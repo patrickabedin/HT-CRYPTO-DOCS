@@ -1,13 +1,13 @@
 ---
 title: "Portfolio and book lock"
-description: "Five-slot Grade B capacity, ranking, giveback, and daily lock. Paper and demo share seats."
+description: "Ten-slot Grade B capacity, ranking, fill-true $150 lock, and 25% giveback. Paper and demo share seats."
 ---
 
 ## What it is
 
 `scripts/grade_b_portfolio.py` and `scripts/grade_b_book_lock.py` bound how many Grade B names can be open at once. Discovery stays broad. Admission is ranked and capped.
 
-Policy name: `GRADE_B_PORTFOLIO_V1`.
+Policy name: `GRADE_B_PORTFOLIO_V1`. `MAX_OPEN = 10`.
 
 ## Clock and size
 
@@ -20,9 +20,19 @@ Admission runs on the armed-watcher cycle inside the shared lock. Paper exits:
 
 Quote outages delay settlement. They do not invent a fill.
 
+Book lock (whole open book, not one ticket):
+
+- Arm `GRADE_B_BOOK_LOCK_USDT` default **\$150**
+- Giveback `GRADE_B_BOOK_LOCK_GIVEBACK` default **25%** of the **fill-true UTC-day peak**
+- `fill_true_high_usdt` / `book_peak_usdt` trails fill × Bitget mark when attached, else fill × WS last
+- `book_high_usdt` may still show a prefill last-chase high for display (`prefill_high_usdt`)
+- `clear_prefill_lock()` keeps the display high and resets the lock peak to 0 so a prefill `BOOK_GIVEBACK` does not keep the day paused
+
+13 Sep 2026: prefill tape printed **+\$318** and locked the book. That high was trigger-vs-last, not fill-true. Resume trails fill-true only. Details: [13 Sep notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty).
+
 ## Radio
 
-Measured pre-selection candidates do not publish entry cards. Selected measured alerts use the frozen plan.
+Measured pre-selection candidates do not publish entry cards. Selected measured alerts use the frozen plan. Book HIGH cards are a separate publisher (`grade_b_upl_high`) — see [Fills, levels, and UPL](/grok-trading-desk/grade-b/fills-levels-upl).
 
 ## Host
 
@@ -32,19 +42,24 @@ Same process as the armed watcher. No extra timer. State: `/var/lib/grok-desk/gr
 
 Paper closes persist to ClickHouse and the portfolio journal. Demo reconciliation follows acknowledged paper closes, never an empty or stale cache.
 
+Tape fields: UTC-day high, low before that high, path low, max concurrent, fill-true high, prefill high. `book_samples` is a count, not a tick list.
+
 ## Gates
 
-- At most five candidate positions across open Grade B paper **and** tracked/unmatched demo
+- At most **ten** candidate positions across open Grade B paper **and** tracked/unmatched demo
 - One position per coin
 - At most three in one direction and two per engine
 - Rank by existing score, then estimated after-fee TP1 reward/risk, then earlier arm timestamp and stable ID
 - Stale or missing demo state blocks new paper admission when demo trading is enabled
-- An old unlimited `BITGET_DEMO_MAX_OPEN` cannot bypass five
+- An old unlimited `BITGET_DEMO_MAX_OPEN` cannot bypass the seat cap
+- Flatten pause (`pause.json` `until`) blocks new takes; `flatten_cooldown` is silent
 
 ## How Patrick uses it
 
-Empty slots are allowed. This is a priority policy, not a win-rate claim. Do not mix the old unlimited book into a claim about five-slot performance.
+Empty slots are allowed. This is a priority policy, not a win-rate claim. Do not mix the old unlimited or five-slot book into a claim about ten-slot performance.
 
 ## Decisions that still bind
 
-2026-09-10 five-slot rollout: migrate excess positions, do not hide them. Preserve up to five demo-linked IDs first, then oldest paper. Paper closes at most 25 positions per cycle at observed prices. Dashboard must see worker policy metadata before claiming the five-slot policy is live.
+2026-09-10 five-slot rollout: migrate excess positions, do not hide them. Paper closes at most 25 positions per cycle at observed prices. Dashboard must see worker policy metadata before claiming a capacity policy is live.
+
+2026-09-13: seats are ten; lock is fill-true `$150` / 25% giveback (`78f5f61`, `349e2c7`). Do not re-arm the lock on the prefill +\$318 tape high.

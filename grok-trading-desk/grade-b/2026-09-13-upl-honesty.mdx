@@ -1,0 +1,223 @@
+---
+title: "13 Sep 2026 UPL honesty"
+description: "What we did on 13 September 2026: fill-true lock, Bitget mark on attached books, HIGH cards, SOL attach smoke, and the mistakes not to repeat."
+sidebarTitle: "13 Sep 2026 notes"
+---
+
+Read this before touching Grade B paper, Bitget demo, desk uPnL, or FLATTEN. Durable rules also live on [Fills, levels, and UPL](/grok-trading-desk/grade-b/fills-levels-upl), [Portfolio and book lock](/grok-trading-desk/grade-b/portfolio-book-lock), [Flatten](/grok-trading-desk/grade-b/flatten), and [Realtime marks](/grok-trading-desk/ops/realtime).
+
+<Warning>
+  SHADOW / Bitget demo only. Do not enable live trading. Do not restart `grok-market-data`. Do not send Telegram test messages. Do not press FLATTEN to test. Do not flatten the leftover XRP SHORT. Do not clear `telegram_429_backoff.json`.
+</Warning>
+
+## Goal
+
+Patrick's desk paper Total uPnL and Bitget demo desk must **agree with the Bitget Demo Trading UI**, not with the public WebSocket last.
+
+Secondary goals the same day:
+
+- Lock the open book on **fill-true** peaks (`$150` arm, **25%** giveback), not last-chase tape highs.
+- Protect every demo fill with the card TP/SL. Refuse a naked first fill.
+- Telegram a book-high when paper or demo open-uPnL prints a new high **≥ `$30`**, then **`+$1`** steps. Render it like a Hunter TAPE card.
+- After Patrick flattened on purpose, prove attach with a real SOL smoke: paper **and** demo, then compare live marks.
+- Write crypto docs here (Mintlify `ht-crypto-docs`), not as new long-form pages under the desk repo `docs/`.
+
+This is an honesty check for the calendar. It is not live money and not a reason to lower Grade A below 75.
+
+## Standing limits that already bit us
+
+| Do | Do not |
+| --- | --- |
+| Land verified desk commits on `main`. Host FF ~60s. | Leave an open PR on the desk repo. |
+| Restart `grok-desk-realtime` after `desk_snapshot` math changes. | Restart `grok-market-data` to "refresh quotes". |
+| Kill one orphan paper plan by `candidate_id`. | `run_flatten(also_demo=True)` or press FLATTEN. |
+| Wait out `grade_b_portfolio.pause.json` `until`. | Smoke during flatten cooldown and keep the paper fill. |
+| Compare Bitget REST `markPrice` + `unrealizedPL`. | Treat public WS last as the demo mark. |
+| Leave leftover XRP SHORT alone. | Flatten XRP because uPnL is ugly. |
+| HIGH alerts through `telegram_429_backoff` source `grade_b_upl_high`. | Test-send a HIGH card. |
+| Document on this Mintlify site. | Add a new long `docs/*.md` in the desk repo. |
+
+Patrick's standing authorization (10 Sep 2026) covers requested commit / push / deploy. It does not expand those limits.
+
+## What shipped (desk `main`)
+
+| SHA | What | Why |
+| --- | --- | --- |
+| `78f5f61` | Fill-true paper stamp + `$150` book lock | Desk, tape, and lock must mark one fill (Bitget if attached, else WS last with 35 bps chase) against the shared last. Default lock `$150` / 25% peak giveback. |
+| `349e2c7` | Resume today on fill-true peaks + desk clocks | Prefill tape printed **+$318** and tripped `BOOK_GIVEBACK`. That high was trigger-vs-last, not fill-true. Lift the pause; trail a new fill-true high only. Show Athens / UTC / next-trades. |
+| `bf651f1` | Card TP/SL on every demo fill + `$30` HIGH text | Naked first fill is refused: re-read SL+TP, attach card levels, flatten that demo side if still unprotected. Empty `holdSide` is not covered. Reconcile repairs today's naked XRP. Paper or demo book high ≥ `$30` texts the desk chat. |
+| `9a394bc` | Mintlify-only crypto docs | All new long-form crypto docs go to `patrickabedin/ht-crypto-docs`. |
+| `7b16c1b` | Mute Telegram toward Grade B | Shared radio. Later wrappers remap leftover `TELEGRAM_ALLOW=GRADE_B` so Grade A can still send after TRIGGERED. |
+| `3862d5b` | Attached paper + demo mark from Bitget uPnL | Public WS last can sit ~1% off the demo mark (SOL printed public `100.25` vs demo mark `99.20`). After fill-true, both books were remade from the public tape, so paper and demo **agreed with each other** and both **disagreed with Bitget**. |
+| `bef5b8e` | HIGH card as Hunter-style HTML | Plain two-line text sat next to TAPE cards. Same words, `parse_mode=HTML` blocks. |
+
+Vercel ships the dashboard from `main`. Host `/opt/grok-trading-desk` fast-forwards from `origin/main`. Confirm `/var/lib/grok-desk/host_ff.json` is `fast_forwarded` / `up_to_date`.
+
+## Root cause: two lasts
+
+This was **not** SSR and **not** a dead WebSocket.
+
+- Public Bitget USDT-FUTURES last lives in `/run/skynet-market/latest.json` (and the shared `md.sock` tape).
+- Bitget **Demo Trading** has its own mark. On SOL it diverged about **1%** (example: public last `100.25` / later `100.70` vs demo mark `99.20` / `99.70`).
+
+Fill-true (`78f5f61`) remade **both** `grade_b_open` and `bitget_open` from the public last so the two desk columns matched. Patrick then saw desk about +11 USD while Bitget UI showed about +0.8 USD. Matching each other is not honesty.
+
+`3862d5b` fix:
+
+- `desk_snapshot.exchange_mark()` / `exchange_upl()` read Bitget `mark` / `unrealizedPL`.
+- **Attached** paper (same symbol+side on demo) uses that mark and uPnL.
+- **Unattached** paper still uses public WS last.
+- Signed zeros stay zeros (`_f`).
+- Lock tape in `grade_b_portfolio.py` marks attached paper from the Bitget mark, not public last.
+
+If public last is still ~1% high, that number is **not** used for attached SOL.
+
+## Realtime process vs market-data
+
+`grok-desk-realtime` is **always-on**. After a host FF it keeps the **old** `desk_snapshot` module in memory until that unit is restarted.
+
+- Restart `grok-desk-realtime` when snapshot / mark math changes.
+- Do **not** restart `grok-market-data` to test UI marks. That unit owns the only public Bitget WS.
+
+File mark can lag Bitget UI by one `grok-demo-trader` tick (~15s). REST `markPrice` / `unrealizedPL` is the live compare. Desk file vs REST may differ by a few cents.
+
+## HIGH Telegram cards
+
+`scripts/grade_b_upl_alert.py` + `telegram_html` kind `grade_b_upl`.
+
+| Rule | Value |
+| --- | --- |
+| First send | open-book uPnL ≥ `$30` |
+| Later send | new high ≥ last alerted **+ `$1`** |
+| Day | UTC day rollover resets paper and demo |
+| Persist | last alerted only after `ok=true` |
+| Source | `grade_b_upl_high` through the shared 429 / budget guard |
+| Books | `paper` and `demo` are separate watermarks |
+
+Card shape (HTML, same rhythm as Hunter TAPE):
+
+- Banner `GRADE B PAPER` or `GRADE B DEMO`
+- Pin: `book high · fill-true uPnL` or `book high · Bitget demo mark`
+- `HIGH +$n.n · N open`
+- Advisory only / manual flatten if you want it
+
+State file: `/var/lib/grok-desk/grade_b_upl_alert.json`. It stores **only** `paper_alerted_high`, `demo_alerted_high`, `day`, `ts`. There is **no** `$1`-step history.
+
+Do not test-send. Next paper send after 13 Sep needs **≥ +$37** if `paper_alerted_high` is still `36.0143` and the UTC day has not rolled.
+
+### 13 Sep HIGH count (do not invent more)
+
+Publisher landed ~13:59 UTC. Morning tape highs did **not** get cards.
+
+| Event | Level | When |
+| --- | --- | --- |
+| HIGH attempt skipped (budget 8/min) | — | 14:12:32Z |
+| One successful paper HIGH | **+$36.0143** | 14:13:27Z |
+| Demo HIGH | none | — |
+
+Paper book tape the same UTC day (not Telegram):
+
+| Tape | Level | When |
+| --- | --- | --- |
+| Prefill / raw `book_high_usdt` | +$318.59 | 03:16:23Z |
+| Fill-true peak / `book_peak_usdt` | +$83.76 | UTC day 2026-09-13 |
+| Low before the raw high | −$76.92 | 03:08:18Z |
+| Later path low | −$104.24 | 12:30:30Z |
+| Yesterday rolled high | +$180.69 | 2026-09-12 23:17:31Z |
+
+`book_samples` on the live state is a **count**, not a tick list.
+
+## Fill-true lock vs prefill tape
+
+- Capacity is **10** open seats (`MAX_OPEN = 10` in `grade_b_portfolio.py`). The 10 Sep five-slot rollout is historical. Do not put five-slot performance claims on the current book.
+- Lock arm: `GRADE_B_BOOK_LOCK_USDT` default **150**. Giveback: `GRADE_B_BOOK_LOCK_GIVEBACK` default **0.25** of the **fill-true UTC-day peak**.
+- `book_high_usdt` can still show the prefill last-chase high for display (`prefill_high_usdt`).
+- `fill_true_high_usdt` / `book_peak_usdt` is what the lock trails. `clear_prefill_lock()` keeps the display high and resets the lock peak to 0.
+- Per-ticket exits (SL / TP1 / 2h / stall / 1R then 50% giveback) stay in `exit_reason`. The book lock flattens the **whole open book**.
+
+## Naked demo fills and leftover XRP
+
+`bf651f1`: a first demo fill without SL+TP is not "covered". Empty `holdSide` does not count. Re-read, attach card levels, flatten **that** demo side if still unprotected.
+
+Leftover XRP SHORT (cid `GROK-EVT-XRPUSDT-RELATIVE_STRENGTH_ROTATION-20260913-1246`) stayed on Bitget after Patrick's flatten. He called it an exchange demo bug (~−$36). **Do not flatten it** to clean a smoke. Desk may still show it on `bitget_open`.
+
+## SOL attach smoke — do it once, correctly
+
+Script: `scripts/grade_b_flatten_smoke.py --symbol SOLUSDT --side LONG`.
+
+It writes a frozen CF plan (score 52, `FUNDING_DISLOCATION`) and asks demo ingest for `$50` @ 20x, size ~10. **It does not flatten.** No Telegram.
+
+### Mistake 1 — smoked during flatten pause
+
+Patrick flattened on purpose. Pause lives at `/var/lib/grok-desk/grade_b_portfolio.pause.json` (`until` + `cutoff`), **not** `/var/lib/skynet-market/pause.json`.
+
+13 Sep: `until` 14:41:39Z, `cutoff` 14:26:39Z (15 minutes). `entries_paused()` made `consider_take` return `flatten_cooldown` **without** `_note_skip`.
+
+First smoke (`…SMOKE-20260913-143045`) created **paper only** (`placed: 0`). Fill was stamped from public last-chase (~`100.467`) while the card entry was ~`99.486`.
+
+### Fix — kill that paper only
+
+Flatten **that** candidate with `flatten_open_plans([that_row])` + `write_grade_b_open_cache`. Do **not** pass `--also-demo`. Do **not** flatten the book.
+
+### Mistake 2 avoided — second smoke after pause
+
+After `until`, same script, no flatten:
+
+- cid `GROK-EVT-SOLUSDT-FUNDING_DISLOCATION-SMOKE-20260913-144206`
+- Card entry `99.675`, stop `98.8776`, tp1 `100.8711`
+- `placed: 1`, paper open 1, Bitget SOL size 10, fill `99.688`
+
+Live compare minutes later: Bitget REST mark `99.699` uPnL `+$0.11`; desk paper and demo `99.705` / `+$0.17`; public WS last still `100.703` (old formula would have shown about +$10). **That is the successful test.** Leave this SOL open unless Patrick asks otherwise.
+
+Still open as of the attach: XRP leftover SHORT + this SOL LONG. `mirror_paper: true` on the demo row.
+
+### How to attach / compare again
+
+On the host, after `pause.until` is in the past, leave the book open:
+
+```bash
+set -a; . /etc/grok-desk/bitget-demo.env; set +a
+/opt/grok-desk/venv/bin/python /opt/grok-trading-desk/scripts/grade_b_flatten_smoke.py --symbol SOLUSDT --side LONG
+```
+
+Then compare three numbers: Bitget REST `markPrice` + `unrealizedPL`, desk `monitor.grade_b_open` / `bitget_open`, public `latest.json` last. Attached rows must track the first two, not the third.
+
+Kill one paper plan only if it has no demo attach. Never `run_flatten` for that.
+
+## Paths (names only)
+
+| File | Role |
+| --- | --- |
+| `/var/lib/grok-desk/grade_b_open_plans.json` | Paper cache (`n`, `plans`, `fill_entry`, `fill_source`) |
+| `/var/lib/grok-desk/grade_b_portfolio.json` | Peaks, tape, lock, fills |
+| `/var/lib/grok-desk/grade_b_portfolio.pause.json` | Flatten / lock pause `until` |
+| `/var/lib/grok-desk/grade_b_upl_alert.json` | Last HIGH watermarks |
+| `/var/lib/grok-desk/desk_snapshot.json` | Dashboard monitor rows |
+| `/var/lib/grok-desk/host_ff.json` | Host SHA |
+| `/var/lib/skynet-market/demo_trader.json` | Demo `open` + `bitget_open` |
+| `/run/skynet-market/latest.json` | Public WS last |
+
+## Not fixed (do not "helpfully" ship unless asked)
+
+- `flatten_cooldown` skips are still silent.
+- Smoke during pause can still persist paper without demo.
+- HIGH state has no step history.
+- File mark lags REST by up to one demo poll.
+- Leftover XRP SHORT remains an exchange-demo leftover.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Fills, levels, and UPL" href="/grok-trading-desk/grade-b/fills-levels-upl">
+  </Card>
+  <Card title="Portfolio and book lock" href="/grok-trading-desk/grade-b/portfolio-book-lock">
+  </Card>
+  <Card title="Flatten" href="/grok-trading-desk/grade-b/flatten">
+  </Card>
+  <Card title="Bitget demo trader" href="/grok-trading-desk/grade-b/demo-trader">
+  </Card>
+  <Card title="Realtime marks" href="/grok-trading-desk/ops/realtime">
+  </Card>
+  <Card title="Host and deploy" href="/grok-trading-desk/ops/host-deploy">
+  </Card>
+</CardGroup>

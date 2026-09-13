@@ -30,11 +30,13 @@ API every publisher must use: `allow_send` before the request, `record_from_resp
 
 ## Gates
 
-Covered engines: chief Grade A/B, armed-watcher edits, hunter ripe/extreme/brain/USELESS (`hunter_telegram.send_or_edit`), scalp/cherry (`run_scalp_telegram.sh`), manual-take.
+Covered engines: chief Grade A/B, armed-watcher edits, Grade B book HIGH (`grade_b_upl_high`), hunter ripe/extreme/brain/USELESS (`hunter_telegram.send_or_edit`), scalp/cherry (`run_scalp_telegram.sh`), manual-take.
 
 Hunter `editMessageText` does not consume the shared send budget. New `sendMessage` does.
 
 While in 429 backoff, still refresh `market_context.json` so Grade B ALIGNED does not go stale.
+
+13 Sep 2026: first HIGH attempt at 14:12:32Z was `telegram_budget_minute` (8/min). The send at 14:13:27Z is the one that persisted. Do not test-send a HIGH card to "verify HTML".
 
 ## How Patrick uses it
 
