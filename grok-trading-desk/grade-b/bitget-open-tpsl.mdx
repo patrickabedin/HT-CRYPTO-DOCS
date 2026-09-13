@@ -255,7 +255,10 @@ If you smoke during `flatten_cooldown`, paper can persist and `placed: 0`. Kill 
 | Open during flatten pause | Paper only, demo 0, silent skip | Wait `until`; kill orphan paper by cid |
 | Chase on public last | Demo mark ≠ public last (~1% SOL) | Chase/open on demo `ticker_last` |
 | “Fix” chase via `ingest_takes` `last=` | Argument is unused | Edit `consider_take` venue last only |
-| Remake desk uPnL from public last | Paper and demo agree, Bitget UI does not | Attached books use Bitget mark/uPnL |
+| Mark paper from card vs public last | Fake +USD 318 lock / last-chase fill | Stamp `fill_entry` once (`grade_b_fills`); never move it |
+| Treat card entry as the fill | TP/SL levels and fill are different numbers | Card stays for SL/TP; fill is Bitget or WS last |
+| Remake both books from public last | Paper and demo agree, Bitget UI does not | Attached books use Bitget mark/uPnL |
+| Rewrite a stamped fill on snapshot | Tape high / lock jumps | `overlay_plan_fills` restores; do not invent a new last |
 | Restart `grok-market-data` for marks | Wrong unit; kills the only public WS | Restart `grok-desk-realtime` |
 | `BITGET_DEMO_MAX_OPEN=0` means unlimited | Code now clamps to 10 | Ten is the cap |
 | Stack same side / opposite hedge | `same_side_position_open` or `symbol_already_open` | One Bitget position per symbol |
@@ -308,8 +311,9 @@ Paste cards into trade-check. Do not chase a TRIGGERED that already ran.
 
 ## Decisions that still bind
 
+- 2026-09-13 `78f5f61`: stamp `fill_entry` once (Bitget if attached, else WS last + 35 bps chase). Never move it. Card entry stays for TP/SL.
 - 2026-09-13 `bf651f1`: refuse a naked first fill; empty holdSide is not covered.
-- 2026-09-13 `3862d5b`: attached paper+demo mark from Bitget uPnL.
+- 2026-09-13 `3862d5b`: attached paper+demo mark from Bitget uPnL. Do not remake both books from public last.
 - Leftover Hunter tape flattens. Demo is Grade B TRIGGERED only.
 - Live `AUTO_ORDER_EXECUTION` stays off.
 - One symbol on Bitget demo at a time. Same-side stacking is rejected.
