@@ -12,6 +12,27 @@ Read this before placing, attaching, or flattening a Bitget demo fill. SHADOW / 
 
 Related: [Bitget demo trader](/grok-trading-desk/grade-b/demo-trader), [13 Sep 2026 notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty), [Fills, levels, and UPL](/grok-trading-desk/grade-b/fills-levels-upl), [Flatten](/grok-trading-desk/grade-b/flatten), [Decisions](/grok-trading-desk/grade-b/decisions).
 
+## Next agent — do not repeat 13 Sep
+
+This page exists so the next agent does **not** spend another day re-fixing the same fill / mark / TP-SL / smoke mistakes. Read it before changing Grade B fills, marks, demo opens, TP/SL, flatten, or smoke.
+
+<Warning>
+  Paid twice already: (1) paper marked card vs public last — fake +USD 318 lock. (2) then both books remade from public last — desk agreed with itself, Bitget UI did not. Stamp `fill_entry` once. Attached books use Bitget mark / `unrealizedPL`. Do not re-open those bugs.
+</Warning>
+
+| Do not | Why it already hurt | Do this |
+| --- | --- | --- |
+| Mark paper from card vs public last | Fake +USD 318 `BOOK_GIVEBACK` | Stamp `fill_entry` once (`grade_b_fills`). Never move it |
+| Remake attached paper **and** demo from public last | Desk +USD 10, Bitget UI +USD 0.11 | Attached books use Bitget `mark` / `unrealizedPL` |
+| Treat card entry as the fill | Smoke last-chase 100.467 vs card 99.486 vs Bitget 99.688 | Card is TP/SL. Fill is Bitget or WS last |
+| Treat presets / empty `holdSide` as protected | Naked LINK/XRP | Re-read position + both plan types |
+| Cancel TP/SL then flatten leftover | Left those legs naked | Flatten first |
+| Smoke during flatten pause | Paper only, `placed: 0` | Wait `pause.until`; kill that cid only |
+| Restart `grok-market-data` for marks | Kills the only public WS | Restart `grok-desk-realtime` |
+| Press FLATTEN / test-send Telegram / flatten leftover XRP | Kills book / flood / Patrick said leave it | Leave opens; no test send |
+
+Full tables and payloads are below. Day notes: [13 Sep 2026 UPL honesty](/grok-trading-desk/grade-b/2026-09-13-upl-honesty).
+
 ## What it is
 
 The only path that opens a Bitget **Demo Trading** USDT-M position for this desk is Grade B **TRIGGERED** paper with a frozen plan that already has entry, stop, and TP1.
