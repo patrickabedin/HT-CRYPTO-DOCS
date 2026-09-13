@@ -1,0 +1,316 @@
+---
+title: "How Bitget demo opens with TP/SL"
+description: "Every gate, order, attach, and flatten on the Grade B Bitget demo path. Pitfalls that already cost us fills."
+sidebarTitle: "Open + TP/SL"
+---
+
+Read this before placing, attaching, or flattening a Bitget demo fill. SHADOW / Demo Trading only. Live keys stay read-only. Grade A stays 75.
+
+<Warning>
+  Never swap `BITGET_DEMO_*` for a live key. `paptrading: 1` is hardcoded in `scripts/bitget_demo.py` and cannot be turned off. No withdraw. No cash-out endpoints. Do not send Telegram to test an open. Do not press FLATTEN to test TP/SL.
+</Warning>
+
+Related: [Bitget demo trader](/grok-trading-desk/grade-b/demo-trader), [13 Sep 2026 notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty), [Fills, levels, and UPL](/grok-trading-desk/grade-b/fills-levels-upl), [Flatten](/grok-trading-desk/grade-b/flatten), [Decisions](/grok-trading-desk/grade-b/decisions).
+
+## What it is
+
+The only path that opens a Bitget **Demo Trading** USDT-M position for this desk is Grade B **TRIGGERED** paper with a frozen plan that already has entry, stop, and TP1.
+
+Hunter TAPE, UNIQUE / brain TAKE, Grade A, scout-only B, and ARMED-but-not-triggered never ingest. Telegram cards do not place. `EXPIRED` / `INVALIDATED` / `MISSED` never place.
+
+Size is always **USD 50 margin at 20x** (USD 1000 notional). Round-trip taker fee model is **12 bps** of notional (USD 1.20). One contract size comes from Bitget `volumePlace` / `sizeMultiplier` / `minTradeNum`, not from inventing qty.
+
+`BITGET_DEMO_LEVERAGE` may override 1–125. Desk default is 20. The `open_market` comment that says “default 10x” is stale — `desk_size.LEVERAGE` is 20.
+
+## End-to-end sequence
+
+1. `grok-desk-armed-watcher` sees ARMED → TRIGGERED on a **completed** candle.
+2. `freeze_on_triggered` writes a CF plan (`entry` / `stop` / `tp1`). `VOID` plans stop here.
+3. `_maybe_demo_grade_b` loads the host demo env, builds `grade_b_take_from_freeze(mirror_paper=True)`, then `maybe_ingest_takes([take])`. Fail-soft. No Telegram from this hook.
+4. Telegram publish of the Grade B card additionally requires `portfolio_selected` + `FROZEN` + score 45–74. **Demo ingest does not require `portfolio_selected`.** If freeze produced a valid Grade B plan, ingest still runs.
+5. `maybe_ingest_takes` is a no-op unless `BITGET_DEMO_TRADING=1`. Missing env file → `flag_off`.
+6. Under `trader_lock` (`/var/lib/grok-desk/demo-trader.lock`): stamp demo equity, then `consider_take`.
+7. If the 60s watcher missed, `grok-demo-trader.timer` (15s) calls `load_grade_b_takes(mirror_paper=True)` and the same ingest. Lock prevents a double fill.
+8. After a place: `open_market` proves protection, then `protect_or_flatten` proves it again. Then `sync_open` stamps `fill_entry` from Bitget fills. Then `apply_hold_and_giveback_exits` (not card TP/SL).
+
+## Clock and size
+
+| Clock | Who |
+| --- | --- |
+| TRIGGERED on a **completed** candle | `grok-desk-armed-watcher.timer` (60s) |
+| Immediate ingest after freeze | `armed_watcher._maybe_demo_grade_b` → `demo_trader.maybe_ingest_takes` |
+| Catch-up attach of still-open paper | `grok-demo-trader.timer` (15s) → `load_grade_b_takes(mirror_paper=True)` |
+| Lock | `trader_lock` so watcher and timer cannot double-fill |
+| REST timeout | 8 seconds per signed call |
+
+Still-open paper may attach for up to **2 hours** (`MIRROR_MAX_AGE_S = 7200`). A brand-new tape card (not used for Grade B) is 300s (`BITGET_DEMO_MAX_AGE_S`). Missing `updated_ts` is **stale** (`card_fresh` is false). Chase / stop / target still apply on catch-up.
+
+Demo force-exits later (not the open, not the card TP/SL):
+
+| Book | Rule |
+| --- | --- |
+| Grade B demo leg | **2h** max hold (`max_hold_2h`, 7200s from `opened_ts`) |
+| Leftover non-GB tape | 24h max hold (`max_hold_24h`) |
+| Either | Once peak uPnL ≥ USD 12, exit if mark gives back ≥ 35% of that peak |
+
+Those run in `apply_hold_and_giveback_exits` on the 15s timer. They are **not** Bitget `pos_loss` / `pos_profit`. Book lock (USD 150 / 25% fill-true peak) is a different flatten.
+
+## Who may open
+
+`consider_take` in `scripts/demo_trader.py` is the gate. Skip reasons matter. Some are silent (no `_note_skip`).
+
+Must all be true:
+
+1. `BITGET_DEMO_TRADING=1` and demo env loaded on **both** armed watcher and the 15s timer. Missing file → `flag_off`.
+2. Demo `usdtEquity` / available ≥ 50. Else `no_demo_equity`. Paper USDT is **not** created by the API. Fund Demo Trading in the Bitget UI.
+3. `kind=GRADE_B`. Hunter `TAPE` is hard-rejected even if env says `ALL`. `BITGET_DEMO_KINDS=ALL` still only allows `GRADE_B`.
+4. Engine is one of the 16 `TRADING_FAMILIES` (everything in `SETUP_FAMILIES` except `NO_SUPPORTED_SETUP`). Hunter `BREAKOUT` (exact string, not `BREAKOUT_CONFIRMATION`) never opens — even if env says `ALL`.
+5. Champion / plan score is 45–74 inclusive (`is_grade_b`). 75+ stays off demo (`not_grade_b`).
+6. `EXTREME_MOMENTUM*` skipped unless `BITGET_DEMO_INCLUDE_EXTREME=1` (`extreme_excluded`).
+7. Plan not `VOID`. Entry, stop, TP1 all finite and > 0 (`insufficient_levels`).
+8. Key not already in `demo_trader.json` `open` (`already_open`). Not `portfolio_closed` / flatten-predating. A closed demo key must not replay unless `mirror_paper` (`already_closed`). UNIQUE-shaped keys (`SYM\|ENGINE\|SIDE\|` empty episode) → `unique_key`.
+9. Not during flatten pause (`grade_b_portfolio.pause.json` `until`) → `flatten_cooldown`.
+10. Position snapshot available. `*` UNKNOWN → `position_snapshot_unavailable` (do not open blind).
+11. **One Bitget symbol at a time.** Same-side already open locally or on the venue → `same_side_position_open`. Live snapshot `BOTH` or `UNKNOWN` uses the same reason. Opposite hedge on that coin, or any local open row for that symbol → `symbol_already_open`. Hedge long+short is **not** allowed as a second Grade B ticket.
+12. Seat cap: `BITGET_DEMO_MAX_OPEN` is clamped to **10**. `0` or negative is **10**, not unlimited. Count is local `open` keys **plus unmatched exchange symbols** not already in local state.
+13. Levels pass `desk_size.levels_reason` (see below).
+14. Live venue last is finite. Prefer **demo** `ticker_last` (`GET /api/v2/mix/market/ticker`, `lastPr` / `last`). If that **throws**, fall back to public `last_from_ticker`. A `None` last without a throw is **not** a public fallback — it is `demo_quote_unavailable`. Never substitute the paper card entry as the executable price.
+15. Not through stop, not chased > **35 bps** past entry, not through TP (`through_target`).
+
+`place_failed:*` leaves **paper FROZEN**. A missing Bitget contract must not expire the Grade B ticket (that emptied the 10-slot book once).
+
+The `last=` argument `ingest_takes` passes from public `latest.json` is **ignored** inside `consider_take`. Chase and size use demo `ticker_last` (or the throw-fallback). Do not “fix” chase by editing the unused argument.
+
+The `scale_in` / `protect=False` / `cancel_tpsl` branch still exists **after** `open_market`, but live `consider_take` returns `same_side_position_open` **before** place. Do not treat stacking as the live first-fill path.
+
+## Skip reasons (silent vs noted)
+
+| Reason | `_note_skip`? | Meaning |
+| --- | --- | --- |
+| `flag_off` / missing creds | n/a (ingest abort) | Env not loaded or demo flag off |
+| `no_demo_equity` | n/a | Wallet \< USD 50 |
+| `flatten_cooldown` | **silent** | Pause `until` not reached |
+| `already_open` | silent | Key already in `demo_trader.json` `open` |
+| `portfolio_closed` | silent | Flatten cutoff / closed book |
+| `already_closed` | silent | Key in demo closed, and not `mirror_paper` |
+| `insufficient_levels` | silent | Missing / non-finite entry, stop, TP |
+| `max_open` | silent | Ten-seat union full |
+| `symbol_already_open` | silent | Other side or any local row on that symbol |
+| `unique_key` | noted | Brain / UNIQUE fingerprint |
+| `kind_filtered` / `engine_filtered` | noted | Not Grade B trading family |
+| `not_grade_b` | noted | Score outside 45–74 |
+| `extreme_excluded` | noted | `EXTREME_MOMENTUM*` |
+| `stale_card` | noted | Age or missing `updated_ts` |
+| `position_snapshot_unavailable` | noted | `positions()` failed |
+| `same_side_position_open` | noted | Same hold already live |
+| `chip_stop` / `stop_too_wide` / `rr_insane` / `levels_side` | noted | Junk fingerprint |
+| `demo_quote_unavailable` | noted | No venue last |
+| `through_stop` / `chased` / `through_target` | noted | Last already past the card |
+| `place_failed:*` | noted (120 chars) | REST / contract / protect flatten |
+
+Silent `flatten_cooldown` is why a smoke during pause can persist **paper** with `placed: 0` and no skip row.
+
+## Level junk gate
+
+`levels_reason` (`scripts/desk_size.py`) before any fill:
+
+| Check | Constant | Skip |
+| --- | --- | --- |
+| LONG must be SL \< entry \< TP | — | `levels_side` |
+| SHORT must be TP \< entry \< SL | — | `levels_side` |
+| Stop risk \< 0.15% of entry | `MIN_SL_PCT = 0.0015` | `chip_stop` |
+| Stop risk > 8% | `MAX_SL_PCT = 0.08` | `stop_too_wide` |
+| TP > 12% **or** R:R > 8 | `MAX_TP_PCT = 0.12`, `MAX_RR = 8` | `rr_insane` |
+
+This is the BTC `80056 \| SL 1.41 \| TP 200139` lottery filter.
+
+Chase at open uses **35 bps** (`CHASE_BPS`), same constant as paper `fill_entry` when unattached. Demo mark and public last can differ ~1% (SOL). Chase is computed on the **venue last used for the order** (`ticker_last` / throw-fallback), not on the desk public tape.
+
+- LONG: last ≤ stop → `through_stop`; last > entry × (1 + 35/10000) → `chased`; last ≥ TP → `through_target`.
+- SHORT: last ≥ stop → `through_stop`; last \< entry × (1 − 35/10000) → `chased`; last ≤ TP → `through_target`.
+
+## How the order is built
+
+`BitgetDemo.open_market`:
+
+1. Size = `size_for(symbol, last or entry, notional=50*leverage)`.
+2. Hedge mode: open LONG is `side=buy` + `tradeSide=open`. Open SHORT is `side=sell` + `tradeSide=open`. Close LONG later is `side=buy` + `tradeSide=close`. Close SHORT is `side=sell` + `tradeSide=close`. That hedge close polarity is what the module sends — do not “correct” it to one-way sell-to-close.
+3. `marginMode=crossed`, `marginCoin=USDT`, `productType=USDT-FUTURES`, `orderType=market`, `force=gtc`.
+4. `clientOid` = `gd` + SHA1(card key)[:16] + last 8 digits of unix ms, trimmed to ≤40. Alphanumeric. Stable per card key + millisecond bucket.
+5. Try `POST /api/v2/mix/account/set-margin-mode` (ignore if already crossed / open pos).
+6. `POST /api/v2/mix/account/set-leverage` on that `holdSide` at `BITGET_DEMO_LEVERAGE` or 20. **This is not ignored.** If leverage set throws, the whole open fails (`place_failed`).
+7. If `protect=True` (first fill), attach presets on the **same** `POST /api/v2/mix/order/place-order` body:
+   - `presetStopLossPrice` = card stop, `price_str`
+   - `presetStopSurplusPrice` = card TP1, `price_str`
+8. If Bitget rejects the preset body, **retry the market open without presets**, then require attach (below). A naked fill must not stay.
+
+`protect=False` is only for a same-side scale-in that already has protection. After a scale-in the trader **cancels position-level TP/SL** so one trigger cannot flatten every stacked paper leg. Paper then drives per-leg exits. **Do not use that cancel on a first fill.** Live ingest never reaches this branch.
+
+### Size and price strings
+
+| Step | Rule |
+| --- | --- |
+| Contract cache | `GET /api/v2/mix/market/contracts` once per process; missing symbol → `no contract SYM` |
+| Qty | `notional / last`, **floor** to `volumePlace` (default 4) and `sizeMultiplier` if larger |
+| Below `minTradeNum` | `size too small for SYM @ price` — paper stays FROZEN |
+| Trigger / preset prices | **floor** to `pricePlace` (default 4), not round-half-up |
+
+Using card entry as the size price when last is 1% away mis-sizes the contract. That is why `last=` on `open_market` is the venue last.
+
+### Auth (no secrets on this page)
+
+- Keys: `BITGET_DEMO_API_KEY` / `BITGET_DEMO_API_SECRET` (or `BITGET_DEMO_SECRET`) / `BITGET_DEMO_PASSPHRASE` only.
+- Refuse if a **live env name** (`BITGET_API_KEY`, `BITGET_SECRET`, …) is the only source. The same _string_ reused locally is allowed; the live _name_ as the demo key is not.
+- Every request header includes `paptrading: 1`. Constructor cannot disable it.
+- Sign: HMAC-SHA256 of `timestamp + METHOD + path + ?query + compact JSON body`, then Base64. Body separators are `(',', ':')` — a pretty-printed body will fail the sign.
+- Base: `https://api.bitget.com`. Code `00000` is success; anything else raises. `request()` returns the unwrapped `data` object.
+
+`close-positions` often returns `code=00000` with `successList: []` and a filled `failureList`. That is **not** a flatten. Callers must use `close_positions_succeeded`.
+
+## How TP/SL is proven
+
+Protection is **not** “we sent presets.” It is Bitget state after the fill.
+
+A leg is protected only if **either**:
+
+- The position row has both `stopLoss` / `presetStopLossPrice` **and** `takeProfit` / `presetStopSurplusPrice`, or
+- Pending plans (`GET /api/v2/mix/order/orders-plan-pending`, `planType=profit_loss`) include **both** `pos_loss` (or `loss`) **and** `pos_profit` (or `profit`) for that **holdSide**.
+
+`plan_hold_side` maps `long`/`buy` and `short`/`sell`. Empty `holdSide` / `posSide` is **not** a match. That is why leftover XRP looked “covered” and was not.
+
+If presets are missing, `_attach_tpsl` / `attach_tpsl` places two plan orders:
+
+| Field | Value |
+| --- | --- |
+| Endpoint | `POST /api/v2/mix/order/place-tpsl-order` |
+| `planType` | `pos_loss` then `pos_profit` |
+| `triggerType` | **`mark_price`** (not last) |
+| `executePrice` | `0` (market on trigger) |
+| `holdSide` | `long` / `short` |
+| `size` | the fill size |
+| `triggerPrice` | card stop / TP1, `price_str` |
+
+Then `_require_fill_protected`: if still naked, `_flatten_naked` (`close-positions`, else `close_market`) and raise. `protect_or_flatten` in the trader does the same after `open_market` returns (attach again, then `_flatten_side`).
+
+Reconcile on the 15s timer repairs today’s naked legs the same way: attach card levels, or flatten **that side only**.
+
+### REST-down traps
+
+| Function | On `positions()` error |
+| --- | --- |
+| `exchange_leg_protected` | Returns **True** (assume protected — will not flatten) |
+| `_exchange_side_open` | Returns **True** (assume still open) |
+| `live_sides` | Returns `{'*': 'UNKNOWN'}` → new opens blocked |
+
+If attach failed and then `positions()` 500s, `exchange_leg_protected` can skip flatten and leave a naked fill. Re-read Bitget UI SL/TP. Do not trust a desk “protected” flag after a transport error.
+
+`_flatten_naked` swallows **both** close failures. The exception still propagates as `place_failed`, but the Bitget side can remain.
+
+## Leftover tape (not a new open)
+
+Hunter BREAKOUT leftovers get flattened, not copied.
+
+Pitfall we already paid: **do not cancel live TP/SL or in-flight reduce-only closes before flatten**. That is what left LINK/XRP naked. `_flatten_side` market-closes first; only if that fails does it `arm_leftover_exit`.
+
+If leftover will not market-close, `arm_leftover_exit` attaches a **tight** SL/TP around **mark** (±0.4%, `max(abs(mark)*0.004, 1e-8)`), not a stale last. Leftover demo last can sit far from mark (LINK 12.7 vs 12.10). LONG leftover: SL = mark − pad, TP = mark + pad. SHORT: opposite.
+
+`cancel_pending_closes` exists to unlock size when a reduce-only is stuck. Do not run it as a prelude to leftover flatten.
+
+Patrick’s leftover XRP SHORT: treat as an exchange-demo leftover. Do not flatten it to clean a smoke.
+
+`trim_oversize` cuts live size if it exceeds intended N × USD 1000 contracts by more than **15%** of one unit. Intentional stacks (dead path) would keep N units.
+
+## After a good fill
+
+`demo_trader.json` `open` stores `card_entry`, `card_sl`, `card_tp`, `fill_entry` (synced from Bitget), `client_oid`, `order_id`, `mirror_paper`, `scale_in=false`, `stack_n=1`.
+
+Desk Last/uPnL for that attached paper **and** the demo row use Bitget `mark` / `unrealizedPL`, not public `latest.json`. Public last can sit ~1% off. Matching paper to demo on the public tape is not honesty.
+
+File mark lags REST by up to one 15s poll. Compare REST `markPrice` + `unrealizedPL` when checking Bitget UI.
+
+After snapshot math changes, restart `grok-desk-realtime`. Never restart `grok-market-data` to refresh marks.
+
+Paper TP1/SL closes persist to ClickHouse CF and show on the Grade B **calendar** (R). Demo twins show on paper-vs-Bitget. A paper-only FIL TP1 will not appear as a demo settle row. Calendar R is stop-risk, not “1R = USD 50”.
+
+Closed demo rows: one row per key. Bitget partials **overwrite**, they do not stack (`upsert_closed`).
+
+## Smoke / attach without flattening the book
+
+`scripts/grade_b_flatten_smoke.py --symbol SOLUSDT --side LONG` writes one frozen CF plan and asks ingest. **It does not flatten.** No Telegram.
+
+Wait `grade_b_portfolio.pause.json` `until` (15 minutes after FLATTEN). Pause path is **not** `/var/lib/skynet-market/pause.json`.
+
+If you smoke during `flatten_cooldown`, paper can persist and `placed: 0`. Kill **that** `candidate_id` with `flatten_open_plans([that_row])` + `write_grade_b_open_cache`. Never `run_flatten(also_demo=True)`.
+
+`register_smoke_open` exists so a host smoke fill is not orphan-flattened by the 15s timer. The Grade B flatten-smoke path goes through freeze + ingest, not that helper, unless you are registering a fill that already landed.
+
+## Pitfalls (do not repeat)
+
+| Pitfall | What happens | Do this |
+| --- | --- | --- |
+| Treat presets as protected | Bitget drops presets; fill sits naked | Re-read position + plans; empty `holdSide` is not a match |
+| Cancel TP/SL then flatten leftover | LINK/XRP sat naked | Flatten first; arm mark-based exits if close will not fill |
+| Trust `close-positions` `code=00000` | Empty `successList` is not a close | `close_positions_succeeded` |
+| Trust protect after `positions()` 500 | `exchange_leg_protected` returns True | Re-read Bitget UI; do not assume covered |
+| Open during flatten pause | Paper only, demo 0, silent skip | Wait `until`; kill orphan paper by cid |
+| Chase on public last | Demo mark ≠ public last (~1% SOL) | Chase/open on demo `ticker_last` |
+| “Fix” chase via `ingest_takes` `last=` | Argument is unused | Edit `consider_take` venue last only |
+| Remake desk uPnL from public last | Paper and demo agree, Bitget UI does not | Attached books use Bitget mark/uPnL |
+| Restart `grok-market-data` for marks | Wrong unit; kills the only public WS | Restart `grok-desk-realtime` |
+| `BITGET_DEMO_MAX_OPEN=0` means unlimited | Code now clamps to 10 | Ten is the cap |
+| Stack same side / opposite hedge | `same_side_position_open` or `symbol_already_open` | One Bitget position per symbol |
+| Cancel TP/SL on a first fill | Naked first fill | Cancel only after a real scale-in |
+| Use live `BITGET_API_*` env names | Module refuses or would fire live | Demo keys only |
+| Pretty-print the signed JSON body | Sign mismatch | Compact separators |
+| Round prices instead of floor | Trigger off `pricePlace` | `format_decimal` floors |
+| Invent qty without `minTradeNum` | `size too small` / reject | `size_for` |
+| Use card entry as size price | Wrong contracts when last drifted | Venue last |
+| Treat Grade B demo hold as 24h | GB legs force-exit at **2h** | `max_hold_2h` |
+| Invent 1R = USD 50 | Calendar R is stop-risk | Use stamped CF net R + model USD |
+| Press FLATTEN / test-send Telegram | Kills book / trips flood | Leave opens; no test send |
+| Flatten leftover XRP to “clean” | Patrick left it as exchange-demo leftover | Leave it |
+| Clear `telegram_429_backoff.json` | Silences every engine longer | Wait `next_ok_ts` |
+| New publisher around the guard | 429 kills Grade A/B/Hunter/scalp | `grade_b_upl_high` already uses the shared guard |
+
+## Radio
+
+Ingest does not Telegram. HIGH ≥ USD 30 is `grade_b_upl_high` on the shared flood guard (8/min, 20/5min). Do not test-send a HIGH card to prove TP/SL.
+
+## Host
+
+| Name | Role |
+| --- | --- |
+| `scripts/bitget_demo.py` | Signed REST, `paptrading: 1`, place + TPSL |
+| `scripts/demo_trader.py` | Gates, ingest, protect-or-flatten, leftover |
+| `scripts/armed_watcher.py` | TRIGGERED freeze → one take |
+| `scripts/grade_b_flatten_smoke.py` | One paper+demo attach, leave open |
+| `grok-demo-trader.timer` | 15s catch-up |
+| Env file | Host path only. Never paste values. |
+
+State names: `/var/lib/skynet-market/demo_trader.json`, `demo_settle.json`, `/var/lib/grok-desk/grade_b_open_plans.json`, `grade_b_portfolio.pause.json`, `/var/lib/grok-desk/demo-trader.lock`.
+
+## Gates (checklist)
+
+- Demo flag + demo keys + `paptrading: 1`
+- Equity ≥ 50
+- Grade B TRIGGERED freeze with entry/stop/TP1
+- Score 45–74, trading family, not Hunter `BREAKOUT`
+- Not paused, not chased, not through stop/TP
+- Snapshot known, symbol free (both hedge sides), ≤ 10 seats
+- After fill: SL **and** TP on position or both plan types with a real holdSide
+- Else flatten **that** side
+
+## How Patrick uses it
+
+Honesty check vs the calendar. Look at Bitget Demo UI SL/TP after TRIGGERED, then desk `ex_sl` / `ex_tp`. If the desk shows a fill and Bitget has no SL/TP, the protect path failed — do not leave it.
+
+Paste cards into trade-check. Do not chase a TRIGGERED that already ran.
+
+## Decisions that still bind
+
+- 2026-09-13 `bf651f1`: refuse a naked first fill; empty holdSide is not covered.
+- 2026-09-13 `3862d5b`: attached paper+demo mark from Bitget uPnL.
+- Leftover Hunter tape flattens. Demo is Grade B TRIGGERED only.
+- Live `AUTO_ORDER_EXECUTION` stays off.
+- One symbol on Bitget demo at a time. Same-side stacking is rejected.
+- Grade B demo force-hold is 2h, not 24h.

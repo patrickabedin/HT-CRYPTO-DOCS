@@ -14,7 +14,7 @@ Decisions that still bind. Dated working notes for 13 Sep 2026 live at [13 Sep 2
 - Attached paper and demo Last/uPnL use Bitget demo mark / `unrealizedPL`. Public last can sit ~1% off (SOL)
 - Paper matching demo on the public tape is not honesty
 - Every demo fill must have card TP/SL. Empty `holdSide` is not covered
-- HIGH Telegram: first ≥ $$30, then +$$1, UTC day reset, HTML TAPE-shaped card, source `grade_b_upl_high`. No test send
+- HIGH Telegram: first ≥ USD 30, then +USD 1, UTC day reset, HTML TAPE-shaped card, source `grade_b_upl_high`. No test send
 - Leftover XRP SHORT: leave it
 - After flatten, wait `pause.json` `until` before attach smoke. Kill orphan paper by `candidate_id` only
 - Restart `grok-desk-realtime` after snapshot math. Never restart `grok-market-data` for marks
@@ -30,7 +30,15 @@ Bound Grade B execution. Do not change Grade A or enable live trading. Capacity 
 
 ## Bitget demo honesty
 
-Demo copies Grade B TRIGGERED only, $50 @ 20x, Demo API key, `paptrading: 1`. Hunter BREAKOUT leftover legs flatten. No withdraw. No live product.
+Demo copies Grade B TRIGGERED only, USD 50 at 20x, Demo API key, `paptrading: 1`. Hunter BREAKOUT leftover legs flatten. No withdraw. No live product.
+
+Open + TP/SL detail (gates, payloads, leftover, pitfalls) is [How Bitget demo opens with TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
+
+- First fill must land with card SL **and** TP on the position or both plan types with a real `holdSide`. Empty `holdSide` is not covered. Else flatten **that** side.
+- One Bitget symbol at a time. Same-side stacking is rejected (`same_side_position_open`). Opposite hedge is `symbol_already_open`.
+- Chase and size use demo `ticker_last`, not public last and not the unused `ingest_takes` last argument.
+- Grade B demo force-hold is **2h**, not 24h. 24h is leftover non-GB tape.
+- Do not cancel live TP/SL before leftover flatten.
 
 ## Radio
 
