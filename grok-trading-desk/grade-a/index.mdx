@@ -6,7 +6,7 @@ description: "Score 75+ (A+ 85+). Watcher, drain, Scout, Champion. Radio muted b
 Grade A is the high band of the Scout / Champion path. Threshold **75**. A+ is **85+**. Raw Scout V1.4 component caps sum to 74; a bounded confluence bridge at the Champion layer can turn 74 into 75. Do not lower the threshold to hit a quota.
 
 <Warning>
-  SHADOW / advisory. Grade A stays off Bitget demo. Radio lane `GRADE_A` is muted unless Patrick unmutes it.
+  SHADOW / advisory. Grade A stays off Bitget demo. Radio lane `GRADE_A` is on by default for **trigger-confirmed** cards only (TRIGGERED + frozen plan).
 </Warning>
 
 ## What it is
@@ -20,8 +20,8 @@ Drain every 60s. Scoring is local code, not an LLM. Size is not invented when eq
 ## Radio
 
 - Card: Grade A fire (🔥) via `maybe_publish_grade_a`
-- Lane: `GRADE_A` — **muted by default**
-- Still flood-guarded if unmuted
+- Lane: `GRADE_A` — on by default, trigger + frozen plan only
+- Flood-guarded. Scout-only Grade A does not send
 
 ## Host
 

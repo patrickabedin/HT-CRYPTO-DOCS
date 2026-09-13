@@ -9,7 +9,7 @@ description: "TELEGRAM_ALLOW is the shared mute. Default GRADE_B only. Detect an
 
 Lanes: `GRADE_B`, `GRADE_A`, `HUNTER`, `SCALP`, `USELESS`.
 
-Default: `TELEGRAM_ALLOW=GRADE_B`.
+Default: `TELEGRAM_ALLOW=GRADE_B,GRADE_A`. Grade A sends only after TRIGGERED + a frozen plan.
 
 ## Clock and size
 
@@ -20,14 +20,16 @@ Not a timer. Evaluated on each would-be send.
 | Lane | Default | Publishers |
 | --- | --- | --- |
 | `GRADE_B` | on | chief `grade_b` + card edits |
-| `GRADE_A` | muted | Grade A fire |
+| `GRADE_A` | on (trigger + frozen plan only) | Grade A fire |
 | `HUNTER` | muted | ripe TAPE + brain UNIQUE |
 | `SCALP` | muted | scalp / cherry (`run_scalp_telegram.sh`) |
 | `USELESS` | muted | USELESS ENTER / clock |
 
 Also need the per-lane knob: `SCALP_TELEGRAM=1`, `USELESS_TELEGRAM=1`, `HUNTER_UNIQUE_TELEGRAM=1`. Radio is the hard gate.
 
-`TELEGRAM_ALLOW=ALL` restores every publisher. `NONE` mutes everything.
+`TELEGRAM_ALLOW=GRADE_B` mutes Grade A. `ALL` restores every publisher. `NONE` mutes everything.
+
+Host units installed before 2026-09-13 may still set `TELEGRAM_ALLOW=GRADE_B`. Drain / armed-watcher wrappers remap that leftover mute so Grade A can send. They do not unmute Hunter / SCALP / USELESS.
 
 ## Host
 
@@ -43,7 +45,7 @@ Scalp runner still refreshes `market_context.json` while muted.
 
 ## How Patrick uses it
 
-Keep Grade B only unless you ask to unmute a lane. UNIQUE Hunter Telegram can be on in code defaults; host radio still mutes the `HUNTER` lane unless allowlisted.
+Keep Hunter / SCALP / USELESS muted unless you ask. UNIQUE Hunter Telegram can be on in code defaults; host radio still mutes the `HUNTER` lane unless allowlisted.
 
 ## Decisions that still bind
 
