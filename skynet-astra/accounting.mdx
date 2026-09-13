@@ -1,0 +1,47 @@
+---
+title: "ASTRA accounting"
+description: "Preserve numeric zero. Empty candles are DATA_FAILURE. Explicit false verification survives rollup."
+---
+
+## What it is
+
+Checkpoint ASTRA-ACCOUNTING-01 (2026-09-12) on the shared stack. Touches `scripts/desk_pnl.py`, `scripts/triggered_cf_book.py`, `web/lib/pnl-stats.ts` in grok-trading-desk.
+
+Scope: preserve numeric zero, stop overriding explicit false verification, classify empty candle evidence as DATA_FAILURE with unknown values, and stop returning partial successful fetches after API/network errors.
+
+No strategy thresholds, live/demo orders, Telegram behaviour, or collector-restart-as-a-docs-test.
+
+## Clock and size
+
+Paired infra note: full snapshot cadence moved 2s → 15s after measuring load. Freshness takes priority over CPU quota experiments. Quota/weight drop-ins were removed after they aged the Grade B cache. Do not claim successful CPU quota optimization or whole-host recovery.
+
+## Radio
+
+Unchanged. Daily ASTRA status Telegram is an ASTRA publisher, still flood-guarded if it shares the bot.
+
+## Host
+
+Do not restart market/order services to roll back only snapshot drop-ins.
+
+## State / settle
+
+Existing modelled calculations remain modelled. This checkpoint does not claim Decimal migration, complete candle coverage, signed funding reconciliation, or exact demo attribution.
+
+ASTRA-ACCOUNTING-02: reject close fills lacking matching symbol, post-entry timestamp, close direction, or compatible position side. Remove arbitrary non-opening-fill fallback. Necessary filter, not exact attribution. Same-symbol stacked positions remain unresolved.
+
+## Gates
+
+- Empty / all-filtered candles cannot produce verified zero `NO_FILL`
+- API fetch failures propagate unknown rather than a partial path
+- Explicit false upstream verification survives host rollup and frontend legacy fallback
+- Zero retains its original value
+- `NO_FILL` does not become a closed trade
+- Breakeven closed trades remain on the calendar
+
+## How Patrick uses it
+
+Treat unknown as unknown. Do not celebrate a zero that was an empty fetch.
+
+## Decisions that still bind
+
+Raw historical observations remain unchanged. Scalp detect/settle/history scans remain a separate unresolved load source.

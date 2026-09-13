@@ -1,0 +1,49 @@
+---
+title: "EXTREME MOMENTUM"
+description: "Fourth hunter family for EXTREME_BULLISH / EXTREME_BEARISH tape. Path-triggered. With-grain only."
+---
+
+## What it is
+
+`scripts/extreme_momentum.py`, invoked as `hunter_ripe_watch.py --extreme`. Additive fourth family. 0 LLM. No new Bitget socket.
+
+The regular ripe timer only packed plain BULLISH/BEARISH, so the sharpest tape produced an empty `ripe[]`. The 60s tick is also the wrong latency for a move that starts in seconds.
+
+## Clock and size
+
+- `grok-hunter-extreme.path` watches `market_context.json`
+- Episode id: `<STATE>@<int(last_market_alert_ts)>`
+- Regular 60s ripe timer still evaluates EXTREME while the episode is live
+- `flock -n` on `/var/lib/grok-desk/hunter-ripe.lock` so the two entry points cannot double-POST
+- SL floor 0.4%, ceiling 3%. TP 1.5R from last. `RR_MIN` 1.5
+
+## Radio
+
+Same `ripe_changed` webhook schema. Fires when a new `(symbol, engine)` appears **or** when a new EXTREME episode is first notified (even if `ripe[]` is empty). Quiet hours skip POST.
+
+## Host
+
+State: `hunter_extreme.state.json`. Dedupe one card per `(symbol, side, episode)`. Webhook engine key `EXTREME_MOMENTUM:<SIDE>:<episode>`. POST body keeps the plain engine label.
+
+## State / settle
+
+`posted[]` written only after a webhook POST succeeded.
+
+## Gates
+
+- With-grain only: `EXTREME_BULLISH → LONG`, `EXTREME_BEARISH → SHORT`. Countertrend is structurally impossible
+- Leader: 24h change ≥ ±1% with grain, `pos_24h` ≥ 0.60 (long) / ≤ 0.40 (short), session 5m range ≥ 0.8%
+- Setup (a) `leader_retest`: pulled back into a confirmed 5m level, holding within 0.6%, ≥ 0.15% off session extreme
+- Setup (b) `continuation_break`: 5m close through prior 12-bar range extreme, last still inside 1R
+- Chase: ≥ 1R past trigger → skip
+- Vertical: `pos_24h` ≥ 0.98 (≤ 0.02 short) with no 5m base and no retest → skip
+- Spread ≥ 10 bps → skip
+- Packs only a symbol GP / SR / BREAKOUT left empty. One row per symbol
+
+## How Patrick uses it
+
+Path wake, then brain or trade-check. Do not treat an extreme_transition webhook as TAKE.
+
+## Decisions that still bind
+
+ADR 2026-09-03. Private-book symbols and US-stock cluster skip rules unchanged.

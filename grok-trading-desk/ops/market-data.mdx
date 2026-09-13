@@ -1,0 +1,48 @@
+---
+title: "Market data"
+description: "One Bitget public WebSocket. md.sock + latest.json. Strategy stays out of the publisher."
+---
+
+## What it is
+
+`grok-market-data.service` owns the only Bitget public ticker + 1m candle WebSocket. It publishes `skynet_md_v0` on a Unix socket. Grok Desk and Skynet Scalp both read it.
+
+Script on host: copied `shared_market_data_public.py` under `/opt/grok-desk`.
+
+<Warning>
+  Do not start a second public ticker WebSocket. Do not restart this service to test an unrelated desk change.
+</Warning>
+
+## Clock and size
+
+Always-on. Two sockets **inside this same service** (ticker vs `candle1m`) so a ticker reconnect does not drop OHLCV. Official channel cap is 1000/connection; ticker+candle1m for the eligible set stays under it.
+
+## Radio
+
+None. Publisher is data only. Grade A, Champion, Telegram, and LLM stay out.
+
+## Host
+
+- Unit: `grok-market-data.service`
+- Socket: `/run/skynet-market/md.sock` (`SKYNET_MD_SOCK`)
+- Snapshot: `/run/skynet-market/latest.json`
+- Valkey: host read via `grok-valkey-localhost.service` on localhost 6379 (docker-internal instance). Do not recreate that container, bind it on all interfaces, or change ACL.
+
+## State / settle
+
+Every JSONL line: `schema=skynet_md_v0`, `type` in `tick` | `bar_1m` | `bar_5m` | `health` | `event`, `ts_ms`, `symbol`.
+
+Writer never blocks on a slow reader; that client is dropped.
+
+## Gates
+
+- Eligible universe + runners + always-on names (see deploy notes in the desk repo)
+- Tick `volume` is 24h quote turnover. Closed bar `volume` is candle quote volume. Ticker 24h delta is never bar volume.
+
+## How Patrick uses it
+
+If quotes are dead, check this unit first. Desk scripts should show `quote=shared_market_data`. REST is fallback only.
+
+## Decisions that still bind
+
+1M CANDLE PRODUCERS: 1. See [Bar history](/grok-trading-desk/ops/bar-history). ASTRA quote-order: a delayed REST snapshot must not replace a newer WebSocket receipt.

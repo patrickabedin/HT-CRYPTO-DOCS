@@ -1,0 +1,36 @@
+---
+title: "Playbook outcomes"
+description: "One JSONL line per private-book close, stamped with engine, grain, SL, TP. No REST."
+---
+
+## What it is
+
+`scripts/playbook_outcomes.py`. Appends close outcomes from private-book events for Cherry/scalp attribution.
+
+## Clock and size
+
+`grok-playbook-outcomes.timer` 15s.
+
+## Radio
+
+None.
+
+## Host
+
+Reads `/run/skynet-private/latest.json`, `hunter_ripe.json`, `market_context.json`, `bars_5m.json`. Writes `/var/lib/skynet-market/playbook_outcomes.jsonl` + `.state.json`.
+
+## State / settle
+
+Stamps engine / grain / SL / TP. No `md.sock`. No orders.
+
+## Gates
+
+Private state must exist. Do not invent closes.
+
+## How Patrick uses it
+
+Outcome tape for playbook review, not a live enter signal.
+
+## Decisions that still bind
+
+0 LLM. Do not log secrets from private state.

@@ -1,0 +1,42 @@
+---
+title: "Champion"
+description: "One production Champion: GROK_META_V1_CHAMPION. Human review only. Challenger is SHADOW."
+---
+
+## What it is
+
+`scripts/meta_ranker.py` plus `state/active_champion.json`. Production ranking policy. Challenger work is research/shadow.
+
+Approved production Champion: `GROK_META_V1_CHAMPION`.
+
+Grade A confluence policy: `GROK_META_V1_1_GRADE_A_CONFLUENCE` — bounded **+1** only when raw `grok_edge_score >= 74` and every listed component is at the top of the V1.4 stack (structure ≥ 11, flow ≥ 20, derivatives ≥ 9, regime ≥ 5, execution ≥ 14, historical ≥ 15). The bridge can make 74 become 75. It does not make A+ naturally reachable.
+
+## Clock and size
+
+Runs inside drain after Scout.
+
+## Radio
+
+Champion does not Telegram. Chief reads the ranked result.
+
+## Host
+
+Runtime pointer that names an unapproved active version fails back to the code-approved Champion and records a governance fallback reason.
+
+## State / settle
+
+`state/active_champion.json`. `save_active_champion()` refuses a Challenger or unapproved version. The runtime state file cannot lower Grade A below 75.
+
+## Gates
+
+- `promotion_mode=HUMAN_REVIEW_ONLY`
+- `AUTO_PROMOTION_ALLOWED=false`
+- Challenger gets no Grade A confluence bridge
+
+## How Patrick uses it
+
+Do not auto-promote the Challenger. A future Champion change needs reviewed code plus owner approval.
+
+## Decisions that still bind
+
+ADR 2026-09-02. No LLM in scoring/ranking. No automated orders. Market-context alignment is not a scoring input.

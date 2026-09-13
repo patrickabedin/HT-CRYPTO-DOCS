@@ -1,0 +1,38 @@
+---
+title: "Hunter Telegram and settle"
+description: "TAPE and UNIQUE cards share hunter_telegram. TAKE-only for brain. Paper settle rolls into PnL."
+---
+
+## What it is
+
+`scripts/hunter_telegram.py` posts TAPE / UNIQUE TAKE cards (`SKYNET HUNTER *`). `scripts/hunter_telegram_settle.py` settles hunter Telegram paper outcomes for the PnL rollup.
+
+`scripts/manual_take_projection.py` builds the shared $50-class level projection used on hunter / USELESS / telegram cards.
+
+## Clock and size
+
+Chained after ripe / extreme / brain runs. Settle is not a quote stream.
+
+## Radio
+
+Lane `HUNTER`. Brain: TAKE only. Ripe TAPE is a shortlist card, not a brain TAKE. `editMessageText` does not consume the shared send budget.
+
+## Host
+
+Uses the same Telegram env as Grade B. State: `HUNTER_RIPE_PATH`, `HUNTER_SETTLE_PATH` under `/var/lib/skynet-market/`.
+
+## State / settle
+
+Dashboard groups: `HUNTER_UNIQUE` vs `HUNTER_TAPE`. EARLY settlements stay under their own engine names on the tape group — they are not relabelled GP/SR/BREAKOUT.
+
+## Gates
+
+Flood guard on every new send. Dedupe per engine rules. Do not publish EARLY as Hunter TAKE (`nudge_only` flag on those rows).
+
+## How Patrick uses it
+
+A TAPE card is a wake. A BRAIN TAKE is the ping worth trade-check. UNIQUE without brain structure is not the product.
+
+## Decisions that still bind
+
+Mute UNIQUE with `HUNTER_UNIQUE_TELEGRAM=0` if you need a quiet channel. Do not mute Grade B to punish hunter.

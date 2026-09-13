@@ -1,0 +1,36 @@
+---
+title: "Ripe watch"
+description: "60s scan of shared 5m bars. Writes hunter_ripe.json. Priority GP, SR, BREAKOUT, then EXTREME leftovers."
+---
+
+## What it is
+
+`scripts/hunter_ripe_watch.py`. One scan per symbol/side. Early impulse/grind rows are appended and do not steal GP/SR/BO.
+
+## Clock and size
+
+60s oneshot. Extreme oneshot on context change. Shared lock serializes both.
+
+## Radio
+
+Webhook POST when a new `(symbol, engine)` pair appears. Optional TAPE Telegram behind radio + unique knobs.
+
+## Host
+
+`HUNTER_RIPE_PATH` → `/var/lib/skynet-market/hunter_ripe.json`. Optional `HUNTER_RIPE_WEBHOOK_*` on the host (no values here).
+
+## State / settle
+
+`last_posted` plus per-engine state files for BREAKOUT and EXTREME. Old last_posted symbol lists without an engine are treated as no-engine so a later BREAKOUT still POSTs.
+
+## Gates
+
+Spread, private-book skip, US-stock cluster skip, 24h tone, chase, `MIN_SL_PCT`, `RR_MIN`.
+
+## How Patrick uses it
+
+Read `ripe[]` as a shortlist. Empty ripe during EXTREME_* can still notify via `extreme_transition`.
+
+## Decisions that still bind
+
+0 LLM. No new Bitget socket. Do not mix scalp firehose into this packer.

@@ -1,0 +1,50 @@
+---
+title: "Radio allowlist"
+description: "TELEGRAM_ALLOW is the shared mute. Default GRADE_B only. Detect and settle stay live."
+---
+
+## What it is
+
+`scripts/telegram_radio.py`. Desk / detect / settle / paper stay live. Only listed lanes may hit Bot API.
+
+Lanes: `GRADE_B`, `GRADE_A`, `HUNTER`, `SCALP`, `USELESS`.
+
+Default: `TELEGRAM_ALLOW=GRADE_B`.
+
+## Clock and size
+
+Not a timer. Evaluated on each would-be send.
+
+## Radio
+
+| Lane | Default | Publishers |
+| --- | --- | --- |
+| `GRADE_B` | on | chief `grade_b` + card edits |
+| `GRADE_A` | muted | Grade A fire |
+| `HUNTER` | muted | ripe TAPE + brain UNIQUE |
+| `SCALP` | muted | scalp / cherry (`run_scalp_telegram.sh`) |
+| `USELESS` | muted | USELESS ENTER / clock |
+
+Also need the per-lane knob: `SCALP_TELEGRAM=1`, `USELESS_TELEGRAM=1`, `HUNTER_UNIQUE_TELEGRAM=1`. Radio is the hard gate.
+
+`TELEGRAM_ALLOW=ALL` restores every publisher. `NONE` mutes everything.
+
+## Host
+
+Env on the shared Telegram unit files. Do not document values.
+
+## State / settle
+
+None beyond the allow string.
+
+## Gates
+
+Scalp runner still refreshes `market_context.json` while muted.
+
+## How Patrick uses it
+
+Keep Grade B only unless you ask to unmute a lane. UNIQUE Hunter Telegram can be on in code defaults; host radio still mutes the `HUNTER` lane unless allowlisted.
+
+## Decisions that still bind
+
+Do not add a publisher that bypasses radio + 429 guard.

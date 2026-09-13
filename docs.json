@@ -2,6 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "HT Crypto Docs",
+  "description": "Canonical documentation for Grok Trading Desk, SKYNET-SOL, SKYNET ASTRA, and every other crypto-only book.",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -9,31 +10,164 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Start here",
-        "pages": [
-          "index",
-          "policy/document-on-mintlify",
-          "how-to-write"
+        "tab": "Start here",
+        "icon": "house",
+        "groups": [
+          {
+            "group": "Start here",
+            "pages": [
+              "index",
+              "policy/document-on-mintlify",
+              "how-to-write"
+            ]
+          }
         ]
       },
       {
-        "group": "Grok Trading Desk",
-        "pages": [
-          "grok-trading-desk/index"
+        "tab": "Grok Trading Desk",
+        "icon": "bolt",
+        "groups": [
+          {
+            "group": "Desk",
+            "pages": ["grok-trading-desk/index"]
+          },
+          {
+            "group": "Grade B",
+            "pages": [
+              "grok-trading-desk/grade-b/index",
+              "grok-trading-desk/grade-b/armed-watcher",
+              "grok-trading-desk/grade-b/setup-families",
+              "grok-trading-desk/grade-b/portfolio-book-lock",
+              "grok-trading-desk/grade-b/fills-levels-upl",
+              "grok-trading-desk/grade-b/demo-trader",
+              "grok-trading-desk/grade-b/flatten",
+              "grok-trading-desk/grade-b/decisions"
+            ]
+          },
+          {
+            "group": "Grade A",
+            "pages": [
+              "grok-trading-desk/grade-a/index",
+              "grok-trading-desk/grade-a/watcher-hot-routing",
+              "grok-trading-desk/grade-a/drain-cycle",
+              "grok-trading-desk/grade-a/scout",
+              "grok-trading-desk/grade-a/champion",
+              "grok-trading-desk/grade-a/arm-gate",
+              "grok-trading-desk/grade-a/chief-publish",
+              "grok-trading-desk/grade-a/decisions"
+            ]
+          },
+          {
+            "group": "Hunter Unique",
+            "pages": [
+              "grok-trading-desk/hunter-unique/index",
+              "grok-trading-desk/hunter-unique/brain",
+              "grok-trading-desk/hunter-unique/grain-pullback",
+              "grok-trading-desk/hunter-unique/sweep-reclaim",
+              "grok-trading-desk/hunter-unique/breakout",
+              "grok-trading-desk/hunter-unique/extreme-momentum",
+              "grok-trading-desk/hunter-unique/telegram-settle"
+            ]
+          },
+          {
+            "group": "Hunter Tape",
+            "pages": [
+              "grok-trading-desk/hunter-tape/index",
+              "grok-trading-desk/hunter-tape/ripe-watch",
+              "grok-trading-desk/hunter-tape/nudge-vs-take"
+            ]
+          },
+          {
+            "group": "EARLY",
+            "pages": [
+              "grok-trading-desk/early/index",
+              "grok-trading-desk/early/pump",
+              "grok-trading-desk/early/dump",
+              "grok-trading-desk/early/grind",
+              "grok-trading-desk/early/trade-book"
+            ]
+          },
+          {
+            "group": "Scalp and Cherry",
+            "pages": [
+              "grok-trading-desk/scalp/index",
+              "grok-trading-desk/scalp/scalp-cards",
+              "grok-trading-desk/scalp/cherry",
+              "grok-trading-desk/scalp/playbook-outcomes",
+              "grok-trading-desk/scalp/host-timer"
+            ]
+          },
+          {
+            "group": "USELESS",
+            "pages": [
+              "grok-trading-desk/useless/index",
+              "grok-trading-desk/useless/scalp-brain",
+              "grok-trading-desk/useless/clock",
+              "grok-trading-desk/useless/live-book",
+              "grok-trading-desk/useless/clip-go"
+            ]
+          },
+          {
+            "group": "Desk ops",
+            "pages": [
+              "grok-trading-desk/ops/market-data",
+              "grok-trading-desk/ops/bar-history",
+              "grok-trading-desk/ops/telegram-flood",
+              "grok-trading-desk/ops/radio",
+              "grok-trading-desk/ops/host-deploy",
+              "grok-trading-desk/ops/dashboard-pnl",
+              "grok-trading-desk/ops/realtime",
+              "grok-trading-desk/ops/risk-shadow",
+              "grok-trading-desk/ops/engine-health",
+              "grok-trading-desk/ops/guard-book"
+            ]
+          },
+          {
+            "group": "Advisory",
+            "pages": [
+              "grok-trading-desk/advisory/trade-check",
+              "grok-trading-desk/advisory/hunter-setup",
+              "grok-trading-desk/advisory/useless-scalp"
+            ]
+          },
+          {
+            "group": "Research",
+            "pages": [
+              "grok-trading-desk/research/triggered-cf",
+              "grok-trading-desk/research/clickhouse",
+              "grok-trading-desk/research/baselines"
+            ]
+          }
         ]
       },
       {
-        "group": "SKYNET-SOL",
-        "pages": [
-          "skynet-sol/index"
+        "tab": "SKYNET-SOL",
+        "icon": "diagram-project",
+        "groups": [
+          {
+            "group": "SKYNET-SOL",
+            "pages": [
+              "skynet-sol/index",
+              "skynet-sol/read-only-adapter",
+              "skynet-sol/teal-rules"
+            ]
+          }
         ]
       },
       {
-        "group": "SKYNET ASTRA",
-        "pages": [
-          "skynet-astra/index"
+        "tab": "SKYNET ASTRA",
+        "icon": "flask",
+        "groups": [
+          {
+            "group": "SKYNET ASTRA",
+            "pages": [
+              "skynet-astra/index",
+              "skynet-astra/accounting",
+              "skynet-astra/quote-order"
+            ]
+          }
         ]
       }
     ]

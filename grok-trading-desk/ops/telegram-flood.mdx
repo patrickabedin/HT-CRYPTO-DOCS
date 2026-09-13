@@ -1,0 +1,49 @@
+---
+title: "Telegram flood guard"
+description: "Shared 429 backoff and send budget. One bot. A 429 silences every engine."
+---
+
+## What it is
+
+Every Telegram send on `grok_bitget_signals_bot` goes through `scripts/telegram_429_backoff.py`. A Bot API HTTP 429 silences **all** alerts.
+
+## Clock and size
+
+Budgets: **8 sends / 60s**, **20 sends / 5 min** (`TELEGRAM_MAX_SENDS_PER_MIN`, `TELEGRAM_MAX_SENDS_PER_5MIN`). Tighten, do not loosen, without Patrick.
+
+## Radio
+
+See [Radio](/grok-trading-desk/ops/radio). Flood guard is independent of the allowlist. Muted lanes still must not bypass the module if they send.
+
+## Host
+
+- Module: `scripts/telegram_429_backoff.py`
+- Host copies under `/opt/grok-trading-desk/scripts/`, `/opt/grok-desk/scripts/`, `/opt/skynet-scalp/scripts/`
+- 429 state: `/var/lib/skynet-market/telegram_429_backoff.json`
+- Budget state: `/var/lib/skynet-market/telegram_send_budget.json`
+
+Never clear the 429 file to force a send. Wait out `next_ok_ts`.
+
+## State / settle
+
+API every publisher must use: `allow_send` before the request, `record_from_response` on the HTTP result, `note_send` after `ok=true`.
+
+## Gates
+
+Covered engines: chief Grade A/B, armed-watcher edits, hunter ripe/extreme/brain/USELESS (`hunter_telegram.send_or_edit`), scalp/cherry (`run_scalp_telegram.sh`), manual-take.
+
+Hunter `editMessageText` does not consume the shared send budget. New `sendMessage` does.
+
+While in 429 backoff, still refresh `market_context.json` so Grade B ALIGNED does not go stale.
+
+## How Patrick uses it
+
+Quiet chat + `waiting_telegram_429` / budget skips = working as designed.
+
+```bash
+python3 /opt/grok-trading-desk/scripts/telegram_flood_health.py
+```
+
+## Decisions that still bind
+
+**2026-09-06:** Scalp / cherry tripped the first 429 (~00:21 UTC), then retried about every 10s without shared backoff. Telegram extended punishment (hours). Grade B was secondary. USELESS was mostly silent ENTER skips. Do not unmute all lanes to "fix" a quiet chat.

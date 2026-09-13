@@ -1,0 +1,38 @@
+---
+title: "Scalp host timer"
+description: "Gate script on the droplet. 429 guard, then skynet-scalp venv. Not shipped in deploy/ units."
+---
+
+## What it is
+
+`deploy/host/run_scalp_telegram.sh` is the gate: shared 429 guard + invoke `/opt/skynet-scalp` venv. Unit `grok-scalp-telegram.timer` is documented on the host and is **not** in this repo's `deploy/` catalog.
+
+Manual-take watcher in the scalp repo (`manual_take_watch.py`) must call the same flood module before `sendMessage`.
+
+## Clock and size
+
+Host timer interval is a scalp-repo concern. While muted, the wrapper still refreshes `market_context.json`.
+
+## Radio
+
+`SCALP_TELEGRAM` + `TELEGRAM_ALLOW`.
+
+## Host
+
+`/opt/skynet-scalp`. Patch senders with `deploy/host/patch_host_telegram_senders.py` when installing the flood guard.
+
+## State / settle
+
+Do not treat a muted timer as a dead detect/settle path.
+
+## Gates
+
+Never add a scalp publisher that bypasses `telegram_429_backoff`.
+
+## How Patrick uses it
+
+If scalp cards vanish, check radio and 429 first.
+
+## Decisions that still bind
+
+Shared budget across **all** engines. One scalp spray can mute Grade B.

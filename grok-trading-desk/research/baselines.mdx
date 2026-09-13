@@ -1,0 +1,38 @@
+---
+title: "Predictive baselines"
+description: "6h refresh of the historical Scout V1.4 component. Research labelers stay off Telegram."
+---
+
+## What it is
+
+`scripts/build_predictive_baselines.py` refreshes the historical baseline component for `SCOUT_SCORE_V1_4`.
+
+Other research scripts (no dedicated systemd unless noted): `opportunity_quality_labeler.py`, `grok_cf_labeler_v0.py`, `nightly_conditional_stats.py`, `scalp_research.py`, `funnel_stats.py`, `grok_plan_outcomes.py`, `health_monitor.py`.
+
+## Clock and size
+
+`grok-desk-baselines.timer` every 6 hours.
+
+## Radio
+
+None. Funnel stats exclude replay rows (`REPLAY_TEST`).
+
+## Host
+
+ClickHouse env from the host file.
+
+## State / settle
+
+A missing / UNKNOWN / INSUFFICIENT historical value cannot qualify for the Grade A confluence bridge.
+
+## Gates
+
+Replay persists with `test=True` and does not advance the live cursor.
+
+## How Patrick uses it
+
+Leave it on. Do not treat a stale historical component as a reason to lower Grade A.
+
+## Decisions that still bind
+
+Do not broadly raise historical caps to manufacture Grade A.

@@ -1,0 +1,47 @@
+---
+title: "Bar history"
+description: "Shared 1m and 5m closed candles. One producer. Watcher and Scalp hydrate; they do not roll their own bars."
+---
+
+## What it is
+
+Closed candles are shared infrastructure. Only `grok-market-data` writes Valkey bar keys `sk:production:market:bars:v1:{SYMBOL}:1m|5m`.
+
+`grok-market-files.timer` (60s) refreshes `/run/skynet-market/bars_5m.json` via `scripts/bars_snapshot.py`.
+
+## Clock and size
+
+On every **completed** 1m: append in-memory deque (maxlen ≥ 300), write Valkey, derive 5m from five completed 1m bars (floor timestamp), publish `bar_1m` / `bar_5m`.
+
+Forming bars fill `open_bar` only. They are not persisted as closed.
+
+## Radio
+
+None.
+
+## Host
+
+`grok-market-data` + `grok-market-files.timer`. Watcher hydrates closed 1m before ticks so Grade A cold-start RVOL uses last closed vs prior closed.
+
+## State / settle
+
+Do not write `sk:production:streams:v1:*` from this path. Soak trade shards are not a candle source.
+
+## Gates
+
+| Check | Value |
+| --- | --- |
+| GROK_NATIVE USES SHARED 1M | yes |
+| SCALP consumes the same bars | other repo; no second producer |
+| DUPLICATE CANDLE CONSTRUCTION | no — watcher does not `roll_bar` or REST `history-candles` |
+| TICKER_24H_DELTA_USED | no |
+
+Volume parse: Bitget mix `[ts, open, high, low, close, baseVol, quoteVol, usdtVol]` — quote index, else base.
+
+## How Patrick uses it
+
+USELESS and Hunter brains read Valkey 5m. If 5m is empty, the clock is wrong — do not invent bars.
+
+## Decisions that still bind
+
+HOT_N=40, DEBOUNCE_SEC=600, Grade A=75 unchanged by this contract.

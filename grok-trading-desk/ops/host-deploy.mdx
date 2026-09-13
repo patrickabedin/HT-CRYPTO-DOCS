@@ -1,0 +1,67 @@
+---
+title: "Host and deploy"
+description: "Land on main. Host fast-forwards about every 60s. One-shot workers load scripts on the next tick."
+---
+
+## What it is
+
+Canonical source: [`patrickabedin/grok-trading-desk`](https://github.com/patrickabedin/grok-trading-desk) `main`. **No open PRs.**
+
+The droplet fast-forwards `/opt/grok-trading-desk` from `origin/main` about every 60 seconds (`grok-desk-ff-main.timer` → `deploy/ff_main.sh`). Confirm with `/var/lib/grok-desk/host_ff.json` (`fast_forwarded` or `up_to_date`).
+
+Vercel deploys the dashboard from `main`.
+
+## Clock and size
+
+`ff_main` every ~60s. Fast-forward only. Do not reset a dirty checkout.
+
+## Radio
+
+Deploy does not Telegram. Do not send test messages to verify a ship.
+
+## Host
+
+| Path | What |
+| --- | --- |
+| `/opt/grok-trading-desk` | Git checkout. Scripts load on the next timer tick. |
+| `/opt/grok-desk` | Synced market-data + watcher (`deploy/sync_host.sh`). `RELEASE` is the copied commit. |
+| `/opt/skynet-scalp` | Scalp / Cherry repo |
+| `/var/lib/grok-desk` | Desk state |
+| `/var/lib/skynet-market` | Hunter / scalp / demo / settle |
+| `/run/skynet-market` | Live tape |
+| `/etc/skynet-sol/grok-desk-*.env` | ClickHouse / Telegram env **files** (no values here) |
+| `/etc/grok-desk/*.env` | Demo / watcher / dashboard env **files** |
+
+`deploy/sync_host.sh` copies `market_data.py`, `watcher.py`, and `skynet_md/` to `/opt/grok-desk`.
+
+Start market-data **first**, then the watcher consumer.
+
+## Unit catalog (names)
+
+Always-on: `grok-market-data`, `grok-desk-watcher`, `grok-valkey-localhost`, `grok-desk-realtime`, `grok-useless-clock`.
+
+60s oneshots: drain, armed-watcher, market-files, desk-pnl, hunter-ripe, hunter-brain, early-trade-book, ff-main.
+
+Faster oneshots: demo-trader 15s, playbook-outcomes 15s, guard-book 20s, useless-scalp 30s, clip-live-book 30s, useless-live-book 30s.
+
+6h: baselines.
+
+Path-triggered: `grok-hunter-extreme` on `market_context.json` change.
+
+Disabled in prod: `grok-desk-snapshot.timer` (full snapshot superseded by PnL-only homepage).
+
+Documented on host but not in this repo's `deploy/`: `grok-scalp-telegram.timer`.
+
+## Gates
+
+- Do not run production from a home-directory loose copy
+- Do not enable live trading, restart market-data, or press FLATTEN to test
+- Treat worker deploy as confirmed only after `host_ff.json` or a live endpoint unique to that SHA
+
+## How Patrick uses it
+
+Push `main`. Wait about a minute. Read `host_ff.json`. Codex / cloud agents cannot SSH — do not ask for keys.
+
+## Decisions that still bind
+
+Standing authorization 2026-09-10: requested work includes commit, push to `main`, and deploy through authorized access. SHADOW mode and Grade A at 75 stay.

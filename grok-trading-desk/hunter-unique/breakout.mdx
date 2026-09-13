@@ -1,0 +1,40 @@
+---
+title: "BREAKOUT"
+description: "5m close through the prior session range. Packs only when grain and sweep did not. Not Grade B demo."
+---
+
+## What it is
+
+`detect_breakout` in `scripts/hunter_ripe_watch.py`. Needs at least 5 bars before the candidate break candle. Retest band around the anchored pre-break level: 0.15%.
+
+This is **not** Grade B `BREAKOUT_CONFIRMATION` and **not** a Bitget demo family. Leftover Hunter BREAKOUT demo legs flatten.
+
+## Clock and size
+
+5m. Same SL floor 0.4% and R:R 1.5. Chase: refused when last already ran ≥ 1R past the trigger (trigger→SL).
+
+## Radio
+
+TAPE cards when hunter radio is on. Hunter telegram TAPE does **not** call demo ingest.
+
+## Host
+
+State: `/var/lib/skynet-market/hunter_breakout.state.json` (`skynet_hunter_breakout_state_v0`). Retained across ticks and restamped; never invent actionable.
+
+## State / settle
+
+Retained BREAKOUT / EXTREME rows stay for the live episode. A symbol flipping GP→BREAKOUT is a new pair and may POST.
+
+## Gates
+
+- GP and SR both failed to pack
+- Close through prior high (long) / low (short), or wait-retest at the anchored level
+- Bypass later-tick CHASE_LONG/CHASE_SHORT still-red/still-green only via the dedicated re-score path — keep spread, MIN_SL, RR
+
+## How Patrick uses it
+
+Wait the retest unless brain independently TAKEs. Do not enable `BITGET_DEMO_ENGINES=BREAKOUT`.
+
+## Decisions that still bind
+
+R:R minimum was lowered from 2.0 to 1.5 because 2.0 emptied `ripe[]`. That is a packer change, not a profitability claim.

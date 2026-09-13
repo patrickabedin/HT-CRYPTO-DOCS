@@ -1,0 +1,41 @@
+---
+title: "Watcher and HOT routing"
+description: "Event detector consumes the shared tape. HOT membership alone is not Scout eligibility."
+---
+
+## What it is
+
+`watcher.py` (host `watcher_shared.py`) is the deterministic Bitget event detector. It consumes shared socket/bars. It does **not** own a Bitget WebSocket.
+
+A USDT-M symbol becomes a Scout candidate only when the drain window has at least one watcher event in `PRICE`, `VOLUME`, `VOLATILITY`, `DERIVATIVES`, `LIQUIDITY`, or `RELATIVE`.
+
+## Clock and size
+
+Always-on `grok-desk-watcher.service`. Debounce 600s. HOT is 40 + runners. `EVENT_RULESET_V1` unchanged.
+
+## Radio
+
+Watcher does not Telegram. Ordinary ticks / HOT-only / ARMED ticks do not re-open Scout.
+
+## Host
+
+Consumer only. Hydrates shared 1m bars. `CONTEXT_ANCHORS` = `BTCUSDT`, `ETHUSDT` may be quoted for health. They are not a candidate gate.
+
+## State / settle
+
+Events persist to `grok_desk.market_events`.
+
+## Gates
+
+- HOT list membership alone is not eligibility
+- Zero-event symbols do not get Scout
+- All families/directions/event_ids for one symbol coalesce into **one** candidate per drain
+- Weekend sat-box `ARMED_SYMS` / `ARMED_BOOK` unchanged
+
+## How Patrick uses it
+
+Discovery is the full eligible Bitget USDT-M set. Static 12-name FOCUS lists are gone (2026-08-29 HOT routing fix).
+
+## Decisions that still bind
+
+Surgical drain fix. Grade A stays 75. Watcher process untouched. Token safety: reject and armed stay `llm_calls=0`. Replay does not Telegram and does not advance the live cursor.

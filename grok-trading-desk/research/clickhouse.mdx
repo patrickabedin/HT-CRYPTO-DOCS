@@ -1,0 +1,38 @@
+---
+title: "ClickHouse"
+description: "Isolated grok_desk database. SKYNET is SELECT-only. Schema lives in the desk repo."
+---
+
+## What it is
+
+Grok Desk uses ClickHouse database `grok_desk`. SKYNET data is **SELECT-only** (`skynet_decisions.evaluations`). No INSERT/UPDATE/DELETE/ALTER on `skynet_*`.
+
+DDL: `schema/clickhouse.sql`, `schema/base_runtime.sql` in [`grok-trading-desk`](https://github.com/patrickabedin/grok-trading-desk).
+
+## Clock and size
+
+Drain, armed watcher, baselines, and research labelers write `grok_desk` only.
+
+## Radio
+
+None.
+
+## Host
+
+Credentials only in the host ClickHouse env file. Do not paste them here.
+
+## State / settle
+
+References to SKYNET prints go to `grok_desk.candidate_source_refs` (`evaluation_id`). Do not copy SKYNET rows as if they were native prints.
+
+## Gates
+
+No JOIN `feature_snapshots`. If SELECT fails, the native path still runs.
+
+## How Patrick uses it
+
+Research and persist. Not a trading venue.
+
+## Decisions that still bind
+
+See [SKYNET read-only adapter](/skynet-sol/read-only-adapter).

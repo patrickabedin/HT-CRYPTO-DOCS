@@ -1,11 +1,11 @@
 ---
 title: "Grok Trading Desk"
-description: "SHADOW Bitget USDT-M intelligence layer. Separate from SKYNET-SOL."
+description: "SHADOW Bitget USDT-M intelligence layer. Separate from SKYNET-SOL. Books, engines, radio, host."
 ---
 
 Grok Trading Desk is the experimental LLM layer: Scout, Qualifier, Risk, Researcher, Telegram. It is **not** SKYNET-SOL.
 
-Code: [`patrickabedin/grok-trading-desk`](https://github.com/patrickabedin/grok-trading-desk).
+Code: [`patrickabedin/grok-trading-desk`](https://github.com/patrickabedin/grok-trading-desk). Dashboard: [grok-trading-desk.vercel.app](https://grok-trading-desk.vercel.app).
 
 <Warning>
   SHADOW / advisory. Never place, cancel, or withdraw **live** exchange orders. Bitget demo paper is opt-in only. Grade A stays **75**. Champion is not auto-promoted.
@@ -17,22 +17,41 @@ Code: [`patrickabedin/grok-trading-desk`](https://github.com/patrickabedin/grok-
 | --- | --- |
 | SKYNET-SOL | Deterministic engines and dashboard. No LLM in live signal, ranking, or risk. |
 | Grok Trading Desk | LLM-assisted cards and research. Isolated `grok_desk` ClickHouse. SKYNET data is SELECT-only. |
+| HT Crypto Docs | This site. All new desk documentation lands here. |
 
 Do not put Grok-specific code in SKYNET-SOL. Do not copy or modify SKYNET engines from the desk repo.
 
-## What lives in the desk repo
+## Books
 
-- Shared Bitget public market-data service
-- Event detector, pipeline router, scout / qualifier / risk helpers
-- Telegram HTML renderer (flood-guarded)
-- Champion / Challenger meta-ranker
-- Researcher jobs and the Vercel PnL calendar
+Parents on this tab match PnL groups and Telegram radio.
 
-## What does not
+| Book | What it is | Default radio |
+| --- | --- | --- |
+| [Grade B](/grok-trading-desk/grade-b) | Score 45–74. Armed book, demo paper. | On (`TELEGRAM_ALLOW=GRADE_B`) |
+| [Grade A](/grok-trading-desk/grade-a) | Score 75+ / A+ 85+. Scout + Champion. | Muted |
+| [Hunter Unique](/grok-trading-desk/hunter-unique) | Brain TAKE + named 5m engines. | Muted (`HUNTER` lane) |
+| [Hunter Tape](/grok-trading-desk/hunter-tape) | Ripe shortlist. Nudge, not TAKE. | Muted |
+| [EARLY](/grok-trading-desk/early) | Independent PUMP / DUMP / GRIND paper. | No TAKE cards |
+| [Scalp and Cherry](/grok-trading-desk/scalp) | Minutes scout in `skynet-scalp`. | Muted |
+| [USELESS](/grok-trading-desk/useless) | One-coin 5m brain + clip. | Muted |
 
-- SKYNET engines, dashboard, or `skynet_*` writes
-- Secrets, bot tokens, API keys
-- Live / automated order execution
+Cross-cutting: [Desk ops](/grok-trading-desk/ops/market-data), [Advisory skills](/grok-trading-desk/advisory/trade-check), [Research](/grok-trading-desk/research/triggered-cf).
+
+## Where to look (names only)
+
+| Place | What |
+| --- | --- |
+| GitHub `main` | Source of truth. No open PRs. |
+| `/opt/grok-trading-desk` | Host checkout. Fast-forward every ~60s. |
+| `/opt/grok-desk` | Copied market-data + watcher runtime. |
+| `/opt/skynet-scalp` | Scalp / Cherry scout (other repo). |
+| `/var/lib/grok-desk` | Desk locks, portfolio, `host_ff.json`. |
+| `/var/lib/skynet-market` | Hunter / scalp / demo / settle state. |
+| `/run/skynet-market` | `md.sock`, `latest.json`, `bars_5m.json`. |
+
+Secrets live in host env files outside git. Do not paste values here.
+
+Confirm the box caught `main` with `host_ff.json` (`fast_forwarded` or `up_to_date`).
 
 ## Hard operating rules
 
@@ -41,6 +60,6 @@ Do not put Grok-specific code in SKYNET-SOL. Do not copy or modify SKYNET engine
 - Only Chief of Staff publishes Telegram
 - Shared Telegram budget: do not bypass `telegram_429_backoff`
 - Land production code on `main`. No open PRs
-- **New docs go in this Mintlify repo**, not under `grok-trading-desk/docs/`
+- **New docs go in this Mintlify repo**, in the same turn as the change
 
-Historical in-repo notes remain under that repo's `docs/` folder as a snapshot.
+Historical in-repo notes remain under `grok-trading-desk/docs/` as a snapshot.

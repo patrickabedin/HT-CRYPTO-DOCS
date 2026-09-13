@@ -1,0 +1,50 @@
+---
+title: "TRIGGERED counterfactual"
+description: "Research-only family B: freeze a plan at TRIGGERED and settle NET R. Not a strategy change."
+---
+
+## What it is
+
+Collects and settles. Does **not** invent win rates. Question for later: are rejects below Grade A — especially scores 20–44 — profitable on a frozen plan? Does existing Grade B (45–74) outperform those bands?
+
+Scripts: `triggered_cf_book.py`, `triggered_cf_scoreboard.py`.
+
+## Clock and size
+
+Armed watcher may settle due plans after the trigger tick. Scoreboard has no Telegram.
+
+## Radio
+
+None.
+
+## Host
+
+No dedicated public timer beyond armed watcher.
+
+## State / settle
+
+Three datasets — do not mix:
+
+| Family | Population | Tables | Use |
+| --- | --- | --- | --- |
+| A | WATCHING / ARMED that never triggered | `opportunity_quality_labels` (`GROK_OQ_V0`) | Forward return / MFE / MAE. Not win-rate |
+| B | Genuine ARMED → TRIGGERED | `triggered_cf_plans` + `triggered_cf_outcomes` (`GROK_TRIGGERED_CF_V0`) | Frozen plan + NET R after costs |
+| C | Live Grade A | `grok_plan_outcomes` (`GROK_PLAN_C_V0`) | Production threshold 75 |
+
+SKYNET reconstructed plans (`GROK_RECONSTRUCTED_V0`) are **not** original SKYNET and are not family B.
+
+## Gates
+
+Freeze **before** Qualifier / Risk / Chief. Future candles dropped. Missing structure → honest `VOID` / `INSUFFICIENT_PLAN`. Every score gets a family-B row or VOID.
+
+Do not compute band win-rate from family A. Do not fold `INSUFFICIENT_PLAN` scout-rejects into family B.
+
+Existing Grade B shadow tracking is **not rebuilt**. SCORE_65_74 joins `grade_b_shadow` on `candidate_id`.
+
+## How Patrick uses it
+
+Research scoreboard only. Grade A stays 75. Champion stays `GROK_META_V1_CHAMPION`.
+
+## Decisions that still bind
+
+Not a live book. No LLM on ticks.

@@ -1,0 +1,39 @@
+---
+title: "Chief publish"
+description: "Only Chief of Staff publishes Telegram. Grade A fire and Grade B cards share the flood guard."
+---
+
+## What it is
+
+`scripts/chief_publish.py` plus `scripts/telegram_html.py`. The only publisher for Grade A and Grade B cards from drain.
+
+## Clock and size
+
+Called from drain / armed-watcher edits. Not a standalone timer.
+
+## Radio
+
+- Grade B kind `grade_b` — default on
+- Grade A `maybe_publish_grade_a` — default muted
+- Symbol+side+setup cooldown 900s on Grade B
+- Every send: `allow_send` → request → `note_send` / `record_from_response`
+
+## Host
+
+Uses the shared Telegram env file on the host. Same bot as Hunter / scalp. Do not add a second bot.
+
+## State / settle
+
+Cooldown file: `/var/lib/grok-desk/grade_b_symbol_cooldown.json`.
+
+## Gates
+
+`TELEGRAM_ALLOW` is the hard mute. Shared budget 8/min, 20/5min. Do not clear the 429 backoff file to force a send.
+
+## How Patrick uses it
+
+If chat is quiet, check flood health before assuming the desk is dead. See [Telegram flood](/grok-trading-desk/ops/telegram-flood) and [Radio](/grok-trading-desk/ops/radio).
+
+## Decisions that still bind
+
+Only Chief publishes. Do not bypass `telegram_429_backoff`. Qualifier / Risk stay short-circuit until Grade A / TRIGGERED paths that already exist — do not loosen them so more cards print.

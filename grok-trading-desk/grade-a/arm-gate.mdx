@@ -1,0 +1,60 @@
+---
+title: "ARM quality gate"
+description: "Only a measured thesis with trigger, invalidation, TTL, and chase may become ARMED_WAITING_FOR_TRIGGER."
+---
+
+## What it is
+
+`scripts/arm_gate.py` plus `scripts/pipeline_router.py`. Four concepts:
+
+| Step | Name | Meaning |
+| --- | --- | --- |
+| A | EVENT | Material watcher `market_event` |
+| B | SETUP FAMILY | Event resembles a named family. Not a trade. |
+| C | TRADE THESIS | Specific LONG/SHORT with measured Bitget facts |
+| D | ARMED SETUP | C plus trigger, invalidation, TTL, chase, entry still available |
+
+Only **D** may become `ARMED_WAITING_FOR_TRIGGER`.
+
+## Clock and size
+
+TTL from `scripts/ttl_policy.py` (`TTL_V0`). Weekday horizons:
+
+- Ignition / expansion / breakout / trap / exhaustion: 6–8h
+- Pullback / reclaim / accumulation / redump / distribution: 10–12h
+- Trend / RS rotation: 16h
+- Funding / crowding / crowded fade: 24h
+
+No scattered `now+18h`.
+
+## Radio
+
+`WATCHING_FOR_STRUCTURE` does not Telegram and does not call an LLM on ticks.
+
+## Host
+
+Runs inside drain. Armed watcher later evaluates D on completed candles.
+
+## State / settle
+
+Missing numbers stay `UNKNOWN`. The generic template `{FAMILY} from watcher families` is not a thesis.
+
+## Gates
+
+All required: family, LONG|SHORT, specific thesis, measured evidence, trigger type/price/condition, invalidation type/price/condition, TTL, do-not-chase boundary, current entry still available.
+
+Family builders are specific:
+
+- `RELATIVE` event ≠ RS vs BTC/ETH (needs 24h fractional change)
+- `LIQUIDITY` event ≠ sweep+reclaim (needs swept 24h extreme + reclaim)
+- Funding event ≠ dislocation (needs the actual Bitget funding rate)
+
+Do not invent prices or funding.
+
+## How Patrick uses it
+
+ARMED on a card means D happened. WATCHING means wait for structure. trade-check on WATCHING / ARMED is **WAIT** until last is at the printed entry.
+
+## Decisions that still bind
+
+2026-08-29: the else-branch that ARMed any non-`NO_SUPPORTED_SETUP` family is gone. Replay BND-20260829-1649 is the evidence. No ARM score cutoff. Grade A stays 75.

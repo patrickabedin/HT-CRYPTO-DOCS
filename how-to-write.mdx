@@ -1,16 +1,78 @@
 ---
 title: "How to write a page"
-description: "MDX layout, docs.json, main-branch publish, and what never to paste."
+description: "Book-to-engine map, the engine section template, docs.json, and what never to paste."
 ---
 
 This site is Mintlify. Pages are MDX. Site config is `docs.json` at the repo root.
+
+Parents are **desk books**. Children are **engines or workers**. Everything you do for an engine is a **fixed section set on that page**, not extra sidebar URLs.
+
+## Book map
+
+| Parent (sidebar group) | Children |
+| --- | --- |
+| Grade B | Armed watcher, setup families, portfolio, fills, demo, flatten, decisions |
+| Grade A | Watcher / HOT, drain, Scout, Champion, ARM gate, chief, decisions |
+| Hunter Unique | Brain, GRAIN_PULLBACK, SWEEP_RECLAIM, BREAKOUT, EXTREME_MOMENTUM, Telegram settle |
+| Hunter Tape | Ripe watch, nudge vs TAKE |
+| EARLY | PUMP, DUMP, GRIND, trade book |
+| Scalp and Cherry | Scalp cards, Cherry, playbook outcomes, host timer |
+| USELESS | Scalp brain, clock, live book, clip GO |
+| Desk ops | Market data, bars, flood, radio, host, dashboard, realtime, risk, health, guard |
+| Advisory | trade-check, hunter-setup, useless-scalp |
+| Research | TRIGGERED CF, ClickHouse, baselines |
+
+A new book becomes a new group under the **Grok Trading Desk** tab. A new engine becomes a new child page under that group.
+
+## Engine page template
+
+Every engine or worker page uses these headings, in this order. Skip a heading only if it cannot apply (then say so).
+
+```mdx
+---
+title: "GRAIN PULLBACK"
+description: "With-grain 5m pullback engine. Ripe packer, not a brain TAKE."
+---
+
+## What it is
+
+One paragraph. Label SHADOW / advisory.
+
+## Clock and size
+
+5m vs 1m. Margin and leverage if the book has a size.
+
+## Radio
+
+Card kind. `TELEGRAM_ALLOW` lane. Muted by default or not.
+
+## Host
+
+Unit name, interval, script path. Names only. No IPs.
+
+## State / settle
+
+State file *names*. Not contents.
+
+## Gates
+
+Cooldown, ARM, grain, spread, flood budget.
+
+## How Patrick uses it
+
+trade-check vs brain vs wait. What not to chase.
+
+## Decisions that still bind
+
+Distilled ADR or rollout. Date the decision.
+```
 
 ## Page file
 
 ```mdx
 ---
-title: "Grade B five-slot book"
-description: "How the five paper slots lock and when they flatten."
+title: "Grade B portfolio"
+description: "Five-slot paper and demo capacity for the Grade B book."
 ---
 
 Lead with the fact. Then the why. Then the constraint.
@@ -20,28 +82,17 @@ Lead with the fact. Then the why. Then the constraint.
 </Warning>
 ```
 
-Put the file next to its system:
+Put the file under its book:
 
 ```
-grok-trading-desk/grade-b-five-slot.mdx
-skynet-sol/findings/your-finding.mdx
-skynet-astra/host-gitops.mdx
-policy/your-policy.mdx
+grok-trading-desk/grade-b/portfolio-book-lock.mdx
+grok-trading-desk/hunter-unique/grain-pullback.mdx
+skynet-sol/read-only-adapter.mdx
 ```
 
 ## Register it
 
-Add the path (no `.mdx`) to `docs.json` navigation:
-
-```json
-{
-  "group": "Grok Trading Desk",
-  "pages": [
-    "grok-trading-desk/index",
-    "grok-trading-desk/grade-b-five-slot"
-  ]
-}
-```
+Add the path (no `.mdx`) to `docs.json` under the matching tab and group. An unlisted file is easy to lose.
 
 ## Publish
 
@@ -60,6 +111,7 @@ Mintlify rebuilds from `main`. Connect the [Mintlify GitHub app](https://dashboa
 - Bold UI labels. Backticks for files, commands, paths, env names.
 - Name the system on first use (Grok Trading Desk, SKYNET-SOL, SKYNET ASTRA).
 - SHADOW / paper / research stays labelled. Do not imply live fills.
+- Card marks already in the product (Grade B, Grade A fire, scalp bolt, cherry) are fine. Do not decorate the rest of the page with emoji.
 
 ## Public-repo checklist
 

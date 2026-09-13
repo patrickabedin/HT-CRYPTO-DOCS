@@ -1,0 +1,47 @@
+---
+title: "Dashboard PnL"
+description: "Vercel UTC calendar. Authoritative rollup from the host. Browser never opens a Bitget socket."
+---
+
+## What it is
+
+Production: [grok-trading-desk.vercel.app](https://grok-trading-desk.vercel.app).
+
+Homepage is the UTC PnL calendar (`web/app/page.tsx`, `web/app/pnl-view.tsx`). Host job `scripts/desk_pnl_early.py` / `scripts/desk_pnl.py` merges settle books and POSTs `/api/ingest`.
+
+Groups: `GRADE_B`, `GRADE_A`, `HUNTER_UNIQUE`, `HUNTER_TAPE`, `CHERRY`, `SCALP`, `DEMO`.
+
+## Clock and size
+
+`grok-desk-pnl.timer` every 60s. Calendar day is UTC close. The UTC clock ticks in the browser and rolls the date at midnight without a network request.
+
+## Radio
+
+None.
+
+## Host
+
+Ingest URL + shared secret live in the host dashboard env file and Vercel project settings. Env **names** only: `DESK_INGEST_SECRET`, `BLOB_READ_WRITE_TOKEN`, `REDIS_URL`.
+
+## State / settle
+
+Vercel Blob is the durable bootstrap store for the full PnL book. Fast marks travel on the realtime socket.
+
+## Gates
+
+Accounting integrity:
+
+- `R` is stop-risk, not a dollar
+- Grade A/B USD only when frozen entry and stop exist
+- Hunter / Cherry / Scalp dollars are simulated signal-book PnL unless `exchange_stamped`
+- Bitget Demo rows stay labeled separately
+- `ALL` and `HUNTER` totals are not combined (overlap / different units)
+- Impossible clocks, missing PnL, unknown funding, duplicate episodes are excluded
+
+## How Patrick uses it
+
+Filter with `?g=` and `?e=` (for example Grade B, or SCALP + USELESS_CLIP_GO). Do not treat simulated books as account equity.
+
+## Decisions that still bind
+
+ASTRA-ACCOUNTING-01: preserve numeric zero; empty candles are DATA_FAILURE; explicit false verification survives rollup; do not turn NO_FILL into a closed trade. See [ASTRA accounting](/skynet-astra/accounting).

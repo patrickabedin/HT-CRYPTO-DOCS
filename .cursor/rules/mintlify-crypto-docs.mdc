@@ -5,9 +5,15 @@ alwaysApply: true
 
 # This repo is the crypto docs home (HARD)
 
-Write all new crypto documentation in this repository. Do not send the
-author to grok-trading-desk, SKYNET-SOL, or skynet-astra `docs/` folders
-to add a new long-form page.
+Write all new crypto documentation in this repository **in the same turn
+as the work**. Do not send the author to grok-trading-desk, SKYNET-SOL,
+or skynet-astra `docs/` folders to add a new long-form page.
+
+Parents are desk books. Children are engines or workers. Everything you
+do for an engine stays on that engine page (see `how-to-write.mdx`).
+
+New engine / book / radio lane → new child page under the right parent,
+registered in `docs.json`.
 
 Add MDX, register it in `docs.json`, push `main`. The repo is public:
 no secrets, tokens, host IPs, or env values.

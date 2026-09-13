@@ -1,0 +1,42 @@
+---
+title: "SHADOW and risk"
+description: "Read-only live key. Demo opt-in paper only. No live place, cancel, or withdraw."
+---
+
+## What it is
+
+Standing risk policy for Grok Trading Desk.
+
+1. Live Bitget key is read-only. Opt-in Bitget **demo** may place paper only. Never a live key.
+2. Equity 0: stop distance, invalidation, R:R only. No invented size.
+3. When funded: 0.5% of mix USDT equity at the stop per trade; max 2.0% simultaneous; max 1.0% one correlated cluster.
+4. CoinGlass off.
+5. Grade A blocked by portfolio is still Grade A — watch only.
+
+## Clock and size
+
+Demo honesty check uses $50 @ 20x. Some hunter-setup projections still print $50 @ 10x — that is a projection label, not a live order.
+
+## Radio
+
+Risk policy does not publish.
+
+## Host
+
+`AUTO_ORDER_EXECUTION` off. `BITGET_DEMO_TRADING=1` only with a Demo API key and `paptrading: 1`.
+
+## State / settle
+
+`scripts/qualifier_states.py` is a SHADOW synthetic state machine. `scripts/circuit_breaker.py` is an LLM-usage breaker, not an exchange flatten.
+
+## Gates
+
+Never place, cancel, or withdraw **live** exchange orders. Agents must not enable live trading to "verify" docs or code.
+
+## How Patrick uses it
+
+Manual decision support. trade-check / brain / USELESS scripts are advisory.
+
+## Decisions that still bind
+
+Grade A threshold 75. Champion not auto-promoted. Secrets stay in env files outside git.

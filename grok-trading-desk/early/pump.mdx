@@ -1,0 +1,43 @@
+---
+title: "EARLY PUMP"
+description: "First expanding 5m bar up. Range, volume, new high, takers agree. Not bar 3 of a finished move."
+---
+
+## What it is
+
+`scripts/early_impulse.py` (`ENGINE_EARLY_PUMP`). Join as the move starts.
+
+A move is BUILDING when all four line up on the **5m** clock (not 1m):
+
+1. Range expands: this 5m (high-low)/low > previous 5m range × **1.15**
+2. Volume expands: this 5m quote volume > previous × **1.25**
+3. New extreme: last > previous 5m high
+4. Takers agree if the quote has them; otherwise green bar (close > open)
+
+## Clock and size
+
+Need at least 3 completed-or-current 5m bars. Previous 5m already expanded the same way → late / chase → skip.
+
+## Radio
+
+No Hunter TAKE. Independent paper via [trade book](/grok-trading-desk/early/trade-book).
+
+## Host
+
+Detected during ripe scan; settled by `grok-early-trade-book.timer`.
+
+## State / settle
+
+`EARLY_TRADE_SETTLE_PATH`. Health cadence 60s.
+
+## Gates
+
+Both range **and** volume must expand. One-axis explosion is not PUMP (and is NO SIGNAL for GRIND).
+
+## How Patrick uses it
+
+First expanding bar only. Do not chase bar 3.
+
+## Decisions that still bind
+
+PUMP owns the setup only when the complete expansion rule qualifies.

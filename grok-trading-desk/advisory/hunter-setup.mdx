@@ -1,0 +1,48 @@
+---
+title: "hunter-setup"
+description: "On-demand Hunter BRAIN on this Cursor account. Same script as the host timer. TAKE / SILENT."
+---
+
+## What it is
+
+`.cursor/skills/hunter-setup` runs `scripts/hunter_brain.py --no-publish`. Same brain as [Hunter BRAIN](/grok-trading-desk/hunter-unique/brain).
+
+Host ripe / engine prints are a shortlist only — never rubber-stamp them as TAKE.
+
+## Clock and size
+
+On demand in chat. Host automation is `grok-hunter-brain.timer` (60s) when you want Telegram TAKE.
+
+## Radio
+
+Chat: no publish. Host: TAKE only, lane `HUNTER`.
+
+## Host
+
+Optional. Chat does not require the timer.
+
+```text
+/hunter-setup
+@hunter-setup
+```
+
+```bash
+python3 scripts/hunter_brain.py --no-publish
+python3 scripts/hunter_brain.py --symbol SOLUSDT --no-publish
+```
+
+## State / settle
+
+None from the chat path.
+
+## Gates
+
+Own structure + trade_check ENTER. Ripe levels ignored.
+
+## How Patrick uses it
+
+"Find me a setup" / brain path. Prefer this over spraying deterministic Telegram alerts.
+
+## Decisions that still bind
+
+Personal Cursor account. Do not bounce to the Grok Bot login.

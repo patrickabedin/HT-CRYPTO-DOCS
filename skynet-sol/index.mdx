@@ -15,7 +15,9 @@ Code: [`patrickabedin/SKYNET-SOL`](https://github.com/patrickabedin/SKYNET-SOL).
 
 - Do not put Grok-specific code here.
 - Do not treat research findings as admit / lock / exit authority.
-- Before Teal / TREND live-copy, snapshot, paper-clock, or orch place/skip/flatten work, read the in-repo armed digest `docs/findings/teal-rules.md` first. Write every new armed rule there **and** on this Mintlify site.
+- Before Teal / TREND live-copy, snapshot, paper-clock, or orch place/skip/flatten work, read the in-repo armed digest `docs/findings/teal-rules.md` first. Write every new armed rule there **and** on [Teal rules](/skynet-sol/teal-rules).
+
+Grok Desk may **SELECT** SKYNET evaluations. It may not write SKYNET. Details: [Read-only adapter](/skynet-sol/read-only-adapter).
 
 ## What to document here
 
@@ -23,6 +25,7 @@ Code: [`patrickabedin/SKYNET-SOL`](https://github.com/patrickabedin/SKYNET-SOL).
 - Runbooks and owner handoffs
 - Durable research findings (still-paper, too-early, measurement judgments)
 - New live-copy rules (copy the armed row here after writing `teal-rules.md`)
+- Deep engine pages — add them in this tab when you are working in the SOL repo, same book → engine template
 
 ## What stays in the monorepo
 
@@ -31,3 +34,10 @@ Code: [`patrickabedin/SKYNET-SOL`](https://github.com/patrickabedin/SKYNET-SOL).
 - Secrets and host access notes that cannot go on a public site
 
 Existing `docs/` trees in SKYNET-SOL are historical unless an agent is updating `teal-rules.md` or an iteration log.
+
+## Shared with the desk (do not duplicate engines)
+
+- Same recovery host
+- Same ClickHouse install; isolated `grok_desk`
+- Shared public market-data socket
+- Private state consumed by the desk guard book and playbook outcomes

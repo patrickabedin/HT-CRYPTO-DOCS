@@ -1,0 +1,40 @@
+---
+title: "Flatten"
+description: "Confirmed dashboard FLATTEN for Grade B paper and demo. Shares the admission lock. Not a test button."
+---
+
+## What it is
+
+Dashboard FLATTEN (`web/lib/flatten.ts`, `scripts/desk_flatten.py`, `scripts/flatten_grade_b_paper.py`) pauses new Grade B entries and closes what it can at observed prices.
+
+## Clock and size
+
+Shares `armed-watcher.lock` with admission. Pauses new entries for **15 minutes**. Cancels pre-flatten armed signals. Blocks replayed demo copies.
+
+Missing-price positions remain open. An incomplete close or calendar refresh is reported as an error.
+
+## Radio
+
+No test Telegram. Do not send flatten announcements as a new publisher.
+
+## Host
+
+Realtime service must be running so the button talks to the worker. Do not restart `grok-market-data` to test flatten.
+
+## State / settle
+
+Pause file lives next to the portfolio journal. Demo reconciliation follows acknowledged paper closes.
+
+## Gates
+
+- Button requires confirmation
+- Live orders are never in scope
+- Agents must not press FLATTEN for testing
+
+## How Patrick uses it
+
+Human kill switch for the paper/demo book. After flatten, wait out the 15-minute pause before expecting new admissions.
+
+## Decisions that still bind
+
+Do not press FLATTEN just to exercise current positions. Report remaining paper/demo counts from state files, not from a forced flatten.

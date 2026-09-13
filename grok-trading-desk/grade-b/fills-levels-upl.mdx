@@ -1,0 +1,40 @@
+---
+title: "Fills, levels, and UPL"
+description: "Grade B fill truth, level stamps, and unrealized PnL alerts. Paper vs Bitget demo stay separate."
+---
+
+## What it is
+
+`scripts/grade_b_fills.py` is fill truth for the Grade B book. `scripts/grade_b_levels.py` stamps plan levels. `scripts/grade_b_upl_alert.py` alerts on open unrealized PnL.
+
+Paper (ClickHouse / counterfactual) and Bitget demo USDT are different calendars. Open uPnL is not realized PnL.
+
+## Clock and size
+
+Levels come from the frozen TRIGGERED plan. Paper closes deduct estimated trading fees. They do not model funding or execution slippage. Demo fills can differ.
+
+`R` is stop-risk. Grade A/B USD on the dashboard appears only when the rollup has frozen entry and stop and stamps that risk on the book's notional.
+
+## Radio
+
+UPL alerts still go through the shared flood guard. Do not add a side channel.
+
+## Host
+
+Called from armed watcher, demo trader, and PnL rollup. No dedicated public timer name beyond those workers.
+
+## State / settle
+
+Open-plan cache keeps unresolved positions (no silent 7-day drop). Plan versions stay in the cache for settlement attribution.
+
+## Gates
+
+Impossible clocks, missing PnL, unknown required funding, or duplicate setup episodes are excluded from the desk calendar and counted in metadata.
+
+## How Patrick uses it
+
+`/?g=GRADE_B` shows paper vs Bitget demo. `/?g=DEMO` is demo-only. Do not invent `1R = $50`.
+
+## Decisions that still bind
+
+Counterfactual Grade B settlements use the plan's stamped TP allocations (normally 30% / 40% / 30%), mark remaining size at expiry, and use the net result — not the outcome label — for W/L.

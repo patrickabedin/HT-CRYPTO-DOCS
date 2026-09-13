@@ -1,0 +1,46 @@
+---
+title: "Engine health"
+description: "STALE vs DEAD vs ALIVE-but-quiet for supervised SHADOW engines. Not a strategy."
+---
+
+## What it is
+
+`scripts/engine_health.py` + `scripts/engine_health_runner.py`. Read/classify side for the live lane and PnL rollup. Zero strategy. Zero orders.
+
+Schema: `grok_engine_health_v1`. State: `/var/lib/skynet-market/engine_health.json`.
+
+## Clock and size
+
+Expected cadence:
+
+| Engine | Cadence |
+| --- | --- |
+| `USELESS_SCALP_BRAIN` | 30s |
+| `USELESS_CLIP_GO` | 30s |
+| `EARLY_PUMP` / `EARLY_DUMP` / `EARLY_GRIND` | 60s |
+
+STALE = several missed runs (`STALE_MULT=3`). DEAD = sustained loss (`DEAD_MULT=10`). One delayed tick is not STALE.
+
+## Radio
+
+None.
+
+## Host
+
+Wrapped onto hunter / useless / clip timers. Not a reason to restart market-data.
+
+## State / settle
+
+No credentials in persisted health payloads.
+
+## Gates
+
+Zero settled trades does not mean an EARLY engine is "only a nudge." It means no qualifying signal or you must read health (ALIVE-but-quiet vs STALE/DEAD).
+
+## How Patrick uses it
+
+Check health before claiming an engine is off. See [EARLY](/grok-trading-desk/early).
+
+## Decisions that still bind
+
+ADR 2026-09-06: EARLY engines are independent trade-producing books. Health exists to tell silence from death.

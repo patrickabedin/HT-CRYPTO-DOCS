@@ -1,0 +1,43 @@
+---
+title: "useless-scalp skill"
+description: "How the USELESS enter / exit / hold skill works. Live verdicts are not docs pages."
+---
+
+## What it is
+
+`.cursor/skills/useless-scalp` and the always-on rule. Same size every time: **$50 margin @ 20x**. Clock is the **5m chart**.
+
+```bash
+python3 scripts/useless_scalp.py
+python3 scripts/useless_scalp.py --side LONG --entry <entry> --stop <stop>
+```
+
+First line: `ENTER` / `WAIT` / `SKIP` / `EXIT` / `HOLD`.
+
+## Clock and size
+
+5m brain. 2% is the default take / exit label, not a scout veto. Not 1m. Not a now-fill.
+
+## Radio
+
+Chat does not `--publish`.
+
+## Host
+
+`grok-useless-scalp.timer` and `grok-useless-clock.service` are the 24/7 path. See [USELESS](/grok-trading-desk/useless).
+
+## State / settle
+
+None from chat.
+
+## Gates
+
+Same as the scalp-brain script. If he pasted a Hunter / Grade A/B / Scalp card for another coin, use trade-check instead.
+
+## How Patrick uses it
+
+Do not explore the repo. Do not plan features. Reply with the script's first line first.
+
+## Decisions that still bind
+
+SHADOW / advisory only.

@@ -1,0 +1,54 @@
+---
+title: "trade-check"
+description: "How the ENTER / SKIP / WAIT skill works. Not a place to log a live timing call."
+---
+
+## What it is
+
+`scripts/trade_check.py` plus `.cursor/skills/trade-check` and the always-on rule. Paste a Telegram / Hunter / Grade A/B / Scalp card (or type levels) and get **ENTER** / **SKIP** / **WAIT** on the first line.
+
+This page documents the tool. A live paste is **not** documentation.
+
+## Clock and size
+
+Seconds. Checks **now** vs the printed card, not the print time. No host timer.
+
+## Radio
+
+None. Advisory only.
+
+## Host
+
+None. Run on the personal Cursor account, not the Grok Bot login.
+
+```bash
+python3 scripts/trade_check.py --text '<pasted card>'
+python3 scripts/trade_check.py --symbol SOLUSDT --side LONG --entry 103.4 --stop 101.12 --tp 106.82
+```
+
+## State / settle
+
+May read host sidecars when present (`market_context.json`, open private / guard_book symbols).
+
+## Gates
+
+- Last vs entry (in zone / waiting / chased)
+- Last through stop or TP
+- R:R still ≥ 1.5
+- Spread: skip ≥ 10 bps wide, ≥ 80 bps untradeable
+- Card lifecycle: MISSED / EXPIRED / INVALIDATED / WAIT / ARMED
+- Advisory grain: COUNTERTREND / EXTREME MARKET RISK → SKIP
+
+**ENTER** — last at the printed entry, R:R ≥ 1.5, not chased, not through stop/TP, not countertrend / extreme risk.
+
+**SKIP** — dead, chased, invalidated, missed, through levels, wide book, already open, or against grain.
+
+**WAIT** — setup still valid but last is not at entry, or card is READY/ARMED. Do not chase.
+
+## How Patrick uses it
+
+Do not explore the repo. Do not re-implement. First line of the reply is the verdict.
+
+## Decisions that still bind
+
+SHADOW. Never place, cancel, or withdraw orders. If Patrick asked to change desk code, do the engineering work — do not treat a coding request as ENTER/SKIP.

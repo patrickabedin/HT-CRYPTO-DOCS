@@ -1,0 +1,50 @@
+---
+title: "Portfolio and book lock"
+description: "Five-slot Grade B capacity, ranking, giveback, and daily lock. Paper and demo share seats."
+---
+
+## What it is
+
+`scripts/grade_b_portfolio.py` and `scripts/grade_b_book_lock.py` bound how many Grade B names can be open at once. Discovery stays broad. Admission is ranked and capped.
+
+Policy name: `GRADE_B_PORTFOLIO_V1`.
+
+## Clock and size
+
+Admission runs on the armed-watcher cycle inside the shared lock. Paper exits:
+
+- Stop or TP1 at an observed valid price
+- Two-hour holding limit
+- 30-minute stall if the trade never reached +0.25R
+- 50% giveback after reaching +1R
+
+Quote outages delay settlement. They do not invent a fill.
+
+## Radio
+
+Measured pre-selection candidates do not publish entry cards. Selected measured alerts use the frozen plan.
+
+## Host
+
+Same process as the armed watcher. No extra timer. State: `/var/lib/grok-desk/grade_b_portfolio.json` and `.pause.json`. Do not delete them during a rollout — the journal prevents replay.
+
+## State / settle
+
+Paper closes persist to ClickHouse and the portfolio journal. Demo reconciliation follows acknowledged paper closes, never an empty or stale cache.
+
+## Gates
+
+- At most five candidate positions across open Grade B paper **and** tracked/unmatched demo
+- One position per coin
+- At most three in one direction and two per engine
+- Rank by existing score, then estimated after-fee TP1 reward/risk, then earlier arm timestamp and stable ID
+- Stale or missing demo state blocks new paper admission when demo trading is enabled
+- An old unlimited `BITGET_DEMO_MAX_OPEN` cannot bypass five
+
+## How Patrick uses it
+
+Empty slots are allowed. This is a priority policy, not a win-rate claim. Do not mix the old unlimited book into a claim about five-slot performance.
+
+## Decisions that still bind
+
+2026-09-10 five-slot rollout: migrate excess positions, do not hide them. Preserve up to five demo-linked IDs first, then oldest paper. Paper closes at most 25 positions per cycle at observed prices. Dashboard must see worker policy metadata before claiming the five-slot policy is live.

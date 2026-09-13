@@ -1,0 +1,42 @@
+---
+title: "ASTRA quote order"
+description: "A delayed REST universe snapshot must not replace a newer WebSocket receipt."
+---
+
+## What it is
+
+Checkpoint ASTRA quote ordering 02 (2026-09-12). Shared collector: prevent a delayed universe REST snapshot from replacing a newer WebSocket receipt.
+
+Implementation: share a receipt-order guard between REST refresh and WebSocket apply, compare/mutate under the existing RLock, keep publisher enqueue outside the lock. No new exchange request.
+
+Startup follow-up: initial REST universe/history warmup used to precede the ticker WebSocket, leaving quotes unavailable for several minutes. Bounded follow-up starts ticker/ping/health before history warmup using only a recent cached symbol list (no old prices). Removes synchronous REST ticker fetching from the WebSocket on-open callback.
+
+## Clock and size
+
+Preserve transport, subscriptions, candle logic, thresholds, and demo-only execution.
+
+## Radio
+
+None.
+
+## Host
+
+A controlled collector restart is necessary to load Python changes. Retain source rollback. Verify reconnection, per-symbol receipt age, and consumers afterward. Do not request credentials.
+
+## State / settle
+
+ASTRA paper unknowns from earlier observation gaps are preserved rather than rewritten.
+
+## Gates
+
+Test: fresh WebSocket update during hydration, late ticker rejection, ordinary newer receipt acceptance, cache validity/cap, early ticker startup, nonblocking on-open.
+
+Periodic universe/candle workers stay behind initial history warmup to avoid duplicate repairs.
+
+## How Patrick uses it
+
+Per-symbol freshness checks still matter even when the feed looks "up."
+
+## Decisions that still bind
+
+Does not resolve all CPU contention. Does not recover past missing paper outcomes. Does not promise bounded completion for historical backfill.

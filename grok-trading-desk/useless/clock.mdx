@@ -1,0 +1,40 @@
+---
+title: "USELESS clock"
+description: "Always-on 1s SHADOW monitor on md.sock. Not a Telegram publisher. Not a 1m strategy."
+---
+
+## What it is
+
+`scripts/useless_clock.py`. Persistent monitor because a Cursor chat cannot sit on the book in real time.
+
+Consumes existing `md.sock` ticks + Valkey / `bars_5m.json` only. No Bitget REST/WS in the loop.
+
+## Clock and size
+
+`grok-useless-clock.service` (`Type=simple`, `Restart=always`). Interval 1s (`USELESS_CLOCK_INTERVAL_S=1`).
+
+Commands: `start` (idempotent), `stop`, `status`, `once`, `run`.
+
+## Radio
+
+Telegram muted by default. Transitions only when unmuted. New short-burst observations never silently become ENTER alerts.
+
+## Host
+
+State: `/var/lib/skynet-market/useless_clock.json`.
+
+## State / settle
+
+Research path `scalp_forecast.py` (`scalp_burst_v1`) is separately versioned SHADOW research: 5s/15s progress, not a strategy promotion. Displayed separately from GO.
+
+## Gates
+
+Shared data-quality checks remain mandatory. Unknown costs → CONFIGURATION REQUIRED. Supported research loss is >$0 and <$50 across both margin configurations.
+
+## How Patrick uses it
+
+Clock for timing. Brain on 5m for ENTER. Stop any leftover Cursor minute-poll outside this repo — changing code cannot delete that session task.
+
+## Decisions that still bind
+
+ADR 2026-09-07. No changes to Grade A/B, Champion, SKYNET, private positions, exchange orders, or Wave 9. Shared tick protocol does not provide aggressor-side flow — do not claim absorption from static book imbalance.

@@ -1,0 +1,37 @@
+---
+title: "Scalp and Cherry"
+description: "Minutes-timeframe scout in skynet-scalp. Radio muted by default. Do not mix into Grade A scoring."
+---
+
+Scalp / Cherry live in **`skynet-scalp`** on the host (`/opt/skynet-scalp`), not in the grok-trading-desk git tree. This desk repo holds the flood-guard wrapper, playbook outcomes, and PnL group labels.
+
+<Warning>
+  The 2026-09-06 Telegram mute started here. Keep `SCALP` off the radio unless Patrick asks.
+</Warning>
+
+## What it is
+
+⚡ SCALP and 🍒 CHERRY PICKER cards from shared 1m volume. Size on cards is typically $50 @ 10x. Desk PnL group `SCALP` / `CHERRY`.
+
+## Clock and size
+
+Host `grok-scalp-telegram.timer` (not in this repo's `deploy/`). Wrapper: `deploy/host/run_scalp_telegram.sh`.
+
+## Radio
+
+Lane `SCALP`. Also needs `SCALP_TELEGRAM=1`. Default muted. Runner still refreshes `market_context.json` while muted.
+
+## Children
+
+- [Scalp cards](/grok-trading-desk/scalp/scalp-cards)
+- [Cherry](/grok-trading-desk/scalp/cherry)
+- [Playbook outcomes](/grok-trading-desk/scalp/playbook-outcomes)
+- [Host timer](/grok-trading-desk/scalp/host-timer)
+
+## How Patrick uses it
+
+Paste a scalp card into trade-check. Do not unmute to debug Grade B.
+
+## Decisions that still bind
+
+Do not mix scalp firehose into Grade A scoring. Do not retune Cherry without settled outcome evidence (market-context ADR).

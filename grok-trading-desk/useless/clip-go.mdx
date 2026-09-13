@@ -1,0 +1,45 @@
+---
+title: "USELESS clip GO"
+description: "Same 5m brain. $100 margin at 20x. Clip about +$20 (1.1%). Paper engine USELESS_CLIP_GO."
+---
+
+## What it is
+
+`scripts/clip_scalp.py` + `scripts/clip_live_book.py`. Same 5m GO. Different size and take. Not a Hunter ripe detector.
+
+Booked as a human clip session (Athens, 2026-09-05): many +$20 clips, not one swing TP. Do not copy that session's fill table here as a live claim.
+
+## Clock and size
+
+- $100 margin @ 20x (~$2000 notional)
+- Clip TP = entry × 1.011 (LONG) or × 0.989 (SHORT) ≈ +$20 after fees
+- Optional extra to 2% (~+$40) only if the first expansion is still going
+- `grok-clip-live-book.timer` 30s
+
+## Radio
+
+Muted. Calendar: `/?g=SCALP&e=USELESS_CLIP_GO`.
+
+## Host
+
+`CLIP_SETTLE_PATH`, `USELESS_CLIP_GO`. Replay: `scripts/clip_scalp_replay.py` (one REST 5m pull or `--bars` fixture — no new websocket).
+
+## State / settle
+
+Live paper reads Valkey / `bars_5m.json`.
+
+## Gates
+
+Why the first clip book bled: do not GO on a 5m that closed against the side; flatten a coil only when last is still sitting (≤0.4%); exit an opposing expansion at that bar's **close** (the former open-price rule used future information); after a banked clip skip 3 bars (15m); after a stop skip 6 bars (30m).
+
+Script `WAIT` = TAKE but `hot_5m_bar` / `climax_5m_bar` / `no_pullback` / `wait_5m`. GO only on ENTER. Good fills are limits on a pullback, not market last on a hot/climax 5m.
+
+## How Patrick uses it
+
+Run both sides every ping. GO a side only when script ENTER and that side is ~80%+. In a fill, pass **his** numbers into `--side --entry --stop --tp`. Two scores: this-fill vs flat scout — never quote scout 70% as this fill.
+
+Coil: 10 minutes of one 5m with no expansion = no clip. A swing stop that can wipe the day is a human flatten call.
+
+## Decisions that still bind
+
+Same 5m brain. Do not invent a new detector. Do not rewrite Hunter.

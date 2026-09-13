@@ -1,0 +1,46 @@
+---
+title: "Grade A"
+description: "Score 75+ (A+ 85+). Watcher, drain, Scout, Champion. Radio muted by default."
+---
+
+Grade A is the high band of the Scout / Champion path. Threshold **75**. A+ is **85+**. Raw Scout V1.4 component caps sum to 74; a bounded confluence bridge at the Champion layer can turn 74 into 75. Do not lower the threshold to hit a quota.
+
+<Warning>
+  SHADOW / advisory. Grade A stays off Bitget demo. Radio lane `GRADE_A` is muted unless Patrick unmutes it.
+</Warning>
+
+## What it is
+
+Watcher events → drain cycle → Scout score → Champion rank → ARM gate. Qualifier / Risk / Chief only run on the live path after a real ARM / trigger. Most prints stay Grade F/B. That is OK.
+
+## Clock and size
+
+Drain every 60s. Scoring is local code, not an LLM. Size is not invented when equity is 0 — stop distance, invalidation, and R:R only.
+
+## Radio
+
+- Card: Grade A fire (🔥) via `maybe_publish_grade_a`
+- Lane: `GRADE_A` — **muted by default**
+- Still flood-guarded if unmuted
+
+## Host
+
+| Unit | Interval | Script |
+| --- | --- | --- |
+| `grok-desk-watcher.service` | always | watcher consumer |
+| `grok-desk-drain.timer` | 60s | `runtime_cycle_shared.py` |
+| `grok-desk-baselines.timer` | 6h | `build_predictive_baselines.py` |
+
+## Workers
+
+- [Watcher and HOT routing](/grok-trading-desk/grade-a/watcher-hot-routing)
+- [Drain cycle](/grok-trading-desk/grade-a/drain-cycle)
+- [Scout](/grok-trading-desk/grade-a/scout)
+- [Champion](/grok-trading-desk/grade-a/champion)
+- [ARM gate](/grok-trading-desk/grade-a/arm-gate)
+- [Chief publish](/grok-trading-desk/grade-a/chief-publish)
+- [Decisions](/grok-trading-desk/grade-a/decisions)
+
+## How Patrick uses it
+
+Grade A blocked by portfolio is still Grade A — watch only. Paste the card into trade-check. Do not chase.

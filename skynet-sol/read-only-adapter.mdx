@@ -1,0 +1,49 @@
+---
+title: "Read-only adapter"
+description: "Grok Desk may SELECT skynet_decisions.evaluations. It may not write SKYNET."
+---
+
+## What it is
+
+Desk adapter policy. Canonical print: `skynet_decisions.evaluations.evaluation_id`.
+
+Desk helpers: `scripts/skynet_counterfactual_labeler.py`, drain + `setup_families.py` tags `GROK_SKYNET` / `SKYNET_DERIVED`.
+
+## Clock and size
+
+Per drain SELECT. One coalesced SKYNET print per symbol per drain.
+
+## Radio
+
+SKYNET-originated candidates still follow Grok Grade / ARM / radio rules. Never auto-ARM from DETECTED alone.
+
+## Host
+
+ClickHouse credentials stay in the desk env file. `SKYNET_PRIVATE_STATE` (path name `/run/skynet-private/latest.json`) is consumed by guard book, playbook outcomes, and demo trader.
+
+## State / settle
+
+Store a reference in `grok_desk.candidate_source_refs`. Attribution export: `scripts/real_intel_candidate_sidecar.py`.
+
+## Gates
+
+Allowed:
+
+- `SELECT` from `skynet_decisions.evaluations` (evaluation_id, engine_id, decision, observed_at, raw_features_json, regime_json)
+
+Forbidden:
+
+- INSERT / UPDATE / DELETE / ALTER on any `skynet_*` database
+- JOIN `feature_snapshots`
+- Copying SKYNET rows into Grok tables as if they were native prints
+- Reconstructing a missing original SKYNET entry/stop/tp/TTL and pretending it was the plan
+
+Family B learning is LIMITED: only when a real original plan exists.
+
+## How Patrick uses it
+
+Grok classifies the live quote independently even when SKYNET originated the candidate.
+
+## Decisions that still bind
+
+`DETECTED` is enough to SELECT; `ACTIONABLE` is not required. If SELECT fails, native path still runs.

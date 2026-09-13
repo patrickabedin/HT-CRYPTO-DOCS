@@ -23,12 +23,14 @@ Push `main`. Mintlify deploys from the default branch after the [GitHub app](htt
 
 ## Layout
 
+Parents are desk books (Grade B, Grade A, Hunter Unique, Hunter Tape, EARLY, Scalp, USELESS, Desk ops, Advisory, Research). Children are engines or workers. See `how-to-write.mdx`.
+
 ```
-index.mdx                      Home
-policy/document-on-mintlify.mdx   The hard rule
-how-to-write.mdx               How agents add a page
-grok-trading-desk/             Desk pages
-skynet-sol/                    SOL pages
-skynet-astra/                  Astra pages
-docs.json                      Navigation and site settings
+index.mdx                         Home
+policy/document-on-mintlify.mdx    Same-turn hard rule
+how-to-write.mdx                  Book map + engine template
+grok-trading-desk/                Desk books and engines
+skynet-sol/                       SOL boundary + adapter
+skynet-astra/                     Astra + shared-stack checkpoints
+docs.json                         Tabs, groups, site settings
 ```

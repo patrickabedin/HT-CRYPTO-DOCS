@@ -1,0 +1,38 @@
+---
+title: "Realtime marks"
+description: "Host pushes grok_desk_live_v1 frames. Vercel fans out over Redis. Browser does not poll."
+---
+
+## What it is
+
+`scripts/desk_realtime.py` reads shared `latest.json` plus Hunter/demo state and sends `grok_desk_live_v1` to `/api/realtime`. Vercel WebSocket Functions fan out through Redis.
+
+Open Last, uPnL, open counts, and early-engine marks update from the fast stream (default 1s, change-only, 20s heartbeat). Full `grok_desk_pnl_v0` rollups still come from the PnL job; when a new rollup lands, Monthly / Today / engine totals / W/L / `n` recompute without a page refresh.
+
+## Clock and size
+
+Always-on `grok-desk-realtime.service`.
+
+## Radio
+
+None.
+
+## Host
+
+Realtime URL is derived from the ingest URL unless overridden. Do not point `REDIS_URL` at the trading-host Valkey.
+
+## State / settle
+
+Read-only on host state files. No Bitget socket in the browser. No `router.refresh()` / interval HTTP polling for live data.
+
+## Gates
+
+Exactly one upstream Bitget public WS: `grok-market-data`. Do not expose host Valkey or create a second exchange feed for the UI.
+
+## How Patrick uses it
+
+If marks freeze but the calendar still updates, the realtime publisher or Redis fan-out is the suspect — not Scout.
+
+## Decisions that still bind
+
+Local websocket dev uses `vercel dev`, not plain `next dev`.

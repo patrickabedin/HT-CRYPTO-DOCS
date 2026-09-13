@@ -1,0 +1,31 @@
+---
+title: "Hunter Tape"
+description: "Ripe shortlist and TAPE cards. Nudge, not TAKE. EARLY names belong to the EARLY book."
+---
+
+Hunter Tape is the always-on packer book. It is cheap structure on shared 5m bars. It is **not** the brain product.
+
+## What it is
+
+`scripts/hunter_ripe_watch.py` scans GRAIN_PULLBACK, SWEEP_RECLAIM, BREAKOUT, EXTREME_MOMENTUM, and EARLY_* . Writes ripe state. May POST `ripe_changed`. Telegram TAPE is optional and muted by default.
+
+## Clock and size
+
+60s ripe timer. Extreme path on `market_context.json` change. 5m bars from Valkey / `bars_5m.json`.
+
+## Radio
+
+Lane `HUNTER`, muted by default. TAPE cards are shortlist. Brain TAKEs live under [Hunter Unique](/grok-trading-desk/hunter-unique).
+
+## Host
+
+`grok-hunter-ripe.timer`. Lock: `/var/lib/grok-desk/hunter-ripe.lock`. Lean host copy may exist under `deploy/host/` — canonical watcher is this repo's script.
+
+## Children
+
+- [Ripe watch](/grok-trading-desk/hunter-tape/ripe-watch)
+- [Nudge vs TAKE](/grok-trading-desk/hunter-tape/nudge-vs-take)
+
+## How Patrick uses it
+
+Use tape as a wake list. Run brain for TAKE. EARLY paper PnL is the [EARLY book](/grok-trading-desk/early), even when the detector row still says `nudge_only`.

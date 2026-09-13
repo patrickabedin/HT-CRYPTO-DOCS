@@ -1,0 +1,38 @@
+---
+title: "Drain cycle"
+description: "60s runtime cycle: bundle watcher events, Scout, Champion, persist, optionally publish."
+---
+
+## What it is
+
+`scripts/runtime_cycle_shared.py` → `runtime_cycle.py` → `event_drain.py`. Host-native scoring. Grok Bot auto-review is not required to keep scoring alive.
+
+## Clock and size
+
+`grok-desk-drain.timer` every 60s. `flock` prevents overlapping runs. The wrapper remaps historical paths to `/var/lib/grok-desk` and disables the old in-process armed-watcher hook.
+
+## Radio
+
+Grade B publishes through chief when the lane is on. Grade A publish is muted by default. Replay persists with `test=True` and does not Telegram.
+
+## Host
+
+`grok-desk-drain.service` + `.timer`. Loads ClickHouse env from the host env file (values stay off this site).
+
+## State / settle
+
+`scripts/drain_persist.py` writes `grok_desk`. Real Intel sidecar (`scripts/real_intel_candidate_sidecar.py`) may export delivered Grade A/B cards for SKYNET-SOL attribution.
+
+## Gates
+
+- Material watcher event required to open Scout
+- `WATCHING_FOR_STRUCTURE` and reject stop the live pipeline (no Qualifier / Risk / LLM on ticks)
+- SKYNET SELECT-only; if SELECT fails, native path still runs
+
+## How Patrick uses it
+
+This is the 60s heartbeat of Grade A/B scoring. Confirm `host_ff.json` after a `main` push before assuming a drain change is live.
+
+## Decisions that still bind
+
+One coalesced SKYNET print per symbol per drain. Never write SKYNET. Never JOIN `feature_snapshots`.

@@ -1,0 +1,40 @@
+---
+title: "Guard book"
+description: "0-LLM watcher on private-position events. Exit-class posts only. Not a pre-entry scout."
+---
+
+## What it is
+
+`scripts/guard_book_watch.py`. Watches private-position dumps. No REST. No `md.sock`. No orders. Not the public pre-entry watcher.
+
+## Clock and size
+
+`grok-guard-book.timer` every 20s. Heartbeat every 600s when the book is non-empty and not in quiet hours.
+
+## Radio
+
+POST kinds: `swing_break`, `stop_through`, `grain_flip`, `heartbeat` only.
+
+`opened` / `closed` may be written to `guard_book.json` events, never POSTed. `size_changed` is file-only.
+
+Quiet hours Europe/Athens 00:00–07:00: POST only `stop_through` + `swing_break`. No heartbeat overnight.
+
+## Host
+
+State: `GUARD_BOOK_PATH` / private state under `/run/skynet-private/latest.json`. Never log webhook URL or key.
+
+## State / settle
+
+First run seeds `events: []` (no fake OPEN). Debounce `stop_through` then `swing_break`: once per symbol until last reclaims the swing or the name closes.
+
+## Gates
+
+Keep last POST-worthy events (`last_unacked`) when this tick has none. POST only **new** postable events this tick.
+
+## How Patrick uses it
+
+Open-trade guard, not a new entry card. Grade A stays 75. Manual-take path stays untouched.
+
+## Decisions that still bind
+
+Canonical open-position observation belongs to SKYNET-SOL private ingest. Do not invent a substitute trade-monitor in the desk repo.

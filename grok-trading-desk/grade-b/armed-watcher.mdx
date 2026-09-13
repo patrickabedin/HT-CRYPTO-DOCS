@@ -1,0 +1,43 @@
+---
+title: "Armed watcher"
+description: "Independent 60s timer that turns ARMED_WAITING_FOR_TRIGGER into TRIGGERED on completed candles."
+---
+
+## What it is
+
+Deterministic worker that re-checks armed Grade B (and Grade A armed) setups even when the drain did not see a new watcher event. Zero LLM. Timeframe-qualified triggers such as `15m close > level` use the last **completed** candle.
+
+Script: `scripts/armed_watcher_shared.py` → `armed_watcher_v13.py`.
+
+## Clock and size
+
+60s oneshot. Trigger evaluation is on closed candles, not ticks. Size is not decided here; freeze + demo/paper apply the book size.
+
+## Radio
+
+Triggered Grade B cards and edits go through the same chief / `send_or_edit` path. Lane `GRADE_B`. Edits still use the shared flood guard. Hunter `editMessageText` does not consume the send budget; Grade B sends do.
+
+## Host
+
+- `grok-desk-armed-watcher.service` + `.timer`
+- `flock -n` on `/var/lib/grok-desk/armed-watcher.lock` (same lock FLATTEN uses)
+- Must load the Bitget demo env file when demo is on; otherwise TRIGGERED ingest prints `flag_off`
+
+## State / settle
+
+Writes armed → TRIGGERED transitions. May settle due TRIGGERED counterfactual plans via `scripts/triggered_cf_book.py` after the tick. That extra cannot LLM and cannot fail the trigger write.
+
+## Gates
+
+- State must already be `ARMED_WAITING_FOR_TRIGGER`
+- Completed-candle condition must fire
+- Invalidation / age / chase checks still apply
+- Portfolio admission happens inside the lock
+
+## How Patrick uses it
+
+This is the gate between "card said ARMED" and "plan is frozen." trade-check on an ARMED card is usually **WAIT**. After TRIGGERED, check last vs entry.
+
+## Decisions that still bind
+
+The in-process drain armed-watcher hook is disabled. This timer is the live path. See [ARM gate](/grok-trading-desk/grade-a/arm-gate).

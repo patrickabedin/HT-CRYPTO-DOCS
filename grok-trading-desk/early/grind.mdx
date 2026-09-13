@@ -1,0 +1,38 @@
+---
+title: "EARLY GRIND"
+description: "First pair of same-direction 5m bars that are not exploding. Conservative NO SIGNAL if either axis already exploded."
+---
+
+## What it is
+
+`scripts/early_grind.py`. A grind is 2+ consecutive 5m bars in the same direction whose range and quote volume are **not** exploding. The first pair is EARLY. A longer same-direction run is no longer EARLY (`MAX_EARLY_BARS=2`).
+
+If that pair already exploded in **either** dimension (range ×1.15 or volume ×1.25), GRIND returns no trade. That one-axis state is an explicit **NO SIGNAL**: too hot for GRIND, and not PUMP/DUMP unless **both** expand.
+
+## Clock and size
+
+5m. `MIN_GRIND_BARS=2`, `MIN_BARS=3`.
+
+## Radio
+
+No Hunter TAKE.
+
+## Host
+
+Ripe scan + early trade book.
+
+## State / settle
+
+Own engine name on the tape group.
+
+## Gates
+
+Deliberate conservatism. Do not "fix" NO SIGNAL by falling through to PUMP.
+
+## How Patrick uses it
+
+Join a grind at the first bar pair, not a climax.
+
+## Decisions that still bind
+
+ADR 2026-09-06 item 6.

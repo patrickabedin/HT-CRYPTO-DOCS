@@ -1,0 +1,68 @@
+---
+title: "Setup families"
+description: "Sixteen GROK_NATIVE families Grade B and Grade A classify. Family is not a trade."
+---
+
+## What it is
+
+Step B of the ARM quality gate. `scripts/setup_families.py` names exactly these families. Do not copy SKYNET `engine_id`s.
+
+Trading families (Grade B demo may copy these when TRIGGERED):
+
+- `BREAKOUT_CONFIRMATION`
+- `EARLY_IGNITION`
+- `VOLATILITY_EXPANSION`
+- `PULLBACK_RETEST`
+- `RECLAIM_CONTINUATION`
+- `TREND_CONTINUATION`
+- `RELATIVE_STRENGTH_ROTATION`
+- `LIQUIDITY_SWEEP_RECLAIM`
+- `FAILED_AUCTION_TRAP`
+- `ACCUMULATION_BREAKOUT`
+- `POSITIONING_CROWDING`
+- `FUNDING_DISLOCATION`
+- `DISTRIBUTION_PRE_DUMP`
+- `REDUMP_CONTINUATION_SHORT`
+- `EXHAUSTION_REVERSAL`
+- `CROWDED_FADE`
+
+`NO_SUPPORTED_SETUP` is a reject, not a book.
+
+## Clock and size
+
+Family classification is per drain / per candidate. Episode key is symbol + family + direction + UTC date. A missed `BREAKOUT_CONFIRMATION` does not block a later `PULLBACK_RETEST` on the same symbol the same day.
+
+`BREAKOUT_CONFIRMATION` is the weekend 15m sat-box on `BTCUSDT` / `ETHUSDT` / `SOLUSDT` / `HYPEUSDT` only. Alts ARM on the other families when live Bitget evidence supports a thesis.
+
+## Radio
+
+All sixteen trading families publish Grade B through the existing ARMED + ALIGNED chief gates when the radio lane is on. No per-family mute.
+
+## Host
+
+Classification runs inside drain (`score_symbol` + `classify_setup`). No dedicated timer.
+
+## State / settle
+
+Persist `setup_family`, `setup_episode_id`, and `prior_candidate_id` when this is a re-entry after `DO_NOT_CHASE`.
+
+## Gates
+
+- Family + complete measured thesis → may ARM
+- Family plausible but incomplete → `WATCHING_FOR_STRUCTURE` (0 LLM)
+- `NO_SUPPORTED_SETUP` → `REJECTED_NO_THESIS` / stop
+- Chop is a score penalty, not a hard veto
+
+## How Patrick uses it
+
+Read the family on the card. Do not treat "it looks like a sweep" as ARM. Hunter `BREAKOUT` is a different engine and is not a Grade B demo family.
+
+## Decisions that still bind
+
+GROK_NATIVE does not wait for a SKYNET print. SKYNET may originate extra candidates (SELECT-only). Consensus does not raise Champion score or Grade. Attribution:
+
+| `trading_source` | Meaning |
+| --- | --- |
+| `GROK_NATIVE` | Grok watcher thesis |
+| `GROK_SKYNET` | SKYNET evaluation originated the candidate |
+| `GROK_SKYNET_CONSENSUS` | Grok thesis independently matches a SKYNET print |

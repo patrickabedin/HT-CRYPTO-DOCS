@@ -1,0 +1,38 @@
+---
+title: "SWEEP RECLAIM"
+description: "5m wick through a prior swing, close back through that swing. With-grain only."
+---
+
+## What it is
+
+`detect_sweep_reclaim` in `scripts/hunter_ripe_watch.py`. Confirmed swings, then a later bar that sweeps and reclaims.
+
+LONG: `bar.low < swing` and `bar.close > swing`. SHORT: `bar.high > swing` and `bar.close < swing`. Confirmation bar is not the sweep bar.
+
+## Clock and size
+
+5m. Same `MIN_SL_PCT` 0.4% and `RR_MIN` 1.5 as grain.
+
+## Radio
+
+TAPE / ripe when hunter radio is on. Not a brain TAKE by itself.
+
+## Host
+
+Same ripe timer as grain. If grain already packed the same swing, sweep is not duplicated.
+
+## State / settle
+
+`hunter_ripe.json`.
+
+## Gates
+
+Spread, 24h tone, chase block, `levels_ok`. With-grain only.
+
+## How Patrick uses it
+
+Liquidity sweep card. Confirm with brain or trade-check. Countertrend sweeps are structurally out of this packer.
+
+## Decisions that still bind
+
+Priority: GP, then SR, then BREAKOUT, then EXTREME on leftovers. EARLY rows coexist and do not steal the slot.

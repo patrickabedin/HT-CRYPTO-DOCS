@@ -1,0 +1,43 @@
+---
+title: "USELESS scalp brain"
+description: "5m Hunter-style brain on USELESSUSDT. TAKE is the only ENTER. $50 margin at 20x."
+---
+
+## What it is
+
+`scripts/useless_scalp.py`. 5m brain TAKE + packer timing gate.
+
+| Layer | Job |
+| --- | --- |
+| 5m brain | Is this a trade? TAKE is the only ENTER |
+| 5m pack | Pullback (≥0.4%), hot bar (≥2% range), climax (wait the bar after a 5%+ 5m). Never a Telegram |
+
+Wide stop → ENTER + `not_a_2pct_scalp` with the real SL/TP. 2% does not hide a brain TAKE.
+
+## Clock and size
+
+$50 margin @ 20x ($1000 notional). Default take / exit label 2% (~+$18–20 net after fees). Fast exit. Host timer 30s (`grok-useless-scalp.timer`) with `--publish` muted.
+
+## Radio
+
+Cards say **USELESS SCALP 5M** with Entry / Stop / TP. Lane `USELESS`. Chat never publishes.
+
+## Host
+
+`engine_5m_guard.py` wraps USELESS timers. State: `/var/lib/skynet-market/useless_scalp.json`. Shared tape: `quote=shared_market_data`, `bars=valkey`. Bitget REST is fallback when the tape is empty.
+
+## State / settle
+
+See [live book](/grok-trading-desk/useless/live-book). Replays: `scripts/useless_scalp_replay.py`.
+
+## Gates
+
+Spread, packed, chase, brain_no_structure, BTC disagreement. After a banked bounce, a fresh ENTER on the same bar is chase for the clip book.
+
+## How Patrick uses it
+
+Personal Cursor account. First line is the verdict. Manage mode (`--side` + `--entry`) prints EXIT at 2% / packed TP / stop, else HOLD.
+
+## Decisions that still bind
+
+Do not re-implement. Do not invent a new detector. Do not rewrite Hunter for this coin.

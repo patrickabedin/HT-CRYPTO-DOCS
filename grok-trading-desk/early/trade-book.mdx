@@ -1,0 +1,36 @@
+---
+title: "EARLY trade book"
+description: "One paper trade per engine, symbol, side, and 5m signal bar. Canonical SHADOW settlement."
+---
+
+## What it is
+
+`scripts/early_trade_book.py`. Consumes actionable EARLY signals. Settles entry/SL/TP from the shared 5m bar cache.
+
+## Clock and size
+
+`grok-early-trade-book.timer` 60s. Dashboard early table: `web/app/early-table.tsx`.
+
+## Radio
+
+None.
+
+## Host
+
+Settle path env `EARLY_TRADE_SETTLE_PATH` under `/var/lib/skynet-market/`.
+
+## State / settle
+
+One paper trade per engine/symbol/side/5m signal bar. Added to `HUNTER_TAPE` under EARLY_* names.
+
+## Gates
+
+No Telegram TAKE, no Bitget placement. Health required to interpret zero trades.
+
+## How Patrick uses it
+
+Read the early table and engine health together.
+
+## Decisions that still bind
+
+Do not relabel EARLY as another Hunter engine. Do not claim pre-ADR history as this book's track record.

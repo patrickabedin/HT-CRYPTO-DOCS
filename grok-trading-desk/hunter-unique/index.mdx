@@ -1,0 +1,43 @@
+---
+title: "Hunter Unique"
+description: "Brain TAKE plus named 5m engines. Ripe is a shortlist. Telegram is TAKE-only for the brain."
+---
+
+Hunter Unique is the discretionary / named-engine book. The product is the **brain path**, not the ripe firehose.
+
+<Warning>
+  SHADOW / advisory. No exchange orders. Radio lane `HUNTER` is muted by default. Brain Telegram is TAKE only.
+</Warning>
+
+## What it is
+
+Host ripe / engines cheaply shortlist. `scripts/hunter_brain.py` packs its own structure off the shared tape (WS quotes in `latest.json` + Valkey 5m). Engine entry/SL/TP on a ripe row are **ignored**. `trade_check` must return ENTER before a brain TAKE.
+
+Named packers: `GRAIN_PULLBACK`, `SWEEP_RECLAIM`, `BREAKOUT`, `EXTREME_MOMENTUM`. EARLY names that appear on ripe rows belong to the [EARLY book](/grok-trading-desk/early).
+
+## Clock and size
+
+5m chart. Brain timer 60s. Projection on hunter-setup cards: $50 @ 10x (label). Do not treat that as a live order.
+
+## Radio
+
+- Brain card: `SKYNET HUNTER BRAIN` — TAKE only
+- UNIQUE Telegram also needs `HUNTER_UNIQUE_TELEGRAM=1` **and** `TELEGRAM_ALLOW` to include `HUNTER`
+- WAIT / SKIP / chop / no grain → silent
+
+## Host
+
+`grok-hunter-brain.timer` (60s). State: `/var/lib/skynet-market/hunter_brain.json`. Leave `grok-hunter-ripe.timer` running if you still want the raw shortlist.
+
+## Children
+
+- [Hunter BRAIN](/grok-trading-desk/hunter-unique/brain)
+- [GRAIN PULLBACK](/grok-trading-desk/hunter-unique/grain-pullback)
+- [SWEEP RECLAIM](/grok-trading-desk/hunter-unique/sweep-reclaim)
+- [BREAKOUT](/grok-trading-desk/hunter-unique/breakout)
+- [EXTREME MOMENTUM](/grok-trading-desk/hunter-unique/extreme-momentum)
+- [Telegram and settle](/grok-trading-desk/hunter-unique/telegram-settle)
+
+## How Patrick uses it
+
+`/hunter-setup` or `python3 scripts/hunter_brain.py --no-publish`. First line TAKE / SILENT. For a pasted card use [trade-check](/grok-trading-desk/advisory/trade-check), not this page.

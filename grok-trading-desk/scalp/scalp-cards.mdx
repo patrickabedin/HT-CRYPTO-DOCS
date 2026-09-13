@@ -1,0 +1,40 @@
+---
+title: "Scalp cards"
+description: "Minutes scout cards from skynet-scalp. Shared 1m volume. Flood-guarded."
+---
+
+## What it is
+
+`/opt/skynet-scalp/scripts/scalp_telegram.py` behind `run_scalp_telegram.sh`. Epoch note in desk history: `SCALP_V0_3_ECONOMIC_TARGETS_1`.
+
+Research-only in this repo: `scripts/scalp_forecast.py` (bounded SHADOW short-burst — see [USELESS clock](/grok-trading-desk/useless/clock)).
+
+## Clock and size
+
+1m volume scout. Card size typically $50 @ 10x. Not the USELESS 5m $50@20x book.
+
+## Radio
+
+Must see Bot API `ok=true` **and** a real `message_id` before counting `sent` / writing cherry-live. Budget blocks used to log `sent` with `message_id=None` and poison retries.
+
+Outer `telegram_429_gate.py` hard-stops only on shared 429 backoff. Budget pressure is soft — scalp still runs; per-card `allow_send` applies.
+
+## Host
+
+`grok-scalp-telegram.timer`. Flood-guard install: `deploy/host/install_telegram_flood_guard.sh`, `patch_host_telegram_senders.py`.
+
+## State / settle
+
+Settle / detect stay live when radio is muted. Calendar group `SCALP`.
+
+## Gates
+
+Shared 8/min 20/5min. Do not retry every 10s on 429.
+
+## How Patrick uses it
+
+trade-check the card. Do not chase a minutes print on a 5m brain.
+
+## Decisions that still bind
+
+2026-09-06: first 429 at 00:21 UTC from scalp/cherry volume, then ungated retries extended the ban.

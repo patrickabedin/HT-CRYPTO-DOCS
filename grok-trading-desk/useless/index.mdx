@@ -1,0 +1,42 @@
+---
+title: "USELESS"
+description: "One-coin USELESSUSDT 5m brain. $50@20x scalp and $100@20x clip. Radio muted by default."
+---
+
+One-coin clock for Bitget USDT-M **USELESSUSDT**.
+
+<Warning>
+  Manual only. SHADOW. Chat does not `--publish`. Radio lane `USELESS` is muted (`USELESS_TELEGRAM=0`).
+</Warning>
+
+## What it is
+
+Two books, same 5m brain:
+
+| Book | Engine | Size | Take |
+| --- | --- | --- | --- |
+| Scalp | `USELESS_SCALP_BRAIN` | $50 @ 20x | 2% is the **exit label**, not a scout veto |
+| Clip | `USELESS_CLIP_GO` | $100 @ 20x | ~1.1% / +$20 clip |
+
+Brain TAKE is the only ENTER. 5m pack (pullback / hot bar / climax) is a timing gate and never a Telegram.
+
+## Clock and size
+
+**5m chart.** Not 1m. Not a now-fill. Fast 1s clock is a monitor, not a 1m strategy.
+
+Grain is USELESS 5m. BTC is a veto only (coin vs BTC disagree → no side).
+
+## Radio
+
+Muted by default. Host `--publish` stays off unless Patrick unmutes radio **and** `USELESS_TELEGRAM=1`.
+
+## Children
+
+- [Scalp brain](/grok-trading-desk/useless/scalp-brain)
+- [Clock](/grok-trading-desk/useless/clock)
+- [Live book](/grok-trading-desk/useless/live-book)
+- [Clip GO](/grok-trading-desk/useless/clip-go)
+
+## How Patrick uses it
+
+`/useless-scalp` or `python3 scripts/useless_scalp.py`. Already in: add `--side --entry --stop`. First line `ENTER` / `WAIT` / `SKIP` / `EXIT` / `HOLD`. Do not write a docs page for a timing call.

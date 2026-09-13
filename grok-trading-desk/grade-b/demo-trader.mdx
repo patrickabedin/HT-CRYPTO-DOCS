@@ -1,0 +1,56 @@
+---
+title: "Bitget demo trader"
+description: "Opt-in Bitget Demo paper. Grade B TRIGGERED only. $50 margin at 20x. Never a live key."
+---
+
+## What it is
+
+`scripts/demo_trader.py` + `scripts/bitget_demo.py` copy **Grade B TRIGGERED** freezes onto Bitget Demo Trading. Same size as the calendar: **$50 @ 20x**.
+
+Scout B (~500/day) and ARMED-but-not-triggered stay paper. Grade A stays off demo. Hunter TAPE / UNIQUE / brain TAKEs do not ingest.
+
+## Clock and size
+
+- Timer: `grok-demo-trader.timer` every 15s
+- Notional: $1000
+- Demo force-close: 24h max hold (mark), or profit giveback once peak uPnL ≥ $12 and mark gives back ≥ 35% of that peak
+- Host timer allow 480s so flatten + attach can finish
+
+Paper USDT is not created by the API. Until demo `usdtEquity ≥ 50` the trader prints `NO_EQUITY`.
+
+## Radio
+
+No extra Telegram. Cards already published by chief / armed watcher.
+
+## Host
+
+- Flag `BITGET_DEMO_TRADING=1`
+- Kinds `BITGET_DEMO_KINDS=GRADE_B`
+- Leverage `BITGET_DEMO_LEVERAGE=20`
+- Env file on the host (mode 0600, not git). Never put values here.
+- `paptrading: 1` is hardcoded in `bitget_demo.py`
+
+Armed watcher must load the same demo env. Without it, TRIGGERED ingest is `flag_off`.
+
+## State / settle
+
+- `/var/lib/skynet-market/demo_trader.json`
+- `/var/lib/skynet-market/demo_settle.json`
+
+## Gates
+
+- `kind=GRADE_B`
+- Engine is a trading family (not `NO_SUPPORTED_SETUP`, not Hunter `BREAKOUT`)
+- Champion score 45–74
+- Freeze returned entry, stop, and at least one TP
+- Five-slot union with paper
+- One Bitget position per symbol/side — same-side stacks add another $50 @ 20x
+- Junk / naked fills (no SL/TP) and UNIQUE-shaped keys with an empty episode are flattened
+
+## How Patrick uses it
+
+Honesty check for the calendar, not live money. Do not swap demo keys for live. A live trade-enabled key on this path would fire every Grade B TRIGGERED.
+
+## Decisions that still bind
+
+Leftover Hunter TAPE / BREAKOUT demo legs are flattened. Bitget demo is Grade B TRIGGERED only. Live `AUTO_ORDER_EXECUTION` stays off.

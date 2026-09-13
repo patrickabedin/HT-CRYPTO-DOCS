@@ -4,7 +4,7 @@ This repository is the **canonical Mintlify documentation** for all of Patrick's
 
 ## Hard rule
 
-From 2026-09-13, document **everything** crypto here:
+From 2026-09-13, document **everything** crypto here **in the same turn as the work**:
 
 - grok-trading-desk
 - SKYNET-SOL
@@ -12,6 +12,12 @@ From 2026-09-13, document **everything** crypto here:
 - any other crypto-only matter
 
 Do not satisfy a "document this" request by adding long-form markdown in those code repos. Write MDX here, register the page in `docs.json`, and push `main`.
+
+## Information architecture
+
+Parents are desk books (Grade B, Grade A, Hunter Unique, Hunter Tape, EARLY, Scalp, USELESS, Desk ops, Advisory, Research). Children are engines or workers. Everything you do for an engine is a section on that engine page. See `how-to-write.mdx`.
+
+New engine / book / radio lane → new child page under the right parent.
 
 ## About this project
 

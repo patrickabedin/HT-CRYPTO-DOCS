@@ -1,0 +1,40 @@
+---
+title: "GRAIN PULLBACK"
+description: "With-grain 5m pullback into a confirmed swing. Highest ripe priority. Not a brain TAKE."
+---
+
+## What it is
+
+`detect_grain_pullback` in `scripts/hunter_ripe_watch.py`. With-grain only. Last is beyond the swing stop, off the local extreme, not a chase.
+
+## Clock and size
+
+5m bars. Stop from a confirmed swing, padded to **0.4%** (`MIN_SL_PCT`) — no chip stops. TP from `levels_ok` with **R:R ≥ 1.5**.
+
+## Radio
+
+Ripe / TAPE cards when the hunter lane is on. Brain ignores these packed levels and rebuilds its own.
+
+## Host
+
+Evaluated every 60s on `grok-hunter-ripe.timer` and during extreme wakes. GP keeps priority over BREAKOUT.
+
+## State / settle
+
+Rows land in `hunter_ripe.json`. Paper / Unique settle is not automatic from a ripe pack.
+
+## Gates
+
+- `tone_24h_ok` and not `chase_blocked`
+- Spread not too wide
+- Majors: mid-range ban (`major_gp_mid_range_banned`)
+- LONG: `swing < last < extreme`. SHORT: `extreme < last < swing`
+- Pullback off the lookback extreme
+
+## How Patrick uses it
+
+Shortlist. Run brain or trade-check. Do not buy the ripe entry blindly.
+
+## Decisions that still bind
+
+GP / SR keep the name. BREAKOUT only packs when both fail. EXTREME only packs a symbol the other three left empty.

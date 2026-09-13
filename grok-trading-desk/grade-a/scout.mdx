@@ -1,0 +1,40 @@
+---
+title: "Scout"
+description: "SCOUT_SCORE_V1_4 local scoring. Grade B 45–74, Grade A 75+, A+ 85+. Not an LLM."
+---
+
+## What it is
+
+`scripts/scout_score.py`. Pure scoring. Raw V1.4 component caps sum to **74**, so raw Scout cannot naturally cross Grade A. Grade A reachability is a Champion-layer bridge, not a lowered threshold.
+
+`is_grade_b(score)` is 45–74 inclusive, exclusive of 75.
+
+## Clock and size
+
+Runs inside drain per candidate. No timer of its own.
+
+## Radio
+
+Scout does not publish. `record_grade_b_shadow(..., telegram=False)` is tracking, not a card.
+
+## Host
+
+Inside `grok-desk-drain`. Historical baseline component refreshes every 6h via `grok-desk-baselines.timer` → `scripts/build_predictive_baselines.py`.
+
+## State / settle
+
+Scores persist with the candidate. Grade B shadow tracking stays in `grok_desk.grade_b_shadow`.
+
+## Gates
+
+- Thresholds: B 45–74, A 75+, A+ 85+
+- Market context is advisory and is **not** a scoring input
+- Missing / UNKNOWN historical cannot qualify for the Grade A bridge
+
+## How Patrick uses it
+
+A 74 print is still Grade B until Champion applies the confluence bridge. Do not treat raw Scout 74 as Grade A.
+
+## Decisions that still bind
+
+Do not raise component caps or add an arbitrary bonus — that would lift ordinary Grade B without evidence. See [Grade A decisions](/grok-trading-desk/grade-a/decisions).

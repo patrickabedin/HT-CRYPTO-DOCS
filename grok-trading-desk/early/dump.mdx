@@ -1,0 +1,36 @@
+---
+title: "EARLY DUMP"
+description: "First expanding 5m bar down. Range, volume, new low, takers agree."
+---
+
+## What it is
+
+Same detector module as PUMP (`ENGINE_EARLY_DUMP`). New extreme: last < previous 5m low. Takers / red bar (close < open).
+
+## Clock and size
+
+5m. Same 1.15 range / 1.25 volume expansion. First expanding bar only.
+
+## Radio
+
+No Hunter TAKE.
+
+## Host
+
+Ripe scan + early trade book.
+
+## State / settle
+
+Same settle path as PUMP, own engine name.
+
+## Gates
+
+Prior 5m already expanded down → skip. Incomplete expansion → not DUMP.
+
+## How Patrick uses it
+
+Symmetric with PUMP. Do not flip a dump into a grind.
+
+## Decisions that still bind
+
+Independent book. `nudge_only` is a Hunter-publish safety flag only.

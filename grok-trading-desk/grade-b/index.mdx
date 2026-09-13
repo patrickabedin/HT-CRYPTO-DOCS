@@ -1,0 +1,68 @@
+---
+title: "Grade B"
+description: "Score 45–74 production desk book. Armed trigger, five-slot portfolio, Bitget demo paper."
+---
+
+Grade B is a **score band plus a book**, not a hunter-style named engine. Score **45–74**. Sixteen GROK_NATIVE setup families. This is the default Telegram radio.
+
+<Warning>
+  SHADOW / advisory. Bitget demo paper is opt-in only. Live keys stay read-only. Grade A stays 75 — do not lower it to grow this book.
+</Warning>
+
+## What it is
+
+Scout and Champion score a candidate. If the score is 45–74 and ARM produced a measured thesis, the armed watcher waits for the trigger on a **completed** candle. TRIGGERED freezes the plan. Paper and (when enabled) Bitget demo copy that freeze.
+
+Cap: **one coin**, bounded open slots (five-slot portfolio policy). Refill when a seat frees.
+
+## Clock and size
+
+- Armed checks run on completed candles (15m close-through-level where that is the trigger).
+- Demo / paper size: **$50 margin @ 20x** ($1000 notional).
+- Calendar `R` is stop-risk, not a dollar. Do not convert with `1R = $50`.
+
+## Radio
+
+- Card: Grade B (🅱️). Kind `grade_b` through `chief_publish`.
+- Lane: `GRADE_B`. **On by default** (`TELEGRAM_ALLOW=GRADE_B`).
+- Symbol + side + setup-family cooldown: 900s (`GRADE_B_SYMBOL_COOLDOWN_SEC`).
+
+## Host
+
+| Unit | Interval | Script |
+| --- | --- | --- |
+| `grok-desk-drain.timer` | 60s | `scripts/runtime_cycle_shared.py` |
+| `grok-desk-armed-watcher.timer` | 60s | `scripts/armed_watcher_shared.py` |
+| `grok-demo-trader.timer` | 15s | `scripts/demo_trader.py` |
+
+Admission shares `armed-watcher.lock` with FLATTEN.
+
+## State / settle
+
+- `/var/lib/grok-desk/grade_b_portfolio.json`
+- `/var/lib/grok-desk/grade_b_symbol_cooldown.json`
+- `/var/lib/grok-desk/grade_b_open_plans.json` (name may vary; open-plan cache)
+- `/var/lib/skynet-market/demo_trader.json`
+- `/var/lib/skynet-market/demo_settle.json`
+
+## Gates
+
+- Score 45–74 inclusive, exclusive of 75
+- Family is a trading family from `scripts/setup_families.py` (not `NO_SUPPORTED_SETUP`, not Hunter `BREAKOUT`)
+- ARM quality gate: measured thesis, trigger, invalidation, TTL, chase, entry still available
+- Five-slot capacity, one position per coin, at most three in one direction and two per engine
+- Shared flood guard on every send
+
+## How Patrick uses it
+
+Paste the card into trade-check. Do not chase a TRIGGERED that already ran. FLATTEN is a confirmed dashboard action — do not press it to test.
+
+## Workers
+
+- [Armed watcher](/grok-trading-desk/grade-b/armed-watcher)
+- [Setup families](/grok-trading-desk/grade-b/setup-families)
+- [Portfolio and book lock](/grok-trading-desk/grade-b/portfolio-book-lock)
+- [Fills, levels, UPL](/grok-trading-desk/grade-b/fills-levels-upl)
+- [Bitget demo trader](/grok-trading-desk/grade-b/demo-trader)
+- [Flatten](/grok-trading-desk/grade-b/flatten)
+- [Decisions](/grok-trading-desk/grade-b/decisions)

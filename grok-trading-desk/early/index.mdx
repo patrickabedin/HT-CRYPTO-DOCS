@@ -1,0 +1,39 @@
+---
+title: "EARLY"
+description: "Independent SHADOW paper for EARLY_PUMP, EARLY_DUMP, and EARLY_GRIND. Not a Hunter TAKE."
+---
+
+EARLY_PUMP, EARLY_DUMP, and EARLY_GRIND are **independent trade-producing SHADOW engines**. Detector rows still carry `nudge_only` so Hunter Telegram cannot publish them as Hunter TAKE cards.
+
+<Warning>
+  SHADOW. No Telegram TAKE. No Bitget orders. No Wave 9.
+</Warning>
+
+## What it is
+
+Detectors run on the 5m clock inside ripe scan. `scripts/early_trade_book.py` consumes actionable signals and keeps one paper trade per engine/symbol/side/5m signal bar. Settlements use the shared 5m cache and canonical SHADOW settlement rules.
+
+Dashboard: `HUNTER_TAPE` group, **own engine names**. Do not relabel as BREAKOUT / GP / SR.
+
+## Clock and size
+
+60s `grok-early-trade-book.timer`. 5m bars. Simulated $50 @ 20x on the desk unless a page says otherwise.
+
+## Radio
+
+None for TAKE. Health distinguishes ALIVE-but-quiet from STALE/DEAD.
+
+## Children
+
+- [EARLY PUMP](/grok-trading-desk/early/pump)
+- [EARLY DUMP](/grok-trading-desk/early/dump)
+- [EARLY GRIND](/grok-trading-desk/early/grind)
+- [Trade book](/grok-trading-desk/early/trade-book)
+
+## How Patrick uses it
+
+Evaluate each engine's paper book on its own. Historical performance before 2026-09-06 must not be presented as if these books had been running.
+
+## Decisions that still bind
+
+ADR 2026-09-06. `mode=SHADOW`, `no_exchange_orders=true`.
