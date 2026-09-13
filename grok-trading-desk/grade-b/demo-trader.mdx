@@ -18,9 +18,11 @@ Scout B (~500/day) and ARMED-but-not-triggered stay paper. Grade A stays off dem
 
 Paper USDT is not created by the API. Until demo `usdtEquity ≥ 50` the trader prints `NO_EQUITY`.
 
+Desk Last/uPnL for demo rows (and attached paper) use Bitget `mark` / `unrealizedPL`, not public WS last. File can lag REST by one 15s poll.
+
 ## Radio
 
-No extra Telegram. Cards already published by chief / armed watcher.
+No extra Telegram from ingest. Cards already published by chief / armed watcher. Open-book HIGH ≥ \$30 is `grade_b_upl_alert` (source `grade_b_upl_high`), not this timer inventing a second bot path.
 
 ## Host
 
@@ -43,13 +45,17 @@ Armed watcher must load the same demo env. Without it, TRIGGERED ingest is `flag
 - Engine is a trading family (not `NO_SUPPORTED_SETUP`, not Hunter `BREAKOUT`)
 - Champion score 45–74
 - Freeze returned entry, stop, and at least one TP
-- Five-slot union with paper
+- Ten-slot union with paper
 - One Bitget position per symbol/side — same-side stacks add another $50 @ 20x
 - Junk / naked fills (no SL/TP) and UNIQUE-shaped keys with an empty episode are flattened
+- A first fill without card SL+TP is refused: re-read, attach card levels, flatten **that** side if still unprotected. Empty `holdSide` is not covered (`bf651f1`)
+- Flatten cooldown blocks ingest (`flatten_cooldown`, silent). Do not leave paper-only smokes behind — see [13 Sep notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty)
 
 ## How Patrick uses it
 
 Honesty check for the calendar, not live money. Do not swap demo keys for live. A live trade-enabled key on this path would fire every Grade B TRIGGERED.
+
+Do not flatten leftover XRP SHORT that he left as an exchange-demo leftover.
 
 ## Decisions that still bind
 

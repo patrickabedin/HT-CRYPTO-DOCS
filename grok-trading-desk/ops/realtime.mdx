@@ -11,7 +11,11 @@ Open Last, uPnL, open counts, and early-engine marks update from the fast stream
 
 ## Clock and size
 
-Always-on `grok-desk-realtime.service`.
+Always-on `grok-desk-realtime.service`. It **imports `desk_snapshot` once**. A host fast-forward does not reload that math until the unit is restarted.
+
+<Warning>
+  After changing mark / uPnL math, restart `grok-desk-realtime`. Do not restart `grok-market-data` to refresh the desk. Market-data owns the only public Bitget WS.
+</Warning>
 
 ## Radio
 
@@ -25,6 +29,10 @@ Realtime URL is derived from the ingest URL unless overridden. Do not point `RED
 
 Read-only on host state files. No Bitget socket in the browser. No `router.refresh()` / interval HTTP polling for live data.
 
+Attached Grade B paper and Bitget demo Last/uPnL come from Bitget demo mark, not public last. Unattached paper still uses `latest.json`. See [Fills, levels, and UPL](/grok-trading-desk/grade-b/fills-levels-upl).
+
+A frozen mark with a moving calendar is the realtime publisher or Redis fan-out — not SSR, not Scout.
+
 ## Gates
 
 Exactly one upstream Bitget public WS: `grok-market-data`. Do not expose host Valkey or create a second exchange feed for the UI.
@@ -33,6 +41,9 @@ Exactly one upstream Bitget public WS: `grok-market-data`. Do not expose host Va
 
 If marks freeze but the calendar still updates, the realtime publisher or Redis fan-out is the suspect — not Scout.
 
+If paper and demo match each other but Bitget UI disagrees, the publisher is still on public last or an old `desk_snapshot` — restart realtime after FF, then compare REST mark.
+
 ## Decisions that still bind
 
-Local websocket dev uses `vercel dev`, not plain `next dev`.
+- 2026-09-13: attached books use Bitget mark/uPnL. Restart realtime after that class of change.
+- Local websocket dev uses `vercel dev`, not plain `next dev`.

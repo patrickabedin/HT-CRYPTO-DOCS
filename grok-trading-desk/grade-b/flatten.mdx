@@ -11,6 +11,8 @@ Dashboard FLATTEN (`web/lib/flatten.ts`, `scripts/desk_flatten.py`, `scripts/fla
 
 Shares `armed-watcher.lock` with admission. Pauses new entries for **15 minutes**. Cancels pre-flatten armed signals. Blocks replayed demo copies.
 
+Pause file: `/var/lib/grok-desk/grade_b_portfolio.pause.json` (`until`, `cutoff`). Not `/var/lib/skynet-market/pause.json`.
+
 Missing-price positions remain open. An incomplete close or calendar refresh is reported as an error.
 
 ## Radio
@@ -25,16 +27,21 @@ Realtime service must be running so the button talks to the worker. Do not resta
 
 Pause file lives next to the portfolio journal. Demo reconciliation follows acknowledged paper closes.
 
+`entries_paused()` makes `consider_take` return `flatten_cooldown` **without** `_note_skip`. A smoke or attach during the pause can persist **paper** and place **zero** demo. Kill that one paper `candidate_id` with `flatten_open_plans([that_row])` + `write_grade_b_open_cache`. Do not `run_flatten(also_demo=True)`.
+
 ## Gates
 
 - Button requires confirmation
 - Live orders are never in scope
 - Agents must not press FLATTEN for testing
+- Do not flatten leftover XRP SHORT that Patrick left as an exchange-demo leftover
 
 ## How Patrick uses it
 
-Human kill switch for the paper/demo book. After flatten, wait out the 15-minute pause before expecting new admissions.
+Human kill switch for the paper/demo book. After flatten, wait out the 15-minute `until` before expecting new admissions or a SOL attach smoke.
+
+`scripts/grade_b_flatten_smoke.py` opens one paper CF + demo attach and **leaves them open**. It is not a flatten.
 
 ## Decisions that still bind
 
-Do not press FLATTEN just to exercise current positions. Report remaining paper/demo counts from state files, not from a forced flatten.
+Do not press FLATTEN just to exercise current positions. Report remaining paper/demo counts from state files, not from a forced flatten. Full smoke notes: [13 Sep 2026](/grok-trading-desk/grade-b/2026-09-13-upl-honesty).

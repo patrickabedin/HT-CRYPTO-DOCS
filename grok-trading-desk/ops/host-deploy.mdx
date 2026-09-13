@@ -15,6 +15,8 @@ Vercel deploys the dashboard from `main`.
 
 `ff_main` every ~60s. Fast-forward only. Do not reset a dirty checkout.
 
+Oneshot timers load scripts on the next tick. Always-on units do **not**. After `desk_snapshot` / mark math changes, restart `grok-desk-realtime` so the publisher drops the old module. Do not restart `grok-market-data` for that.
+
 ## Radio
 
 Deploy does not Telegram. Do not send test messages to verify a ship.
