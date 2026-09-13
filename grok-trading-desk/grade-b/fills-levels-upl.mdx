@@ -17,7 +17,20 @@ Paper (ClickHouse / counterfactual) and Bitget demo USDT are different calendars
 
 Levels come from the frozen TRIGGERED plan. Size is `$50` margin @ 20x (`$1000` notional). Paper closes deduct estimated trading fees. They do not model funding or execution slippage. Demo fills can differ.
 
-Every paper open keeps **one fill**: Bitget fill if attached, else WS last with the 35 bps chase. Desk, tape, and lock mark that fill.
+Every paper open keeps **one fill**. Stamp it once. Never move it. That is the 13 Sep fill bug (`78f5f61`).
+
+Before the fix, desk uPnL and the book lock marked **card / trigger vs public last** (last-chase). Prefill printed +USD 318 and tripped `BOOK_GIVEBACK` with no real attach.
+
+`paper_fill_px` order:
+
+1. Attached Bitget `openPriceAvg` / demo `fill_entry` (`fill_source=bitget`)
+2. Else if last is through 35 bps, stamp **last** as `last_chase` — not the card trigger
+3. Else public WS last (`last`)
+4. Else card (`card`)
+
+Leave card `entry` for TP/SL. `overlay_plan_fills` restores the stamp; it does not invent a new last. Do not rewrite a prior UTC-day tape high when backfilling a missing stamp.
+
+Then do not remake **both** attached books from public last (`3862d5b`). Demo mark and public last can sit ~1% apart.
 
 `R` is stop-risk. Grade A/B USD on the dashboard appears only when the rollup has frozen entry and stop and stamps that risk on the book's notional. Do not invent `1R = $50`.
 
