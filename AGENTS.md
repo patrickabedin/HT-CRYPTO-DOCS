@@ -1,33 +1,43 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> For Mintlify product knowledge (components, configuration, writing standards),
-> install the Mintlify skill: `npx skills add https://mintlify.com/docs`
+# HT Crypto Docs — agent instructions
 
-# Documentation project instructions
+This repository is the **canonical Mintlify documentation** for all of Patrick's crypto-only systems.
+
+## Hard rule
+
+From 2026-09-13, document **everything** crypto here:
+
+- grok-trading-desk
+- SKYNET-SOL
+- skynet-astra
+- any other crypto-only matter
+
+Do not satisfy a "document this" request by adding long-form markdown in those code repos. Write MDX here, register the page in `docs.json`, and push `main`.
 
 ## About this project
 
-- This is a documentation site built on [Mintlify](https://mintlify.com)
-- Pages are MDX files with YAML frontmatter
+- Pages are MDX with YAML frontmatter
 - Configuration lives in `docs.json`
-- Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
-- Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
+- Mintlify publishes from the default branch (`main`)
+- The GitHub repo is **public**
 
-## Terminology
+## Public-repo safety
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+Never commit secrets, tokens, API keys, chat IDs, private URLs, host IPs, SSH material, or env-file values.
 
-## Style preferences
+## Style
 
-{/* Add any project-specific style rules below */}
+- Active voice and second person
+- One idea per sentence
+- Sentence case for headings
+- Bold UI elements; backticks for files, commands, and paths
+- Label SHADOW / paper / research. Do not imply live fills
+- Missing money stays unknown / `null`
 
-- Use active voice and second person ("you")
-- Keep sentences concise — one idea per sentence
-- Use sentence case for headings
-- Bold for UI elements: Click **Settings**
-- Code formatting for file names, commands, paths, and code references
+## Do not document here
 
-## Content boundaries
+- Live enter / skip / hold / exit timing calls
+- Iteration control logs (`STATUS.md`, QA dumps) — those stay in the code repo; durable conclusions still get a page here
 
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+## Finish
+
+Land docs on `main`. Do not leave an open PR. Connect the Mintlify GitHub app if production is not updating: https://dashboard.mintlify.com/settings/organization/github-app

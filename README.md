@@ -1,55 +1,34 @@
-# Mintlify Starter Kit
+# HT Crypto Docs
 
-Use the starter kit to get your docs deployed and ready to customize.
+Canonical Mintlify documentation for **grok-trading-desk**, **SKYNET-SOL**, **skynet-astra**, and every other crypto-only system.
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+GitHub: https://github.com/patrickabedin/ht-crypto-docs/
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+From 13 September 2026, agents write new crypto docs **here**, not in the code repositories.
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+This repo is **public**. Never commit secrets, tokens, host IPs, or env-file values.
 
-## AI-assisted writing
-
-Set up your AI coding tool to work with Mintlify:
+## Preview
 
 ```bash
-npx skills add https://mintlify.com/docs
-```
-
-This command installs Mintlify's documentation skill for your configured AI tools like Claude Code, Cursor, Windsurf, and others. The skill includes component reference, writing standards, and workflow guidance.
-
-See the [AI tools guides](/ai-tools) for tool-specific setup.
-
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
-
-```
 npm i -g mint
-```
-
-Run the following command at the root of your documentation, where your `docs.json` is located:
-
-```
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+Open `http://localhost:3000`.
 
-## Publishing changes
+## Publish
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+Push `main`. Mintlify deploys from the default branch after the [GitHub app](https://dashboard.mintlify.com/settings/organization/github-app) is connected.
 
-## Need help?
+## Layout
 
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+```
+index.mdx                      Home
+policy/document-on-mintlify.mdx   The hard rule
+how-to-write.mdx               How agents add a page
+grok-trading-desk/             Desk pages
+skynet-sol/                    SOL pages
+skynet-astra/                  Astra pages
+docs.json                      Navigation and site settings
+```

@@ -1,0 +1,66 @@
+---
+title: "Document everything here"
+description: "Hard rule from 13 September 2026: all crypto documentation lives in this Mintlify repo."
+---
+
+Patrick's rule: **document everything crypto from now on in this repository.**
+
+Applies to **grok-trading-desk**, **SKYNET-SOL**, **skynet-astra**, and **any other crypto-only matter** (scalp, hunter, new books, cross-repo decisions).
+
+The GitHub source is [`patrickabedin/ht-crypto-docs`](https://github.com/patrickabedin/ht-crypto-docs/). Mintlify publishes from `main`.
+
+## Agents must do this
+
+<Steps>
+  <Step title="Write the page here">
+    Add or update an `.mdx` file in this repo. Use YAML frontmatter (`title`, `description`) and Mintlify components.
+  </Step>
+  <Step title="Register navigation">
+    Add the page path to `docs.json` under the right group. An unlisted file is easy to lose.
+  </Step>
+  <Step title="Land on main">
+    Commit and push this repo's `main`. Mintlify deploys from the default branch. Do not leave the write as a parked PR.
+  </Step>
+  <Step title="Pointer only in the code repo">
+    If someone would look in `docs/` of grok-trading-desk, SKYNET-SOL, or skynet-astra, add a **one-line** link to the Mintlify page. Do not paste the article again.
+  </Step>
+</Steps>
+
+## Write here
+
+- Architecture and system maps
+- ADRs and policy changes
+- Runbooks and how-tos
+- Rollout / freeze / family notes meant to be read later
+- Research findings and measurement judgments
+- Cross-repo crypto decisions
+
+## Do not write here
+
+<AccordionGroup>
+  <Accordion title="Live trade checks">
+    `ENTER` / `SKIP` / `WAIT` / `HOLD` / `EXIT` are timing calls. Run `scripts/trade_check.py`, `scripts/useless_scalp.py`, or the hunter brain. Do not open a docs page for a fill.
+  </Accordion>
+  <Accordion title="Secrets and host internals">
+    This repo is **public**. Never commit tokens, API keys, chat IDs, private ingest URLs, SSH material, host IPs, or the contents of env files.
+  </Accordion>
+  <Accordion title="Iteration control logs">
+    `STATUS.md`, `TEST_EVIDENCE.md`, and QA dumps stay in the code repo as a log. If the work produced a durable conclusion, write that conclusion here and keep the log where it is.
+  </Accordion>
+</AccordionGroup>
+
+## In-repo `docs/` folders
+
+Existing markdown in the code repos is a **historical snapshot**. Do not extend those files with new long-form documentation.
+
+Exception that stays in-repo **and** is also written here:
+
+- SKYNET-SOL armed live-copy digest (`docs/findings/teal-rules.md`) — agents must still update that file before touching Teal / TREND live-copy paths. Also publish the same rule here so it is not only buried in the monorepo.
+
+## Code-repo enforcement
+
+The same hard rule is installed as `.cursor/rules/mintlify-crypto-docs.mdc` (always apply) plus a section in each repo's `AGENTS.md`:
+
+- [`grok-trading-desk`](https://github.com/patrickabedin/grok-trading-desk)
+- [`SKYNET-SOL`](https://github.com/patrickabedin/SKYNET-SOL)
+- [`skynet-astra`](https://github.com/patrickabedin/skynet-astra)

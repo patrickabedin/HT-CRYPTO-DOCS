@@ -1,0 +1,46 @@
+---
+title: "Grok Trading Desk"
+description: "SHADOW Bitget USDT-M intelligence layer. Separate from SKYNET-SOL."
+---
+
+Grok Trading Desk is the experimental LLM layer: Scout, Qualifier, Risk, Researcher, Telegram. It is **not** SKYNET-SOL.
+
+Code: [`patrickabedin/grok-trading-desk`](https://github.com/patrickabedin/grok-trading-desk).
+
+<Warning>
+  SHADOW / advisory. Never place, cancel, or withdraw **live** exchange orders. Bitget demo paper is opt-in only. Grade A stays **75**. Champion is not auto-promoted.
+</Warning>
+
+## Boundary
+
+| System | Role |
+| --- | --- |
+| SKYNET-SOL | Deterministic engines and dashboard. No LLM in live signal, ranking, or risk. |
+| Grok Trading Desk | LLM-assisted cards and research. Isolated `grok_desk` ClickHouse. SKYNET data is SELECT-only. |
+
+Do not put Grok-specific code in SKYNET-SOL. Do not copy or modify SKYNET engines from the desk repo.
+
+## What lives in the desk repo
+
+- Shared Bitget public market-data service
+- Event detector, pipeline router, scout / qualifier / risk helpers
+- Telegram HTML renderer (flood-guarded)
+- Champion / Challenger meta-ranker
+- Researcher jobs and the Vercel PnL calendar
+
+## What does not
+
+- SKYNET engines, dashboard, or `skynet_*` writes
+- Secrets, bot tokens, API keys
+- Live / automated order execution
+
+## Hard operating rules
+
+- Live Bitget API key is read-only
+- Demo trading uses a Demo key and `paptrading: 1` only
+- Only Chief of Staff publishes Telegram
+- Shared Telegram budget: do not bypass `telegram_429_backoff`
+- Land production code on `main`. No open PRs
+- **New docs go in this Mintlify repo**, not under `grok-trading-desk/docs/`
+
+Historical in-repo notes remain under that repo's `docs/` folder as a snapshot.

@@ -1,20 +1,48 @@
 ---
-title: "Introduction"
-description: "Welcome to your project"
+title: "HT Crypto Docs"
+description: "Canonical documentation for grok-trading-desk, SKYNET-SOL, skynet-astra, and every other crypto-only system."
 ---
 
-Write a short description of your product here. What it does, who it's for, and what they can accomplish with it.
+This is the **only** documentation home for Patrick's crypto work.
 
-<Tip>
-  Ready to make this your own? Start by editing this page. Update your `docs.json` file to customize your site. Then fill out the [Quickstart](/quickstart) page.
-</Tip>
+From 13 September 2026, agents and humans write new crypto docs here — not in the code repositories.
 
-<Card title="Quickstart" icon="rocket" href="/quickstart">
-  This card links to the quickstart page in your project.
-</Card>
-<Card title="Components" icon="puzzle-piece" href="https://mintlify.com/docs/components">
-  Add cards, callouts, steps, tabs, and more to design and structure your pages.
-</Card>
-<Card title="Settings" icon="gear" href="https://mintlify.com/docs/organize/settings">
-  Set your site name, branding, and navigation in the `docs.json` file.
-</Card>
+<Warning>
+  `ht-crypto-docs` is a **public** GitHub repo. Never commit secrets, tokens, API keys, chat IDs, host IPs, SSH material, or env-file values.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Hard rule" icon="scale-balanced" href="/policy/document-on-mintlify">
+    What must be written here, what stays in a code repo, and what never goes public.
+  </Card>
+  <Card title="How to write a page" icon="pen-to-square" href="/how-to-write">
+    MDX, docs.json, landing on main, and the one-line pointer back in the code repo.
+  </Card>
+  <Card title="Grok Trading Desk" icon="bolt" href="/grok-trading-desk">
+    SHADOW Bitget USDT-M intelligence layer. LLM scout / qualifier / Telegram. Not SKYNET.
+  </Card>
+  <Card title="SKYNET-SOL" icon="diagram-project" href="/skynet-sol">
+    Deterministic engines and dashboard. No LLM in live signal, ranking, or risk.
+  </Card>
+  <Card title="SKYNET ASTRA" icon="flask" href="/skynet-astra">
+    Lightweight research desk. Cache-only publisher. No live order path.
+  </Card>
+</CardGroup>
+
+## Code stays in the code repos
+
+| System | Repo | What it is |
+| --- | --- | --- |
+| Grok Trading Desk | [`patrickabedin/grok-trading-desk`](https://github.com/patrickabedin/grok-trading-desk) | Experimental LLM desk. SHADOW + opt-in Bitget demo paper. |
+| SKYNET-SOL | [`patrickabedin/SKYNET-SOL`](https://github.com/patrickabedin/SKYNET-SOL) | Deterministic live-ranking platform. Frozen LLM boundary. |
+| SKYNET ASTRA | [`patrickabedin/skynet-astra`](https://github.com/patrickabedin/skynet-astra) | Research desk on the existing host and Vercel. |
+| This site | [`patrickabedin/ht-crypto-docs`](https://github.com/patrickabedin/ht-crypto-docs) | Mintlify. Canonical docs for all of the above and any new crypto-only book. |
+
+Do not put Grok-specific code in SKYNET-SOL. Do not copy SKYNET engines into the Grok repo. Document both here.
+
+## Standing safety
+
+- Shadow / advisory / research only unless an owner-stamped live path already exists in that repo.
+- Never place, cancel, or withdraw live exchange orders from a docs change.
+- Grade A stays 75. Do not lower a threshold to hit a quota.
+- Live enter / skip / hold calls are **not** documentation. Run the desk scripts.

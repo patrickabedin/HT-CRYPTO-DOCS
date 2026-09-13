@@ -1,0 +1,34 @@
+---
+title: "SKYNET ASTRA"
+description: "Private lightweight research desk. Cache-only publisher. No live order path."
+---
+
+SKYNET ASTRA is a research desk: vanilla browser UI, Node Vercel API, cache-only Python publisher on the existing DigitalOcean host.
+
+Code: [`patrickabedin/skynet-astra`](https://github.com/patrickabedin/skynet-astra). Desk: [skynet-astra.vercel.app](https://skynet-astra.vercel.app).
+
+<Warning>
+  No exchange client and no live order path. Structure policy is unvalidated research. Do not equate paper marks with exchange fills. Do not loosen quality filters to fill a daily quota.
+</Warning>
+
+## What it does
+
+- Reads existing market cache (quotes + closed 5m bars)
+- Four unvalidated research engines behind a freshness / spread / volume gate
+- Telegram sends qualifying research setups and a daily status message
+- Paper calendar is a sampled-quote model, not venue authority
+
+## What to document here
+
+- Engine admission and lineage
+- Host gitops and rollback
+- Accounting / freshness policy
+- Migration and retirement decisions that other agents must not rediscover
+
+## What stays in the code repo
+
+- `docs/STATUS.md` and other iteration logs
+- Secrets on the host / Vercel project settings
+- Synthetic tests and worker code
+
+Do not alter shared collectors or other books as part of routine ASTRA documentation.

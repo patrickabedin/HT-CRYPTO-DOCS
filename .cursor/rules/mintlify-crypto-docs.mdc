@@ -1,0 +1,15 @@
+---
+description: HARD rule — this Mintlify repo is the only canonical home for crypto documentation
+alwaysApply: true
+---
+
+# This repo is the crypto docs home (HARD)
+
+Write all new crypto documentation in this repository. Do not send the
+author to grok-trading-desk, SKYNET-SOL, or skynet-astra `docs/` folders
+to add a new long-form page.
+
+Add MDX, register it in `docs.json`, push `main`. The repo is public:
+no secrets, tokens, host IPs, or env values.
+
+Live enter/skip/hold calls are not documentation.

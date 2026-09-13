@@ -1,0 +1,33 @@
+---
+title: "SKYNET-SOL"
+description: "Deterministic Bitget market-intelligence platform. No LLM on the live ranking path."
+---
+
+SKYNET-SOL is the deterministic engines, dashboard, and SKYNET ClickHouse stack.
+
+Code: [`patrickabedin/SKYNET-SOL`](https://github.com/patrickabedin/SKYNET-SOL).
+
+<Warning>
+  Waves 0–8 stay read-only with respect to Bitget unless an owner-stamped live-copy path already exists. No LLM in live signal generation, confirmation, ranking, risk, sizing, execution, or stop management. Missing money stays `null`.
+</Warning>
+
+## Boundary
+
+- Do not put Grok-specific code here.
+- Do not treat research findings as admit / lock / exit authority.
+- Before Teal / TREND live-copy, snapshot, paper-clock, or orch place/skip/flatten work, read the in-repo armed digest `docs/findings/teal-rules.md` first. Write every new armed rule there **and** on this Mintlify site.
+
+## What to document here
+
+- Architecture changes and ADRs
+- Runbooks and owner handoffs
+- Durable research findings (still-paper, too-early, measurement judgments)
+- New live-copy rules (copy the armed row here after writing `teal-rules.md`)
+
+## What stays in the monorepo
+
+- Iteration logs: `docs/implementation/STATUS.md`, `TEST_EVIDENCE.md`, QA dumps
+- The armed Teal / TREND digest `docs/findings/teal-rules.md` (agents must keep it current)
+- Secrets and host access notes that cannot go on a public site
+
+Existing `docs/` trees in SKYNET-SOL are historical unless an agent is updating `teal-rules.md` or an iteration log.

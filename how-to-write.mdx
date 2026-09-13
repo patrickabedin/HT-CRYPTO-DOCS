@@ -1,0 +1,80 @@
+---
+title: "How to write a page"
+description: "MDX layout, docs.json, main-branch publish, and what never to paste."
+---
+
+This site is Mintlify. Pages are MDX. Site config is `docs.json` at the repo root.
+
+## Page file
+
+```mdx
+---
+title: "Grade B five-slot book"
+description: "How the five paper slots lock and when they flatten."
+---
+
+Lead with the fact. Then the why. Then the constraint.
+
+<Warning>
+  Shadow / advisory only. Do not place live orders from this page.
+</Warning>
+```
+
+Put the file next to its system:
+
+```
+grok-trading-desk/grade-b-five-slot.mdx
+skynet-sol/findings/your-finding.mdx
+skynet-astra/host-gitops.mdx
+policy/your-policy.mdx
+```
+
+## Register it
+
+Add the path (no `.mdx`) to `docs.json` navigation:
+
+```json
+{
+  "group": "Grok Trading Desk",
+  "pages": [
+    "grok-trading-desk/index",
+    "grok-trading-desk/grade-b-five-slot"
+  ]
+}
+```
+
+## Publish
+
+```bash
+git add -A
+git commit -m "Document <what changed>."
+git push origin main
+```
+
+Mintlify rebuilds from `main`. Connect the [Mintlify GitHub app](https://dashboard.mintlify.com/settings/organization/github-app) on this repo if the site is not updating.
+
+## Style
+
+- Active voice. One idea per sentence.
+- Sentence-case headings.
+- Bold UI labels. Backticks for files, commands, paths, env names.
+- Name the system on first use (Grok Trading Desk, SKYNET-SOL, SKYNET ASTRA).
+- SHADOW / paper / research stays labelled. Do not imply live fills.
+
+## Public-repo checklist
+
+Before you push:
+
+1. No secrets, tokens, keys, chat IDs, or env values.
+2. No host IPs or SSH instructions.
+3. No private dashboard query strings that embed credentials.
+4. Missing money stays **unknown** / `null`. Never invent a number to fill a table.
+
+## Preview locally (optional)
+
+```bash
+npm i -g mint
+mint dev
+```
+
+Local preview is `http://localhost:3000`.
