@@ -4,6 +4,8 @@ Canonical Mintlify documentation for **grok-trading-desk**, **SKYNET-SOL**, **sk
 
 GitHub: https://github.com/patrickabedin/ht-crypto-docs/
 
+Live site (Mintlify): https://htcrypto.mintlify.app
+
 From 13 September 2026, agents write new crypto docs **here**, not in the code repositories.
 
 This repo is **public**. Never commit secrets, tokens, host IPs, or env-file values.
