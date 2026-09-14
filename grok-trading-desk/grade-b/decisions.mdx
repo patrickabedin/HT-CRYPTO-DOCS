@@ -15,6 +15,7 @@ Decisions that still bind. Dated working notes for 13 Sep 2026 live at [13 Sep 2
 - Paper matching demo on the public tape is not honesty
 - Every demo fill must have card TP/SL. Empty `holdSide` is not covered
 - HIGH Telegram: first ≥ USD 30, then +USD 1, UTC day reset, HTML TAPE-shaped card, source `grade_b_upl_high`. No test send
+- UTC-day tape counts each fill-true cross up through \$50 (`book_above_50_n` / `book_above_50_ats`). Desk prints those clocks in Athens
 - Leftover XRP SHORT: leave it
 - After flatten, wait `pause.json` `until` before attach smoke. Kill orphan paper by `candidate_id` only
 - Restart `grok-desk-realtime` after snapshot math. Never restart `grok-market-data` for marks
