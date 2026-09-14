@@ -42,7 +42,7 @@ Same process as the armed watcher. No extra timer. State: `/var/lib/grok-desk/gr
 
 Paper closes persist to ClickHouse and the portfolio journal. Demo reconciliation follows acknowledged paper closes, never an empty or stale cache.
 
-Tape fields: UTC-day high, low before that high, path low, max concurrent, fill-true high, prefill high. `book_samples` is a count, not a tick list.
+Tape fields: UTC-day high, low before that high, path low, max concurrent, fill-true high, prefill high, and \*\*≥$$50 hits** (`book_above_50_n`, `book_above_50_ats`). A hit is one cross up through $$50 on fill-true open-book uPnL. Stay above $$50 and grind higher = still one hit. Dip under $$50 and cross again = another. After a lock flatten the book is ~0, so the day's count freezes — we do not invent post-lock prints. `book_samples` is a watcher-tick count, not a tick list. Each hit stamps ISO UTC (`book_above_50_ats`, cap 50). The desk UTC-day tape shows the count and **every clock in Athens**. First/last: `book_above_50_first_at` / `book_above_50_last_at`. Counting starts on the next watcher tick after the counter shipped; 14 Sep crossings cannot be reconstructed.
 
 ## Gates
 

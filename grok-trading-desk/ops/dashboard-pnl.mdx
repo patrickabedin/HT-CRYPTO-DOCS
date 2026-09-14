@@ -42,6 +42,8 @@ Accounting integrity:
 
 Filter with `?g=` and `?e=` (for example Grade B, or SCALP + USELESS_CLIP_GO). Do not treat simulated books as account equity.
 
+On `/?g=GRADE_B` the **UTC day tape** shows ≥$$50 hits: how many times fill-true open-book uPnL crossed up through $$50 that UTC day, and **each Athens clock**. After a profit lock the book is flat, so the count and list freeze. The tape day is UTC (resets 03:00 Athens in September). We cannot reconstruct 14 Sep crossings — full clocks start on the next worker tick after this ships.
+
 ## Decisions that still bind
 
 ASTRA-ACCOUNTING-01: preserve numeric zero; empty candles are DATA_FAILURE; explicit false verification survives rollup; do not turn NO_FILL into a closed trade. See [ASTRA accounting](/skynet-astra/accounting).
