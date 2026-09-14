@@ -1,0 +1,81 @@
+---
+title: "RELATIVE STRENGTH ROTATION"
+description: "Grade B family: both RS legs, BTC moving, trade with the tape. Lone RELATIVE is not a rotation."
+sidebarTitle: "Relative strength"
+icon: "arrows-rotate"
+---
+
+<Warning>
+  SHADOW / demo only. Family classification is not a fill. Do not place, cancel, or withdraw live orders from this page.
+</Warning>
+
+## What it is
+
+Grade B setup family `RELATIVE_STRENGTH_ROTATION`. An alt is stronger or weaker than **both** BTC and ETH while BTC itself is moving, and the trade goes **with** that BTC tape. A lone `RELATIVE` watcher tick is not a rotation.
+
+Helper: `relative_rotation_ok` in `scripts/setup_families.py`. ARM builder: `build_relative_strength_rotation` in `scripts/arm_gate.py`.
+
+## Clock and size
+
+24h quote RS versus live `BTCUSDT` and `ETHUSDT` fractional change. Trigger is a 24h high (LONG) or low (SHORT) break. Grade B demo size is unchanged when TRIGGERED. This is not a Hunter 5m engine.
+
+## Radio
+
+Grade B card through the existing ARMED + ALIGNED chief gates. `TELEGRAM_ALLOW` default includes `GRADE_B`. No new publisher. Do not test-send Telegram.
+
+## Host
+
+Runs inside drain (`score_symbol` → `classify_setup` → ARM). No dedicated timer. Do not restart `grok-market-data` for this tune.
+
+## State / settle
+
+Same Grade B paper and demo book. Episode key is symbol + family + direction + UTC date. Live TP/SL, `fill_entry`, marks, flatten, and smoke are not part of this tune.
+
+## Gates
+
+Classifier:
+
+- `RELATIVE` **and** `PRICE` **and** one-sided
+- LONG: `pos24 >= 0.55` (`POS24_RS_LONG_MIN`)
+- SHORT: `pos24 <= 0.45` (`POS24_RS_SHORT_MAX`)
+- Lone `RELATIVE` → `NO_SUPPORTED_SETUP`
+- Mid-box RELATIVE plus PRICE → `NO_SUPPORTED_SETUP`
+
+ARM (`relative_rotation_ok`):
+
+- Both `rs_vs_btc` **and** `rs_vs_eth` agree (AND, not OR)
+- BTC 24h move at least 1% (`RS_BTC_MOVE_MIN`)
+- LONG only if BTC is at least +1%; SHORT only if BTC is at most −1%
+- Same `pos24` band as the classifier
+- Missing BTC/ETH or quote → `rs_supports_direction=UNKNOWN` → do not ARM
+- Quality false → do not ARM
+
+## How Patrick uses it
+
+Read the family on the card. If majors are flat, skip. Do not fade BTC on this family. If he pastes a card, that is a [trade-check](/grok-trading-desk/advisory/trade-check), not a classifier change.
+
+## Decisions that still bind
+
+**14 Sep 2026.** Calendar Grade B row (ex-FLATTEN): **251** trades, **33%** WR, **−40.7R**, **−$304**. Reconstructed Bitget structure on 237 fills:
+
+| Slice | n | WR | Net R |
+| --- | --- | --- | --- |
+| All reconstructed | 237 | 32% | −44.2 |
+| BTC 24h move under 1% (alt noise, majors flat) | 184 | 30% | **−41.6** |
+| One RS leg only | 11 | 0% | −6.5 |
+| Fade BTC (against a 1%+ BTC tape) | 19 | 32% | −6.0 |
+| Both legs + BTC 24h at least 1% + with tape | 34 | 44% | **+3.44** |
+
+110 of the calendar 251 were `STALL`. 51 were `STOP`. The old classifier treated a lone `RELATIVE` tick as a rotation and ORed the two RS legs.
+
+Do not change fills, `fill_entry`, marks, TP/SL, flatten, or smoke to "fix" this family. Grade A stays 75.
+
+Sister tune: [REDUMP CONTINUATION SHORT](/grok-trading-desk/grade-b/redump-continuation-short).
+
+## Pitfalls
+
+- Do not treat a `RELATIVE` watcher tick as RS.
+- Do not OR `rs_vs_btc` / `rs_vs_eth`. Both legs must agree.
+- Do not ARM when BTC is flat (under 1% 24h). That slice printed −42R.
+- Do not fade BTC on this family.
+- Do not remake attached paper and demo from public last so the columns match. See [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
