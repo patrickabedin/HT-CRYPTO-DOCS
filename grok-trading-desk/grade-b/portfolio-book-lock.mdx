@@ -23,12 +23,16 @@ Quote outages delay settlement. They do not invent a fill.
 Book lock (whole open book, not one ticket):
 
 - Arm `GRADE_B_BOOK_LOCK_USDT` default **\$150**
-- Giveback `GRADE_B_BOOK_LOCK_GIVEBACK` default **25%** of the **fill-true UTC-day peak**
+- **Mission:** capture the UTC-day **fill-true open-book high**, flatten **every** open seat, sit out until the next UTC day. The Grade B calendar cell is that locked high (or locked loss), not Σ ticket closes.
+- Once armed, a ticket **TP1** or profit giveback flattens the **whole** book as `BOOK_LOCK` at the current mark and pauses the UTC day. Do not let one ticket peel the winner and dump leftovers.
+- Giveback `GRADE_B_BOOK_LOCK_GIVEBACK` default **25%** of the **fill-true UTC-day peak** is the backup if nothing hits TP.
 - `fill_true_high_usdt` / `book_peak_usdt` trails fill × Bitget mark when attached, else fill × WS last
 - `book_high_usdt` may still show a prefill last-chase high for display (`prefill_high_usdt`)
 - `clear_prefill_lock()` keeps the display high and resets the lock peak to 0 so a prefill `BOOK_GIVEBACK` does not keep the day paused
 
 13 Sep 2026: prefill tape printed **+\$318** and locked the book. That high was trigger-vs-last, not fill-true. Resume trails fill-true only. Details: [13 Sep notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty).
+
+14 Sep 2026: fill-true high **+\$252.5** at 02:21:31Z (ten seats, mostly MTL). Ticket TP1 peeled MTL and `BOOK_GIVEBACK` flattened leftovers at **+\$17**. The calendar cell / day X is **+\$252.5**, not the leftover flatten and not the stall/stop blotter. Armed TP1 now locks the whole book. Trade count and time-to-that-PnL already sit on the day-engine band.
 
 ## Radio
 
@@ -63,3 +67,5 @@ Empty slots are allowed. This is a priority policy, not a win-rate claim. Do not
 2026-09-10 five-slot rollout: migrate excess positions, do not hide them. Paper closes at most 25 positions per cycle at observed prices. Dashboard must see worker policy metadata before claiming a capacity policy is live.
 
 2026-09-13: seats are ten; lock is fill-true `$150` / 25% giveback (`78f5f61`, `349e2c7`). Do not re-arm the lock on the prefill +\$318 tape high.
+
+2026-09-14: armed TP1 / profit giveback flattens the **whole** open book as `BOOK_LOCK`. Calendar cell is the fill-true high (14 Sep **+\$252.5**), not leftover flatten dollars.

@@ -74,7 +74,7 @@ Demo force-exits later (not the open, not the card TP/SL):
 | Leftover non-GB tape | 24h max hold (`max_hold_24h`) |
 | Either | Once peak uPnL ≥ USD 12, exit if mark gives back ≥ 35% of that peak |
 
-Those run in `apply_hold_and_giveback_exits` on the 15s timer. They are **not** Bitget `pos_loss` / `pos_profit`. Book lock (USD 150 / 25% fill-true peak) is a different flatten.
+Those run in `apply_hold_and_giveback_exits` on the 15s timer. They are **not** Bitget `pos_loss` / `pos_profit`. Book lock (USD 150 arm, then whole-book `BOOK_LOCK` on armed TP1, 25% fill-true peak as backup) is a different flatten. See [Portfolio and book lock](/grok-trading-desk/grade-b/portfolio-book-lock).
 
 ## Who may open
 
@@ -251,7 +251,7 @@ File mark lags REST by up to one 15s poll. Compare REST `markPrice` + `unrealize
 
 After snapshot math changes, restart `grok-desk-realtime`. Never restart `grok-market-data` to refresh marks.
 
-Paper TP1/SL closes persist to ClickHouse CF and show on the Grade B **calendar** (R). Demo twins show on paper-vs-Bitget. A paper-only FIL TP1 will not appear as a demo settle row. Calendar R is stop-risk, not “1R = USD 50”.
+Paper TP1/SL closes persist to ClickHouse CF and show on the Grade B **ticket list**. The Grade B calendar **dollar cell** is the locked fill-true book high for that UTC day, not Σ those closes. Demo twins show on paper-vs-Bitget. A paper-only FIL TP1 will not appear as a demo settle row. Calendar R is stop-risk, not “1R = USD 50”.
 
 Closed demo rows: one row per key. Bitget partials **overwrite**, they do not stack (`upsert_closed`).
 

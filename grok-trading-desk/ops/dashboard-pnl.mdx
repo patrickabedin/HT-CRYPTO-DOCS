@@ -42,6 +42,8 @@ Accounting integrity:
 
 Filter with `?g=` and `?e=` (for example Grade B, or SCALP + USELESS_CLIP_GO). Do not treat simulated books as account equity.
 
+On `/?g=GRADE_B` the UTC calendar **cell** is the locked fill-true open-book high for that day (or a locked loss), not the sum of ticket closes. Click a day for **`YYYY-MM-DD · paper vs Bitget · all engines`** — that table is the ticket blotter. Trade count and trading time to that day PnL already sit on the day-engine band above it. Leftover Bitget fills stay unpaired. `/?g=DEMO` is the 44-coin exchange blotter — it is not the lock capture.
+
 ## Decisions that still bind
 
 ASTRA-ACCOUNTING-01: preserve numeric zero; empty candles are DATA_FAILURE; explicit false verification survives rollup; do not turn NO_FILL into a closed trade. See [ASTRA accounting](/skynet-astra/accounting).

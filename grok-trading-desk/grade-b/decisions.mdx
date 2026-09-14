@@ -5,6 +5,15 @@ description: "Binding Grade B policy: ten-slot book, fill-true lock, demo honest
 
 Decisions that still bind. Dated working notes for 13 Sep 2026 live at [13 Sep 2026 UPL honesty](/grok-trading-desk/grade-b/2026-09-13-upl-honesty). Paid fill / mark / TP-SL pitfalls for the next agent: [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
 
+## 2026-09-14 — lock the whole book, calendar is the high
+
+- Mission: capture the UTC-day fill-true **open-book high**, flatten the **whole** book, sit out until the next UTC day.
+- Armed book: ticket **TP1** or profit giveback → flatten every open seat as `BOOK_LOCK` at the current mark. 25% giveback is backup only.
+- Do not let a ticket TP1 peel the winner (`if book_reason and reason not in {"STOP", "TP1"}` dumped 14 Sep from +\$252.5 to +\$17 leftovers).
+- Grade B calendar cell / Today / Day stats = `lockCaptureByDay` fill-true high (or locked loss), **not** Σ ticket closes. 14 Sep cell is **+\$252.5**, not paper +\$84 and not DEMO −\$28.
+- Paper-vs-Bitget is the ticket blotter for that UTC day. Trade count and trading time to the day PnL already live on the day-engine band (`DayTotals`). Do not retell those on the compare heading.
+- With real keys copying **all** paper, Bitget should track the locked high, not the leftover blotter. 44-coin DEMO FILL without MTL is a different book.
+
 ## 2026-09-13 — fill-true lock and Bitget mark
 
 - Paper fill is one number: Bitget if attached, else WS last with 35 bps chase

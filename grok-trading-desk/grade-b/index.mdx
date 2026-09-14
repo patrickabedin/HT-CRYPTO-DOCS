@@ -13,7 +13,7 @@ Grade B is a **score band plus a book**, not a hunter-style named engine. Score 
 
 Scout and Champion score a candidate. If the score is 45–74 and ARM produced a measured thesis, the armed watcher waits for the trigger on a **completed** candle. TRIGGERED freezes the plan. Paper and (when enabled) Bitget demo copy that freeze.
 
-Cap: **one coin**, **ten** open seats. Refill when a seat frees. Book lock arms at **\$150** and trails **25%** of the fill-true UTC-day peak.
+Cap: **one coin**, **ten** open seats. Refill when a seat frees. Book lock arms at **\$150**. Once armed, a ticket **TP1** flattens **every** open seat as `BOOK_LOCK` at the current mark and the book sits out the rest of the UTC day. **25%** trail of the fill-true peak is the backup if nothing hits TP. The Grade B calendar cell is that locked high (or locked loss), not Σ ticket closes.
 
 Attached paper and demo Last/uPnL follow the Bitget demo mark, not public last. **Next agent:** before changing fills, marks, demo opens, TP/SL, flatten, or smoke, read [Open + TP/SL pitfalls](/grok-trading-desk/grade-b/bitget-open-tpsl) so we do not repeat 13 Sep. Day notes: [13 Sep 2026](/grok-trading-desk/grade-b/2026-09-13-upl-honesty).
 
@@ -22,6 +22,7 @@ Attached paper and demo Last/uPnL follow the Bitget demo mark, not public last. 
 - Armed checks run on completed candles (15m close-through-level where that is the trigger).
 - Demo / paper size: **USD 50 margin at 20x** (USD 1000 notional).
 - Calendar `R` is stop-risk, not a dollar. Do not convert with `1R = $50`.
+- Grade B calendar **dollars** are the locked fill-true book high for that UTC day, not the sum of stall/stop/TP closes. Paper-vs-Bitget lists those closes. The day band already shows trade count and trading time to that PnL.
 
 ## Radio
 
