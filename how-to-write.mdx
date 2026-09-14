@@ -1,11 +1,13 @@
 ---
 title: "How to write a page"
-description: "Book-to-engine map, the engine section template, docs.json, and what never to paste."
+description: "Book-to-engine map, the why on every page, docs.json, and what never to paste."
 ---
 
 This site is Mintlify. Pages are MDX. Site config is `docs.json` at the repo root.
 
 Parents are **desk books**. Children are **engines or workers**. Everything you do for an engine is a **fixed section set on that page**, not extra sidebar URLs.
+
+While you work, write **everything you have** onto that page: the change **and the reason why**. A restatement of new code with no why is incomplete. Policy: [Document everything here](/policy/document-on-mintlify).
 
 ## Book map
 
@@ -64,7 +66,7 @@ trade-check vs brain vs wait. What not to chase.
 
 ## Decisions that still bind
 
-Distilled ADR or rollout. Date the decision.
+Distilled ADR or rollout. Date the decision. Write **why** it binds and which alternative is wrong.
 
 ## Pitfalls (if we already paid)
 
@@ -94,6 +96,16 @@ grok-trading-desk/hunter-unique/grain-pullback.mdx
 skynet-sol/read-only-adapter.mdx
 ```
 
+## Write the why
+
+Every working turn that touches an engine, book, or policy must leave the reason on this site, not only in chat.
+
+- Lead with the fact. Then the why. Then the constraint.
+- Name the ask or bug that forced the change.
+- Name the alternative you rejected and why it is wrong.
+- Date binding decisions under **Decisions that still bind**.
+- If you already paid for a pitfall, put it in a **Next agent — do not repeat** table on that engine page.
+
 ## Register it
 
 Add the path (no `.mdx`) to `docs.json` under the matching tab and group. An unlisted file is easy to lose.
@@ -110,7 +122,7 @@ Mintlify rebuilds from `main` to https://htcrypto.mintlify.app. Connect the [Min
 
 ## Style
 
-- Active voice. One idea per sentence.
+- Active voice. One idea per sentence. Lead with the fact, then the why.
 - Sentence-case headings.
 - Bold UI labels. Backticks for files, commands, paths, env names.
 - Name the system on first use (Grok Trading Desk, SKYNET-SOL, SKYNET ASTRA).
