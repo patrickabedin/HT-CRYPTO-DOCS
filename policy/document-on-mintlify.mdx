@@ -1,19 +1,38 @@
 ---
 title: "Document everything here"
-description: "Hard rule from 13 September 2026: all crypto documentation lives in this Mintlify repo, written in the same turn as the change."
+description: "Hard rule: while you work, write everything you have and the why on this Mintlify site in the same turn."
 ---
 
-Patrick's rule: **document everything crypto from now on in this repository, in the same turn as the work.**
+Patrick's rule: **while you work, document everything you have here — including the reason why — in the same turn.**
+
+The code change is not finished until this site has the what **and** the why. Do not ship and "document later." A chat recap is not the record. This site is.
 
 Applies to **grok-trading-desk**, **SKYNET-SOL**, **skynet-astra**, and **any other crypto-only matter** (scalp, hunter, new books, cross-repo decisions).
 
 The GitHub source is [`patrickabedin/ht-crypto-docs`](https://github.com/patrickabedin/ht-crypto-docs/). Mintlify publishes from `main`.
 
+<Warning>
+  A page that only restates new code, with no reason, is incomplete. Write what changed, why it exists, which alternative you rejected, and what the next agent must not undo.
+</Warning>
+
+## What every update must carry
+
+Write **everything you have** from the turn onto the engine (or book) page that owns the work:
+
+| Required | Meaning |
+| --- | --- |
+| **What** | Behavior, files, gates, radio, settle, host units. |
+| **Why** | The ask or bug that forced it. Why this path, not another. |
+| **What still binds** | The constraint the next agent must not undo. |
+| **Dead paths** | What you tried and discarded, so the next agent does not repeat the day. |
+
+If you only have a one-line behavior change, still write the why. That is what stops the next agent from reverting it.
+
 ## Same-turn checklist
 
 <Steps>
   <Step title="Write or update the matching page here">
-    New engine, book, radio lane, host unit, or binding decision gets a page (or a new section on the existing engine page). Do not bury it in an index paragraph.
+    New engine, book, radio lane, host unit, or binding decision gets a page (or a new section on the existing engine page). Put the what **and** the why on that page. Do not bury it in an index paragraph or leave the reason only in chat.
   </Step>
   <Step title="Use the book map">
     Parent = desk book (Grade B, Grade A, Hunter Unique, Hunter Tape, EARLY, Scalp, USELESS, Desk ops, Advisory, Research). Child = engine or worker. Everything you do for that engine stays on its page.
@@ -31,13 +50,14 @@ The GitHub source is [`patrickabedin/ht-crypto-docs`](https://github.com/patrick
 
 ## Write here
 
-- Architecture and system maps
-- ADRs and policy changes
+- Architecture and system maps, plus why the boundary is drawn that way
+- ADRs and policy changes, plus the rejected alternative
 - Runbooks and how-tos
 - Rollout / freeze / family notes meant to be read later
 - Research findings and measurement judgments
 - Cross-repo crypto decisions
 - New engines, books, radio lanes, systemd units, and settle paths
+- Bug fixes and behavior changes — the pitfall **and** why the new path stays
 
 ## Do not write here
 
@@ -49,7 +69,7 @@ The GitHub source is [`patrickabedin/ht-crypto-docs`](https://github.com/patrick
     This repo is **public**. Never commit tokens, API keys, chat IDs, private ingest URLs, SSH material, host IPs, or the contents of env files. Path *names* are fine. Values are not.
   </Accordion>
   <Accordion title="Iteration control logs">
-    `STATUS.md`, `TEST_EVIDENCE.md`, and QA dumps stay in the code repo as a log. If the work produced a durable conclusion, write that conclusion here and keep the log where it is.
+    `STATUS.md`, `TEST_EVIDENCE.md`, and QA dumps stay in the code repo as a log. If the work produced a durable conclusion, write that conclusion **and its why** here and keep the log where it is.
   </Accordion>
 </AccordionGroup>
 
@@ -60,6 +80,12 @@ Existing markdown in the code repos is a **historical snapshot**. Do not extend 
 Exception that stays in-repo **and** is also written here:
 
 - SKYNET-SOL armed live-copy digest (`docs/findings/teal-rules.md`) — agents must still update that file before touching Teal / TREND live-copy paths. Also publish the same rule here so it is not only buried in the monorepo.
+
+## Why this rule exists (14 Sep 2026)
+
+Patrick asked that while agents work they must also update Mintlify with **everything they have** and the **reason why**. The 13 Sep same-turn rule already required a page. Agents were still shipping the what and leaving the why in chat, so the next agent re-litigated the same decision. The why is now required on the page, in the same turn, or the work is incomplete.
+
+Enforced in `grok-trading-desk` as `AGENTS.md` plus `.cursor/rules/mintlify-crypto-docs.mdc`.
 
 ## Code-repo enforcement
 
