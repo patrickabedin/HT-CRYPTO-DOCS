@@ -48,8 +48,7 @@ Tape fields: UTC-day high, low before that high, path low, max concurrent, fill-
 
 - At most **ten** candidate positions across open Grade B paper **and** tracked/unmatched demo
 - One position per coin
-- At most three in one direction and two per engine
-- Rank by existing score, then estimated after-fee TP1 reward/risk, then earlier arm timestamp and stable ID
+- Rank by existing score, then estimated after-fee TP1 reward/risk, then earlier arm timestamp and stable ID. Live `Admission.reserve` does not cap three-per-direction or two-per-engine
 - Stale or missing demo state blocks new paper admission when demo trading is enabled
 - An old unlimited `BITGET_DEMO_MAX_OPEN` cannot bypass the seat cap
 - Flatten pause (`pause.json` `until`) blocks new takes; `flatten_cooldown` is silent
