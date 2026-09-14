@@ -1,0 +1,77 @@
+---
+title: "Redump continuation short"
+description: "Grade B REDUMP_CONTINUATION_SHORT. Failed-bounce second dump only. First-flush shorts are the bleed."
+sidebarTitle: "Redump short"
+---
+
+Family page for `REDUMP_CONTINUATION_SHORT`. Classification and ARM thesis live here. Live TP/SL, fills, and flatten stay on the shared Grade B pages. SHADOW / demo only. Grade A stays 75.
+
+Related: [Setup families](/grok-trading-desk/grade-b/setup-families), [Armed watcher](/grok-trading-desk/grade-b/armed-watcher), [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
+
+## What it is
+
+A **SHORT** continuation after a dump already happened, price **bounced and failed to reclaim the 24h mid**, and selling resumes toward a break of the 24h low.
+
+It is not "the coin is red, short the next low." That first-flush print is the bleed.
+
+Code: `scripts/setup_families.py` (`redump_continuation_ok`) and `scripts/arm_gate.py` (`build_redump_continuation_short`).
+
+## Clock and size
+
+- TTL 10h (`ttl_policy.FAMILY_TTL_HOURS`). Weekend compression still applies.
+- Trigger: `BREAK_BELOW` the measured 24h low.
+- Invalidation in the thesis: last back above the 24h mid.
+- Live paper/demo stop and TP still come from `grade_b_levels` 5m structure, not from rewriting this family's 24h mid. Do not retune fills or TP/SL here.
+- Grade B stall (30 min / 0.25R) and 2h max-hold are portfolio rules, not this engine.
+
+## Radio
+
+Same Grade B lane. No per-family mute. Do not add a publisher.
+
+## Host
+
+Runs inside drain `score_symbol` → classify → ARM gate. No dedicated timer. Do not restart `grok-market-data` for this change. After snapshot math, restart `grok-desk-realtime` only.
+
+## State / settle
+
+Same Grade B CF book as the other families. Calendar R is stop-risk. Flatten / portfolio migration are not this engine's calendar.
+
+## Gates
+
+Must all be true to classify **and** ARM:
+
+1. 24h change ≤ −4% (`CHG24_STRONG`).
+2. `pos24` in **0.30–0.50** — still off the low, still below mid (failed bounce).
+3. Watcher `VOLUME` + `PRICE` and **one-sided `down`**. Two-sided tape is not a redump.
+4. Measured 24h box present. Last still **above** the 24h low (entry not already gone).
+
+Loose dump tape (`chg24` ≤ −4% + VOLUME + down) that **fails** those quality checks is `NO_SUPPORTED_SETUP`. It does **not** fall through to `EARLY_IGNITION` or `RELATIVE_STRENGTH_ROTATION` as a consolation short.
+
+Missing `pos24` or `chg24` → no redump (UNKNOWN, do not invent).
+
+## Book that forced the tune (Sep 2026)
+
+Grade B engine-monthly calendar through 14 Sep: **402** shorts, **29%** WR, **−96.3R**, **−$1,111**. Outcomes: 149 `STALL`, 140 `STOP`, 81 TP hits.
+
+Reconstructed 1h Bitget structure on those 402 fills:
+
+| Filter at fill | n | WR | Net R |
+| --- | --- | --- | --- |
+| All redump calendar | 402 | 29% | −96.3 |
+| Bounce after first low < 25% of the 24h range (first flush / grind) | 320 | 26% | −103 |
+| Bounce ≥ 30% of the 24h range | 56 | 45% | **+10.0** |
+| Bounce ≥ 35% and still a dump day (≤ −4%) | 28 | 57% | **+11.7** |
+
+`pos24` 0.30–0.50 at ARM is the live proxy for that failed bounce (last still elevated, waiting for the re-break). Do not loosen it back to "any −4% + volume + down."
+
+Asia hours (22:00–05:00 UTC) were ugly on this five-day sample. The structural gate is the durable fix. Do not add a session blacklist from one week.
+
+## How Patrick uses it
+
+If the card is redump, last should still be **off** the 24h low and **below** mid. If last is already glued to the low, that is a first flush — skip. Paste the card into trade-check. SHADOW only. No flatten to test.
+
+## Decisions that still bind
+
+- 2026-09-14: quality failed-bounce only. Junk dumps reject instead of leaking into other families.
+- Do not remake TP/SL or `fill_entry` to "fix" this engine. See [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
+- Stamp `fill_entry` once. Attached books use Bitget mark / uPnL.

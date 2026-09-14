@@ -39,6 +39,7 @@
               "grok-trading-desk/grade-b/index",
               "grok-trading-desk/grade-b/armed-watcher",
               "grok-trading-desk/grade-b/setup-families",
+              "grok-trading-desk/grade-b/redump-continuation-short",
               "grok-trading-desk/grade-b/portfolio-book-lock",
               "grok-trading-desk/grade-b/fills-levels-upl",
               "grok-trading-desk/grade-b/demo-trader",
