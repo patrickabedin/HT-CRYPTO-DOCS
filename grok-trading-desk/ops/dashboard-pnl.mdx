@@ -40,7 +40,9 @@ Accounting integrity:
 
 ## How Patrick uses it
 
-Filter with `?g=` and `?e=` (for example Grade B, or SCALP + USELESS_CLIP_GO). Do not treat simulated books as account equity.
+Filter with `?g=` and `?e=` (for example Grade B, or SCALP + USELESS_CLIP_GO). Do not treat simulated books as account equity. On Grade B the engine chip filters **settled calendar** only — the live 10-seat paper book stays visible (tape + hits + paper use zebra lanes).
+
+On `/?g=GRADE_B` the **UTC day tape** has its own column per dollar level ($$30 / $$50 / $$80 / $$100 / $$150 / $$200 / $$300 / $$350 / $$400): how many times fill-true open-book uPnL crossed up through that dollar that UTC day. Clocks sit in a separate hits table (Athens). After a profit lock the book is flat, so the counts freeze. The tape day is UTC (resets 03:00 Athens in September). A stale-demo note on the LIVE line is a warning only — last-known seats still count and **new paper stays open**. Only `new entries blocked: demo file missing` closes admission. Watcher ticks write ClickHouse `grade_b_book_samples` / `grade_b_book_hits` so `scripts/grade_b_book_hits.py --day` can replay later. Samples start only after that writer ships; 15 Sep 2026 morning cannot reconstruct $$30/\$80.
 
 ## Decisions that still bind
 
