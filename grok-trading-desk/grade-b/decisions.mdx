@@ -15,7 +15,8 @@ Decisions that still bind. Dated working notes for 13 Sep 2026 live at [13 Sep 2
 - Paper matching demo on the public tape is not honesty
 - Every demo fill must have card TP/SL. Empty `holdSide` is not covered
 - HIGH Telegram: first ≥ USD 30, then +USD 1, UTC day reset, HTML TAPE-shaped card, source `grade_b_upl_high`. No test send
-- UTC-day tape counts each fill-true cross up through \$50 (`book_above_50_n` / `book_above_50_ats`). Desk prints those clocks in Athens
+- UTC-day tape counts fill-true cross-ups at $$30 / $$50 / $$80 / $$100 / $$150 / $$200 / $$300 / $$350 / $$400 (`book_hits`). Desk columns are the counts; clocks are Athens. ClickHouse samples start after this writer; `grade_b_book_hits.py --day` replays them. 15 Sep 2026 morning cannot reconstruct $$30/\$80 — those levels were not stored yet
+- Stale `demo_trader.json` must not close the paper book. 15 Sep morning freeze was that admission gate, not the \$150 lock. Missing file only.
 - Leftover XRP SHORT: leave it
 - After flatten, wait `pause.json` `until` before attach smoke. Kill orphan paper by `candidate_id` only
 - Restart `grok-desk-realtime` after snapshot math. Never restart `grok-market-data` for marks

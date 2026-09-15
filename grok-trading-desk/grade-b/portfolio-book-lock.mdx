@@ -42,7 +42,11 @@ Same process as the armed watcher. No extra timer. State: `/var/lib/grok-desk/gr
 
 Paper closes persist to ClickHouse and the portfolio journal. Demo reconciliation follows acknowledged paper closes, never an empty or stale cache.
 
-Tape fields: UTC-day high, low before that high, path low, max concurrent, fill-true high, prefill high, and **≥**$$50 / ≥$$**100 hits** (`book_above_50_*`, `book_above_100_*`). A hit is one cross up through that dollar on fill-true open-book uPnL. Stay above and grind higher = still one hit. Dip under and cross again = another. After a lock flatten the book is ~0, so the day's counts freeze. Each hit stamps ISO UTC (cap 50). The desk UTC-day tape shows the count and **every clock in Athens**. A stale `demo_trader.json` (default older than 10 minutes) blocks new paper seats; open paper still marks and exits. We cannot reconstruct crossings from before a level started counting.
+Tape fields: UTC-day high, low before that high, path low, max concurrent, fill-true high, prefill high, and **dollar hits** in `book_hits` for $$30 / $$50 / $$80 / $$100 / $$150 / $$200 / $$300 / $$350 / \$400. A hit is one cross up through that dollar on fill-true open-book uPnL. Stay above and grind higher = still one hit. Dip under and cross again = another. After a lock flatten the book is ~0, so the day's counts freeze. Each hit stamps ISO UTC (cap 50). The desk UTC-day tape gives each level its **own column** (count). Clocks live in a separate hits table, Athens wall time.
+
+Watcher ticks also write `grok_desk.grade_b_book_samples` and `grok_desk.grade_b_book_hits` when ClickHouse env is present. Replay any level with `python3 scripts/grade_b_book_hits.py --day YYYY-MM-DD`. Samples start only after this writer ships — 15 Sep 2026 morning cannot be reconstructed below $$50. Live JSON still holds $$50 clocks from that day.
+
+A stale `demo_trader.json` (default older than 10 minutes) must **not** refuse new paper. Last-known demo still counts toward the 10 seats. The dashboard warns `demo snapshot Xm stale (last-known seats, new paper still open)`. Only a **missing** file with `BITGET_DEMO_TRADING=1` blocks admission. 15 Sep 2026 morning froze with 8 empty seats because the stale-file gate returned `None` and skipped `admission.reserve` — that was a logic bug, not the \$150 lock. Open paper still marks and exits either way. `demo_trader` heartbeats `ts` on failed ticks so a Bitget error does not age the file.
 
 ## Gates
 
@@ -50,7 +54,7 @@ Tape fields: UTC-day high, low before that high, path low, max concurrent, fill-
 - One position per coin
 - At most three in one direction and two per engine
 - Rank by existing score, then estimated after-fee TP1 reward/risk, then earlier arm timestamp and stable ID
-- Stale or missing demo state blocks new paper admission when demo trading is enabled
+- Missing demo file blocks new paper admission when demo trading is enabled. A stale-but-present file does not
 - An old unlimited `BITGET_DEMO_MAX_OPEN` cannot bypass the seat cap
 - Flatten pause (`pause.json` `until`) blocks new takes; `flatten_cooldown` is silent
 
