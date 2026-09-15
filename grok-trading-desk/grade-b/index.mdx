@@ -22,7 +22,8 @@ Attached paper and demo Last/uPnL follow the Bitget demo mark, not public last. 
 - Armed checks run on completed candles (15m close-through-level where that is the trigger).
 - Demo / paper size: **USD 50 margin at 20x** (USD 1000 notional).
 - Calendar `R` is stop-risk, not a dollar. Do not convert with `1R = $50`.
-- UTC-day tape counts \*\*≥$$50 hits**: each time fill-true open-book uPnL crosses up through $$50. Each clock is Athens. After a lock flatten the count freezes.
+- UTC-day tape counts **≥**$$50 / ≥$$**100 hits**: each time fill-true open-book uPnL crosses up through that dollar. Each clock is Athens. After a lock flatten the counts freeze.
+- Stale demo snapshot (default >10 minutes) blocks new paper seats. Open paper still marks and exits. Bitget demo stays one coin.
 
 ## Radio
 
