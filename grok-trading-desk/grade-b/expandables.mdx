@@ -1,0 +1,58 @@
+---
+title: "Expandables loan desk"
+description: "Three-seat TREND / RECLAIM / EXTREME book. Bitget demo only. Cash +$50 banks, −$50 sits. Grade B 10-seat stays paper research."
+sidebarTitle: "Expandables"
+icon: "book-open"
+---
+
+Demo cash is the only book that can repay the $15k loan. Target: bank **+$50** and sit the UTC day, or cut at **−$50** and sit. One shared wallet. Three named engines. Nothing else gets a new Bitget fill.
+
+$15k / $50 ≈ **300 perfect green days**. This desk cannot promise that. It *can* stop another −$650 day on the account that matters.
+
+SHADOW / advisory only. No live orders. No Telegram publisher. Grade A stays 75.
+
+## Who sits
+
+| Engine | Why |
+|---|---|
+| `TREND_CONTINUATION` | Only Grade B family with real +$50 paper days |
+| `RECLAIM_CONTINUATION` | Thin, already printed a +$50 day |
+| `EXTREME_MOMENTUM` | Hunter tape; one seat if ripe is actionable. Empty seat is fine |
+
+Hard reject everything else (REDUMP, RS, BREAKOUT, EARLY*, SCALP, CLIP GO). One coin and one engine per seat. **Max 3 open.**
+
+Admission is mutually exclusive with the [Grade B 10-seat book](/grok-trading-desk/grade-b/portfolio-book-lock). A TREND cannot sit in both.
+
+## Locks (cash, not tape high)
+
+Combined Expandables cash = UTC-day realized $ + open-book uPnL:
+
+- **Bank:** cash ≥ **+$50** → flatten all, sit until next UTC day. Reason `EXPAND_BANK`. Giveback **0** (hard first touch).
+- **Cut:** cash ≤ **−$50** → flatten all, sit. Reason `EXPAND_STOP`.
+
+Do **not** reuse `GRADE_B_BOOK_LOCK_USDT=150` on this process. State is `EXPAND_PORTFOLIO_STATE` (`/var/lib/grok-desk/expand_portfolio.json`). Pause is the sibling `.pause.json`.
+
+Calendar cell $ is banked ticket cash (same rule as Grade B now). Tape High stays. Stamp `EXPANDABLES_PORTFOLIO_V1` on settles.
+
+## Demo
+
+New Bitget demo attaches are Expandables only. Host `BITGET_DEMO_MAX_OPEN=10` cannot reopen the 16-family lane — code caps at 3.
+
+- Leftover Grade B demo (REDUMP / RS / …) ages out. Do not flatten them to “test” this lane.
+- EXTREME is one ripe ingest when the EXTREME seat is free. Do **not** set `BITGET_DEMO_INCLUDE_EXTREME=1`.
+- Size stays $50 @ 20x.
+
+## 5 UTC-day proof
+
+Watch **Bitget demo** (paper is advisory):
+
+- Keep the desk if ≥3 days bank +$50 and no day worse than −$50.
+- Kill EXTREME demo attach if it is silent or red after those 5 days; TREND+RECLAIM can continue.
+- Do not raise size or add a fourth engine to “go faster.” Speed is more +$50 days, not more seats.
+
+## What we did not change
+
+- Grade B 10-seat, $150 lock, −$100 day stop, hit tape
+- SHADOW / no live trading / no `grok-market-data` restart / no flatten-for-test
+- No harvest-recycle of $50 (that is how 15 Sep went to −$653)
+- No new Telegram publisher. Flood guard unchanged
