@@ -5,7 +5,7 @@ description: "Opt-in Bitget Demo paper. Grade B TRIGGERED only. $50 margin at 20
 
 ## What it is
 
-`scripts/demo_trader.py` + `scripts/bitget_demo.py` copy **Grade B TRIGGERED** freezes onto Bitget Demo Trading. Same size as the calendar: **USD 50 at 20x**.
+`scripts/demo_trader.py` + `scripts/bitget_demo.py` copy **Expandables** freezes onto Bitget Demo Trading. Same size as the calendar: **USD 50 at 20x**. New attaches are `TREND_CONTINUATION`, `RECLAIM_CONTINUATION`, and one `EXTREME_MOMENTUM` seat only. See [Expandables](/grok-trading-desk/grade-b/expandables). Leftover Grade B demo ages out — do not flatten it to test the new lane.
 
 Every field of the open + TP/SL path, skip reasons, and pitfalls lives on [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl). Read that before placing or attaching.
 
@@ -44,14 +44,14 @@ Armed watcher must load the same demo env. Without it, TRIGGERED ingest is `flag
 ## Gates
 
 - `kind=GRADE_B`
-- Engine is a trading family (not `NO_SUPPORTED_SETUP`, not Hunter `BREAKOUT`)
-- Champion score 45–74
+- Engine is Expandables (`TREND_CONTINUATION`, `RECLAIM_CONTINUATION`, `EXTREME_MOMENTUM`). Env `ALL` cannot widen this.
+- Champion score 45–74 (EXTREME ripe ingest may stamp 60)
 - Freeze returned entry, stop, and at least one TP
-- Ten-slot union with paper
+- Three-seat Expandables cap. Leftover Grade B demo does not spend a seat
 - One Bitget symbol at a time. Live `consider_take` rejects same-side (`same_side_position_open`) and opposite hedge (`symbol_already_open`). Do not assume stacking still works. Full open + TP/SL path: [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
 - Junk / naked fills (no SL/TP) and UNIQUE-shaped keys with an empty episode are flattened
 - A first fill without card SL+TP is refused: re-read, attach card levels, flatten **that** side if still unprotected. Empty `holdSide` is not covered (`bf651f1`)
-- Flatten cooldown blocks ingest (`flatten_cooldown`, silent). Do not leave paper-only smokes behind — see [13 Sep notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty)
+- Expandables flatten cooldown blocks ingest (`flatten_cooldown`, silent). Do not leave paper-only smokes behind — see [13 Sep notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty)
 
 ## How Patrick uses it
 
@@ -61,4 +61,4 @@ Do not flatten leftover XRP SHORT that he left as an exchange-demo leftover.
 
 ## Decisions that still bind
 
-Leftover Hunter TAPE / BREAKOUT demo legs are flattened. Bitget demo is Grade B TRIGGERED only. Live `AUTO_ORDER_EXECUTION` stays off.
+Leftover Hunter TAPE / BREAKOUT demo legs are flattened. New Bitget demo attaches are Expandables only. Live `AUTO_ORDER_EXECUTION` stays off.

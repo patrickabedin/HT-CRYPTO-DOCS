@@ -40,6 +40,7 @@
               "grok-trading-desk/grade-b/armed-watcher",
               "grok-trading-desk/grade-b/setup-families",
               "grok-trading-desk/grade-b/portfolio-book-lock",
+              "grok-trading-desk/grade-b/expandables",
               "grok-trading-desk/grade-b/fills-levels-upl",
               "grok-trading-desk/grade-b/demo-trader",
               "grok-trading-desk/grade-b/bitget-open-tpsl",
