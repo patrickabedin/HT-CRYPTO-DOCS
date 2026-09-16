@@ -53,6 +53,7 @@ Size is always **USD 50 margin at 20x** (USD 1000 notional). Round-trip taker fe
 6. Under `trader_lock` (`/var/lib/grok-desk/demo-trader.lock`): stamp demo equity, then `consider_take`.
 7. If the 60s watcher missed, `grok-demo-trader.timer` (15s) calls `load_grade_b_takes(mirror_paper=True)` and the same ingest. Lock prevents a double fill.
 8. After a place: `open_market` proves protection, then `protect_or_flatten` proves it again. Then `sync_open` stamps `fill_entry` from Bitget fills. Then `apply_hold_and_giveback_exits` (not card TP/SL).
+9. Same first fill also places Bitget **Trailing TP/SL** (`moving_plan`, 2.5% callback) with trigger at USD +50 on USD 1000 notional. That is the mechanical dead-man. Script `TICKET_TRAIL` (USD 50 peak, 25% giveback) is the tighter bot net. Full table: [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
 
 ## Clock and size
 
@@ -337,5 +338,7 @@ Paste cards into trade-check. Do not chase a TRIGGERED that already ran.
 - 2026-09-13 `3862d5b`: attached paper+demo mark from Bitget uPnL. Do not remake both books from public last.
 - Leftover Hunter tape flattens. Demo is Grade B TRIGGERED only.
 - Live `AUTO_ORDER_EXECUTION` stays off.
+- 2026-09-16: Bitget trail is `moving_plan` at entry, trigger USD +50, callback 2.5%. Not `track_plan`. Script trail is USD 50 / 25% of peak dollars. See [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
+- 2026-09-16: Bitget trail is `moving_plan` at entry, trigger USD +50, callback 2.5%. Not `track_plan`. Script trail is USD 50 / 25% of peak dollars. See [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
 - One symbol on Bitget demo at a time. Same-side stacking is rejected.
 - Grade B demo force-hold is 2h, not 24h.

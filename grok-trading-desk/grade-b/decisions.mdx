@@ -5,6 +5,14 @@ description: "Binding Grade B policy: ten-slot book, fill-true lock, demo honest
 
 Decisions that still bind. Dated working notes for 13 Sep 2026 live at [13 Sep 2026 UPL honesty](/grok-trading-desk/grade-b/2026-09-13-upl-honesty). Paid fill / mark / TP-SL pitfalls for the next agent: [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
 
+## 2026-09-16 -- ticket trail and Bitget moving_plan
+
+- Two layers: script `TICKET_TRAIL` (arm USD 50, give back 25% of peak dollars) and Bitget **Trailing TP/SL** `moving_plan` (2.5% callback).
+- Place the Bitget plan **at entry with SL/TP**, trigger at USD +50 on USD 1000 notional. Do not wait for the bot to see USD +50. Do not use `track_plan`.
+- Empty Trailing TP/SL form is a create form, not proof the plan is missing.
+- What-if uses the same per-ticket exits. `parse_dt` must accept unix ms or TP1/MAX_HOLD never fire. What-if TP1/STOP bank at the card level, not the overshoot last.
+- Detail: [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
+
 ## 2026-09-13 — fill-true lock and Bitget mark
 
 - Paper fill is one number: Bitget if attached, else WS last with 35 bps chase
@@ -32,7 +40,7 @@ Bound Grade B execution. Do not change Grade A or enable live trading. Capacity 
 
 Demo copies Grade B TRIGGERED only, USD 50 at 20x, Demo API key, `paptrading: 1`. Hunter BREAKOUT leftover legs flatten. No withdraw. No live product.
 
-Open + TP/SL detail (gates, payloads, leftover, pitfalls) is [How Bitget demo opens with TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
+Open + TP/SL detail (gates, payloads, leftover, pitfalls) is [How Bitget demo opens with TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl). Trail: [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
 
 - First fill must land with card SL **and** TP on the position or both plan types with a real `holdSide`. Empty `holdSide` is not covered. Else flatten **that** side.
 - One Bitget symbol at a time. Same-side stacking is rejected (`same_side_position_open`). Opposite hedge is `symbol_already_open`.

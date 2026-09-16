@@ -7,7 +7,7 @@ description: "Opt-in Bitget Demo paper. Grade B TRIGGERED only. $50 margin at 20
 
 `scripts/demo_trader.py` + `scripts/bitget_demo.py` copy **Grade B TRIGGERED** freezes onto Bitget Demo Trading. Same size as the calendar: **USD 50 at 20x**.
 
-Every field of the open + TP/SL path, skip reasons, and pitfalls lives on [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl). Read that before placing or attaching.
+Every field of the open + TP/SL path, skip reasons, and pitfalls lives on [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl). Two-layer trail (script USD 50 / 25% plus Bitget `moving_plan` 2.5% at entry): [Ticket trail](/grok-trading-desk/grade-b/ticket-trail). Read those before placing or attaching.
 
 Scout B (~500/day) and ARMED-but-not-triggered stay paper. Grade A stays off demo. Hunter TAPE / UNIQUE / brain TAKEs do not ingest.
 
@@ -15,7 +15,8 @@ Scout B (~500/day) and ARMED-but-not-triggered stay paper. Grade A stays off dem
 
 - Timer: `grok-demo-trader.timer` every 15s
 - Notional: USD 1000
-- Grade B demo force-close: **2h** max hold on mark (`max_hold_2h`). Leftover non-GB tape is 24h. Profit giveback once peak uPnL ≥ USD 12 and mark gives back ≥ 35% of that peak. Those are not the card TP/SL.
+- Grade B demo force-close: **2h** max hold on mark (`max_hold_2h`). Leftover non-GB tape is 24h. Profit giveback once peak uPnL at least USD 12 and mark gives back at least 35% of that peak. Those are not the card TP/SL.
+- Mechanical trail: `open_market` places Bitget Trailing TP/SL (`moving_plan`) at entry, trigger USD +50, callback 2.5%. `ensure_mechanical_trail` backfills if the first place missed. Script `TICKET_TRAIL` is the tighter USD 50 / 25% net.
 - Host timer allow 480s so flatten + attach can finish
 
 Paper USDT is not created by the API. Until demo `usdtEquity ≥ 50` the trader prints `NO_EQUITY`.
