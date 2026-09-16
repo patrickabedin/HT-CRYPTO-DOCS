@@ -167,7 +167,8 @@
             "pages": [
               "skynet-astra/index",
               "skynet-astra/accounting",
-              "skynet-astra/quote-order"
+              "skynet-astra/quote-order",
+              "skynet-astra/paper-calendar"
             ]
           }
         ]
