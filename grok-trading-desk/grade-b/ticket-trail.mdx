@@ -1,0 +1,120 @@
+---
+title: "Ticket trail and Bitget mechanical trail"
+sidebarTitle: "Ticket trail"
+description: "Two-layer profit net: script $50 / 25% TICKET_TRAIL plus Bitget Trailing TP/SL moving_plan 2.5% placed at entry."
+---
+
+Two nets on the same USD 50 at 20x seat (USD 1000 notional). The script trail is tighter. Bitget is the dead-man if the bot hangs. SHADOW / Demo Trading only. Live keys stay read-only. Grade A stays 75.
+
+<Warning>
+  Never swap `BITGET_DEMO_*` for a live key. `paptrading: 1` is hardcoded. Do not send Telegram to test a trail. Do not press FLATTEN or flatten leftover Expandables to clean a SOL smoke. The empty Bitget **Trailing TP/SL** form is a create form, not proof the plan is missing -- look at the live `moving_plan` row on the position.
+</Warning>
+
+Related: [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl), [Bitget demo trader](/grok-trading-desk/grade-b/demo-trader), [Decisions](/grok-trading-desk/grade-b/decisions), [Portfolio and book lock](/grok-trading-desk/grade-b/portfolio-book-lock).
+
+## Two layers
+
+| Layer | When it is placed | When it starts | How it exits |
+| --- | --- | --- | --- |
+| Script `TICKET_TRAIL` | Always watching | Peak uPnL at least **USD 50** | Mark at or below peak times **0.75** (give back 25% of the peak dollars) |
+| Bitget `moving_plan` | **At entry, with SL/TP** | Mark hits **USD +50** on USD 1000 notional (entry times 1.05 long / 0.95 short) | **2.5%** price callback (about USD 25 on USD 1000) |
+
+Card STOP / TP1 / MAX_HOLD (2h) / STALL (30m) / R-giveback still win if they fire first. `TICKET_TRAIL` does **not** arm the Grade B whole-book USD 150 lock. Attached paper waits for the Bitget close (`PAPER_ONLY_EXITS` includes `TICKET_TRAIL`).
+
+What-if (no day sit, no USD 150 lock) uses the same per-ticket exits, including `TICKET_TRAIL`.
+
+<Warning>
+  Do not trail 5% / 10% from entry. That can go red. The USD +50 is the **arm**, not the callback. After arm, Bitget trails 2.5% of **price**; the script trails 25% of **peak dollars**.
+</Warning>
+
+## Why two layers
+
+Patrick asked for a mechanical exchange net in case the bot bugs or the host dies. The script is the intended bank (tighter). Bitget `moving_plan` is the backup. Script 25% of peak dollars is tighter than Bitget 2.5% of price, so they should not fight on a healthy host.
+
+Demo follows **Expandables** TRIGGERED. Grade B 10-seat USD 150 lock / minus USD 100 day stop stays paper research.
+
+## Bitget payload (do not invent another tab)
+
+Place at entry via `BitgetDemo.attach_entry_trail` after protect. Backfill on the 15s timer with `ensure_mechanical_trail` if the first place missed.
+
+| Field | Value |
+| --- | --- |
+| Endpoint | `POST /api/v2/mix/order/place-tpsl-order` |
+| `planType` | **`moving_plan`** |
+| Tab | Position **Trailing TP/SL** |
+| `holdSide` | `long` / `short` |
+| `rangeRate` | `2.5` (`BITGET_TRAIL_CALLBACK`) |
+| `triggerPrice` | `trail_arm_price(entry, side)` = entry times (1 plus or minus 50/1000) |
+| `triggerType` | `mark_price` |
+
+`track_plan` via `place-plan-order` is the wrong UI tab. In hedge mode it parked as `posSide=short` on a long. Do not use it for this net.
+
+Hedge close long is `side=buy` + `tradeSide=close`. Do not "correct" that to one-way sell-to-close.
+
+`infer_plan_hold`: `moving_plan` uses `holdSide` / `posSide`. `track_plan` leftover: sell + close = long. Empty `holdSide` is not a match.
+
+`cancel_tpsl` must see both plan types. Smoke `--keep` lists `pending_all_plans` (`moving_plan` + `track_plan`), not `track_plan` only.
+
+## Env
+
+| Name | Default | Meaning |
+| --- | --- | --- |
+| `TICKET_TRAIL_ARM_USDT` | 50 | Script arm |
+| `TICKET_TRAIL_GIVEBACK` | 0.25 | Script giveback of peak dollars |
+| `BITGET_TRAIL_PLAN` | `moving_plan` | Exchange plan type |
+| `BITGET_TRAIL_CALLBACK` | 2.5 | Exchange percent callback |
+| `BITGET_TRAIL_ARM_USDT` | 50 | Exchange trigger = USD +50 on USD 1000 |
+
+## LSK example (16 Sep 2026 what-if)
+
+Expandables `LSKUSDT LONG TREND_CONTINUATION` `GROK-EVT-LSKUSDT-TREND_CONTINUATION-20260916-0310`. USD 1000 notional. Entry **0.4984**. Stop **0.37849**. TP1 **0.62326**.
+
+| Number | What it is |
+| --- | --- |
+| **about USD 240.59** | **1R stop-risk**, not TP |
+| **about USD 250.52** | Card **TP1** dollar |
+| **USD +340 / +341** | Live mark **through** TP1 (last about 0.668). Not the TP |
+
+Live Expandables already `EXPAND_STOP` flattened this ticket (about minus USD 64). What-if stayed `WHATIF_OPEN` because `plan_from_live` stamped `trigger_ts` from epoch-ms `entry_ts` (`1789529765256` = 03:36 UTC / 06:36 Athens) and `parse_dt` dropped that clock, so TP1 / MAX_HOLD / STALL never ran.
+
+`parse_dt` now accepts unix ms. What-if TP1 / STOP bank **at the card level**, not the overshoot last. After the next host cycle this row should flip to **TP1 about USD +250.52**, not stay a juicy USD +340 open mark.
+
+A USD 50 / 25% trail would not flatten a still-making-highs tape. Floor from a USD 340 peak is about USD 255. Card TP1 still wins first once the clock parses.
+
+## Smoke
+
+`scripts/ticket_trail_smoke.py` -- paper SOL half + demo open/trail. `--keep` leaves the seat so Patrick can see Trailing TP/SL. Flatten **that** SOL only. Do not flatten leftover Expandables.
+
+If SOL is already open, smoke aborts. `open_market` attaches the trail, so a later `ensure` may report `placed: False` / `has_plan: True`.
+
+A visual smoke cannot wait for a real USD +50 SOL move. The live plan is the real USD +50 **trigger**, then 2.5% callback.
+
+## Pitfalls (do not repeat)
+
+| Do not | Why it hurt | Do this |
+| --- | --- | --- |
+| Place `track_plan` | Wrong tab; hedge parked short on a long | `moving_plan` + `holdSide` |
+| Wait for the bot to see USD +50 before placing the Bitget trail | Host die = naked winner | Place at entry with SL/TP |
+| Trail 5% / 10% from entry | Can go red | USD +50 is the trigger, 2.5% is the callback |
+| Treat the empty Trailing TP/SL form as "off" | That page is a create form | Read pending `moving_plan` |
+| List only `track_plan` in smoke | Report said `plans=[]` while trail was live | `pending_all_plans` |
+| Arm Grade B USD 150 lock from ticket trail | Different product | Per-ticket only |
+| Flatten leftover LSK / COPPER to clean a SOL smoke | Patrick left those seats | Flatten the smoke SOL only |
+| Clear `telegram_429_backoff.json` / test-send | Flood mute | Shared guard |
+
+## Host
+
+| Name | Role |
+| --- | --- |
+| `scripts/grade_b_portfolio.py` | `ticket_trail_reason` / `paper_exit` |
+| `scripts/bitget_demo.py` | `trail_arm_price`, `place_trailing_stop`, `attach_entry_trail` |
+| `scripts/demo_trader.py` | `ensure_mechanical_trail` backfill + script USD 50 / 25% close |
+| `scripts/whatif_book.py` | Same ticket exits, no day sit |
+| `scripts/ticket_trail_smoke.py` | Demo smoke, `--keep` |
+| `scripts/triggered_cf_book.py` | `parse_dt` ISO + unix ms |
+
+## Decisions that still bind
+
+- 2026-09-16: two-layer trail. Script USD 50 / 25% of peak dollars. Bitget `moving_plan` 2.5% at entry, trigger USD +50. Not `track_plan`.
+- 2026-09-16: what-if TP1/STOP bank at the card level. `parse_dt` must accept epoch ms or ticket exits never fire.
+- Live `AUTO_ORDER_EXECUTION` stays off. Demo `paptrading: 1` only.

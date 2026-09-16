@@ -43,6 +43,7 @@
               "grok-trading-desk/grade-b/fills-levels-upl",
               "grok-trading-desk/grade-b/demo-trader",
               "grok-trading-desk/grade-b/bitget-open-tpsl",
+              "grok-trading-desk/grade-b/ticket-trail",
               "grok-trading-desk/grade-b/flatten",
               "grok-trading-desk/grade-b/decisions",
               "grok-trading-desk/grade-b/2026-09-13-upl-honesty"
