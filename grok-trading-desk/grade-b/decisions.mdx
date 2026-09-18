@@ -10,7 +10,7 @@ Decisions that still bind. Dated working notes for 13 Sep 2026 live at [13 Sep 2
 - Two layers: script `TICKET_TRAIL` (arm USD 50, give back 25% of peak dollars) and Bitget **Trailing TP/SL** `moving_plan` (2.5% callback).
 - Place the Bitget plan **at entry with SL/TP**, trigger at USD +50 on USD 1000 notional. Do not wait for the bot to see USD +50. Do not use `track_plan`.
 - Empty Trailing TP/SL form is a create form, not proof the plan is missing.
-- What-if uses the same per-ticket exits. `parse_dt` must accept unix ms or TP1/MAX_HOLD never fire. What-if TP1/STOP bank at the card level, not the overshoot last.
+- What-if uses the same per-ticket exits. `parse_dt` must accept unix ms or TP1/MAX_HOLD never fire. What-if TP1/STOP bank at the card level, not the overshoot last. TREND / RECLAIM / EXTREME what-if seats live on [Expandables what-if](/grok-trading-desk/expandables/whatif), even if a leftover row still says `GRADE_B`.
 - Detail: [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
 
 ## 2026-09-13 — fill-true lock and Bitget mark
