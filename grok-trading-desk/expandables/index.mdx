@@ -1,0 +1,51 @@
+---
+title: "Expandables"
+description: "Three-seat TREND / RECLAIM / EXTREME loan desk. No +$50 bank. Cash ≤ −$50 sits the UTC day."
+---
+
+Expandables is its own Grok Trading Desk book. TREND_CONTINUATION, RECLAIM_CONTINUATION, and EXTREME_MOMENTUM sit here. Everything else stays Grade B paper research.
+
+<Warning>
+  SHADOW / advisory. Bitget demo paper only. No Telegram. Do not flatten leftover Grade B demo to test this lane.
+</Warning>
+
+## What it is
+
+Cap **3** open seats, one coin. The same engine may stack all three seats. Combined UTC-day cash (realized + open) at or below minus USD 50 flattens and sits until the next UTC day (`EXPAND_STOP`). There is no plus-USD-50 profit bank.
+
+Live paper is empty after that sit. That is honest. The no-lock book keeps those seats running — see [What-if book](/grok-trading-desk/expandables/whatif).
+
+Leftover Grade B Bitget fills of TREND / RECLAIM / EXTREME stay on the Grade B chip. They do not write this calendar.
+
+## Clock and size
+
+USD 50 margin at 20x. Calendar cell is banked cash (closed tickets + flatten remainder). The tape keeps the open-book high.
+
+## Radio
+
+None. Do not unmute Hunter / SCALP / USELESS to watch this book.
+
+## Host
+
+Admission shares `armed-watcher.lock` with Grade B. `scripts/expandables_portfolio.py` and `scripts/expandables.py`.
+
+## State / settle
+
+- `expand_portfolio.json`
+- `expand_portfolio.pause.json`
+- `expand_whatif.json`
+
+## Gates
+
+- Engine is TREND / RECLAIM / EXTREME
+- Max 3 open, one symbol
+- New live entries pause after `EXPAND_STOP` until the next UTC day
+- What-if still admits those names while live sits
+
+## How Patrick uses it
+
+Dashboard: `?g=EXPANDABLES`. Live paper is the locked book. What-if paper is the no-lock book. Click a calendar day — tickets sit under that calendar (`#day-trades` or `#whatif-trades`).
+
+## Workers
+
+- [What-if book](/grok-trading-desk/expandables/whatif)

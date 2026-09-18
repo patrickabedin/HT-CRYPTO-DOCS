@@ -1,0 +1,54 @@
+---
+title: "What-if book"
+description: "No-lock Expandables seats after EXPAND_STOP. Still-open marks stay on the live monitor."
+---
+
+The live Expandables calendar banks `EXPAND_STOP` and then sits. The what-if book asks what the day would have printed if that sit never happened.
+
+<Warning>
+  Paper only. Never demo-attaches. Never places, cancels, or withdraws orders.
+</Warning>
+
+## What it is
+
+`scripts/whatif_book.py` keeps lock-flatten tickets on per-ticket exits (TP / SL / STALL / MAX_HOLD / TICKET_TRAIL). While live is paused, the armed watcher still admits TREND / RECLAIM / EXTREME into this book (cap 3, one coin).
+
+Dashboard `?g=EXPANDABLES` shows:
+
+1. **Expandables paper** — live locked seats (`grade_b_open` filtered to the three engines). Empty after flatten is correct.
+2. **What-if paper** — still-open `WHATIF_OPEN` marks next to that live book. Do not hide an open because the quote file missed a last.
+3. Live calendar tickets under `#day-trades`. What-if tickets under `#whatif-trades`.
+
+TREND / RECLAIM / EXTREME belong on this chip even if a leftover host row still says `group=GRADE_B` (pre-split RECLAIM). `lane_for` and `whatifDeskGroup` route by engine.
+
+## Clock and size
+
+Same USD 50 at 20x. What-if TP1 / STOP bank at the **card** level, not the overshoot last. `parse_dt` must accept unix ms or TP1 / MAX_HOLD never fire.
+
+## Radio
+
+None.
+
+## Host
+
+`desk_pnl.py` adopts live lock outcomes, cycles both lanes, and POSTs `whatif_rows` with the compact ingest.
+
+## State / settle
+
+- `expand_whatif.json`
+- `grade_b_whatif.json` (Grade B lane only)
+
+## Gates
+
+- `WHATIF_OPEN` stays visible with `usd` null (unpriced mark). Cell **o** count is opens; **n** is natural closes.
+- Day-lock outcomes (`EXPAND_STOP`, `DAY_STOP`, `BOOK_LOCK`, `BOOK_GIVEBACK`, `EXPAND_BANK`) drop from the what-if calendar.
+- Do not count open marks as wins or losses.
+
+## How Patrick uses it
+
+After flatten the live book says none open. Scroll stays on `#day-trades` / `#whatif-trades` after a day click. What-if paper at the top is the still-running no-lock seats.
+
+## Decisions that still bind
+
+- 2026-09-18: show unpriced `WHATIF_OPEN` on Expandables; route RECLAIM / TREND / EXTREME off the Grade B what-if chip; keep hash scroll on the ticket list.
+- 2026-09-16: what-if TP1 at the card, not last. Epoch-ms `trigger_ts` must parse. See [Grade B decisions](/grok-trading-desk/grade-b/decisions).

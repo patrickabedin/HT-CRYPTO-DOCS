@@ -36,7 +36,10 @@
           {
             "group": "Expandables",
             "icon": "book",
-            "pages": []
+            "pages": [
+              "grok-trading-desk/expandables/index",
+              "grok-trading-desk/expandables/whatif"
+            ]
           },
           {
             "group": "Grade B",

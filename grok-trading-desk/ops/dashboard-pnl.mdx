@@ -9,7 +9,9 @@ Production: [grok-trading-desk.vercel.app](https://grok-trading-desk.vercel.app)
 
 Homepage is the UTC PnL calendar (`web/app/page.tsx`, `web/app/pnl-view.tsx`). Host job `scripts/desk_pnl_early.py` / `scripts/desk_pnl.py` merges settle books and POSTs `/api/ingest`.
 
-Groups: `GRADE_B`, `GRADE_A`, `HUNTER_UNIQUE`, `HUNTER_TAPE`, `CHERRY`, `SCALP`, `DEMO`.
+Groups: `EXPANDABLES`, `GRADE_B`, `GRADE_A`, `HUNTER_UNIQUE`, `HUNTER_TAPE`, `CHERRY`, `SCALP`, `DEMO`.
+
+Expandables live paper can be empty after `EXPAND_STOP`. What-if opens sit in the **What-if paper** book and under `#whatif-trades`. See [Expandables](/grok-trading-desk/expandables) and [What-if book](/grok-trading-desk/expandables/whatif).
 
 ## Clock and size
 
