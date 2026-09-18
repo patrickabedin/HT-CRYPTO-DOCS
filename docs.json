@@ -34,6 +34,11 @@
             "pages": ["grok-trading-desk/index"]
           },
           {
+            "group": "Expandables",
+            "icon": "book",
+            "pages": []
+          },
+          {
             "group": "Grade B",
             "pages": [
               "grok-trading-desk/grade-b/index",
