@@ -1,0 +1,43 @@
+---
+title: "What-if"
+description: "No-sit paper book. Drops EXPAND_STOP / EXPAND_BANK. Not Bitget."
+sidebarTitle: "What-if"
+icon: "code-compare"
+---
+
+## What it is
+
+`scripts/whatif_book.py` lane `EXPANDABLES`. Live calendars bank `EXPAND_STOP` / `EXPAND_BANK` and sit. This book keeps those tickets on per-ticket exits (TP / SL / STALL / MAX_HOLD / TICKET_TRAIL) and still admits TRIGGERED names after the live book sits.
+
+SHADOW only. Never demo-attaches. Never places orders.
+
+## Clock and size
+
+Same USD 50 at 20x marks. Dashboard second calendar on `/?g=EXPANDABLES`.
+
+## Radio
+
+None.
+
+## Host
+
+State file **name** only: `expand_whatif.json`. Armed watcher adopts a live lock-flatten ticket via `whatif_adopt`.
+
+## State / settle
+
+What-if rows ingest as `book=whatif_nolock`. `WHATIF_OPEN` is a still-running mark.
+
+## Gates
+
+Max 3 open, one coin. No day sit. No $150 lock.
+
+## How Patrick uses it
+
+16 Sep LSK what-if TP1 **+$250.52** vs live `EXPAND_STOP` **-$64.20** is the honest "no sit" number. 5d what-if **+$316** vs live **-$0.50**. The gap is sitting LSK/CHIP/TAO, not a missing TP grid. 18 Sep what-if **-$103** is worse than live **-$89**: the sit cut a loser.
+
+Do not turn off `EXPAND_STOP` because what-if is green. That is the blow-up path.
+
+## Decisions that still bind
+
+- 2026-09-16: `parse_dt` must accept unix ms or what-if exits never fire.
+- 2026-09-19: what-if +$316 is not a production target.
