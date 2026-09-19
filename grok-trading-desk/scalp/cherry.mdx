@@ -3,34 +3,38 @@ title: "Cherry"
 description: "Cherry Picker manual alerts. Observed operator value. Do not retune without settled outcomes."
 ---
 
+<Warning>
+  Live `?g=CHERRY` −\$695 / 216 tickets (19 Sep snapshot) was leftover hunter 24h scoring, not a minutes book. Do not kill RIDE / FADE / pullback / sweep / trap from that number. Do not unmute `SCALP`. Do not start Scalp / USELESS from this page.
+</Warning>
+
 ## What it is
 
-🍒 CHERRY PICKER cards from the same skynet-scalp publisher path as scalp. Qualification logic must not be casually retuned or suppressed (market-context ADR).
+🍒 CHERRY PICKER / CHERRY V2 cards from the same skynet-scalp publisher path as scalp. PnL engines are the scalp `TRADE_FAMILIES`: **RIDE**, **FADE**, **PULLBACK_CONTINUATION**, **LIQUIDITY_SWEEP_RECLAIM**, **FAILED_BREAKOUT_TRAP**. Cherry V2 is a fail-closed send bar (`cherry_v2.py`), not a fourth PnL engine. Qualification logic must not be casually retuned or suppressed (market-context ADR).
 
 ## Clock and size
 
-Minutes timeframe. Same host timer as scalp cards.
+Minutes timeframe. Family TTL floors 8–25 minutes, publish cap **90 minutes**. Never hunter 24h. Same host timer as scalp cards. Paper size on cards is typically $$50 @ 10x; desk hunter replay stays $$50 @ 20x.
 
 ## Radio
 
-Same `SCALP` lane. Muted by default.
+Same `SCALP` lane. Muted by default (`TELEGRAM_ALLOW=GRADE_B,GRADE_A`). Mute is chat, not a reason to pack new Cherry paper.
 
 ## Host
 
-`/opt/skynet-scalp`. Playbook close outcomes in this repo: [playbook outcomes](/grok-trading-desk/scalp/playbook-outcomes).
+`/opt/skynet-scalp`. Playbook close outcomes in this repo: [playbook outcomes](/grok-trading-desk/scalp/playbook-outcomes). Honest settle notes: [Cherry settle](/grok-trading-desk/scalp/cherry-settle).
 
 ## State / settle
 
-Dashboard group `CHERRY`. Simulated signal-book PnL unless `exchange_stamped`.
+Dashboard group `CHERRY` (`https://grok-trading-desk.vercel.app/?g=CHERRY`). Intel JSONL must carry `expires_at` / `family`. Missing TTL used to be scored as a 24h hunter hold (117 of 216 closed tickets held >24h; 142 tickets dumped on 7 Sep). Desk now expires those leftovers with no invented PnL. Sidecar still omits `family` on many lines, so the calendar may keep a collapsed `CHERRY` bucket until host intel stamps the family.
 
 ## Gates
 
-Market context is advisory and must not change Cherry qualification.
+Market context is advisory and must not change Cherry qualification. Hunter `cherry_v2` skip bar is publisher-only.
 
 ## How Patrick uses it
 
-Manual picker. trade-check. Do not fold Cherry into Grade A Champion.
+Manual picker. trade-check. Do not fold Cherry into Grade A Champion. Do not treat the 19 Sep −\$695 cell as engine edge.
 
 ## Decisions that still bind
 
-No change to Silver/Gold/Bronze badge logic from the Grade A reachability ADR.
+No change to Silver/Gold/Bronze badge logic from the Grade A reachability ADR. Do not retune RIDE/FADE TTL or stops. Do not unmute Cherry to debug Grade B.

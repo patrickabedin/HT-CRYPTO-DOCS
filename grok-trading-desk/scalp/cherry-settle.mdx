@@ -1,0 +1,65 @@
+---
+title: "Cherry settle"
+description: "Minutes TTL honesty. Do not score Cherry leftovers as hunter 24h holds."
+sidebarTitle: "Cherry settle"
+---
+
+<Warning>
+  Do not kill a Cherry family from the 19 Sep −$695 / 216-ticket calendar. That book was hunter 24h leftover scoring. Radio stays `GRADE_B,GRADE_A`. Do not unmute `SCALP`. Do not start Scalp / USELESS / clip-go from this page.
+</Warning>
+
+## What it is
+
+Desk ingest of Cherry intel (`scalp_real_intel_candidates.jsonl`) plus optional host `scalp_settle.json`. Canonical 1m settle lives in `skynet-scalp`. This desk page is the calendar honesty layer.
+
+## Why the calendar lied
+
+Live `/api/pnl` `grok_desk_pnl_v0` **2026-09-19T12:24:09Z**. Group `CHERRY` book `intel_settle`. **n=216**, **WR 36.1%**, **−$695**. One engine label: `CHERRY`. `excluded_invalid=27`.
+
+| Day | n | WR | USD | Note |
+| --- | ---: | ---: | ---: | --- |
+| 05 Sep | 6 | 67% | +$8 | |
+| 06 Sep | 2 | 100% | +$13 | Telegram flood day |
+| 07 Sep | 142 | 31% | −$514 | Leftover dump (entries 2–6 Sep) |
+| 08–13 Sep | 55 |  | −$223 | Quiet after mute |
+| 14–19 Sep | 11 |  | +$22 | 1–4 / day intel still writes |
+
+117 of 216 holds were **>24h** (p50 30h, max 102h). Same-day symbol+side reprints: 37 keys, max 28 (USELESSUSDT LONG on 7 Sep). USELESSUSDT alone was 53 tickets / −$430.
+
+That is not a minutes scout. Host Cherry TTL floors are 8–25 minutes and the publish cap is **90 minutes**. Intel `expires_at` was dropped, so hunter `settle_card` ran the 24h max-hold path and reused those terminals forever.
+
+## Engines (enough vs kill)
+
+| Engine | What it is | Enough to tune/kill? |
+| --- | --- | --- |
+| RIDE | 25m floor | Not on this book. Family was stripped from intel. Keep. |
+| FADE | 18m floor | Same. Keep. |
+| PULLBACK_CONTINUATION | 12m floor | Same. Keep. |
+| LIQUIDITY_SWEEP_RECLAIM | 8m floor | Same. Keep. Do not confuse with Hunter SR. |
+| FAILED_BREAKOUT_TRAP | 10m floor | Same. Keep. |
+| CHERRY (collapsed) | Banner when family is missing | n=216 dishonest 24h. Not a kill. |
+| CHERRY V2 | Publisher fail-closed bar | Not a PnL engine. Not killed. |
+
+No Cherry family is resource stress with a measurable edge hole on honest minutes data. Current intel fire is 1–4 / day. Sep 7 142 was leftover settle, not live radio spray. **Do not kill. Do not retune TTL/stops.**
+
+## Fixes on the desk
+
+1. `intel_to_card` keeps `expires_at` and freezes `entry_ts`. Cherry rows without TTL get the 90m publish cap, never 24h.
+2. Family (`RIDE` / `FADE` / …) is the calendar engine when present. Group stays `CHERRY`.
+3. Hunter terminals that closed after TTL are not reused.
+4. Missing bars after TTL stamp `expired` with **no invented PnL**. `close_stale_unresolved` does the same. Fresh missing history under TTL stays `no_bars`.
+5. Calendar pins the five families even when the book is missing.
+
+Host `skynet-scalp` intel sidecar still omits `family` on many lines. Until that stamp exists, collapsed `CHERRY` remains. Do not patch pick logic from this desk page.
+
+## Clock and size
+
+Minutes. TTL cap 90m. $50 margin. Do not retune family floors.
+
+## Radio
+
+Lane `SCALP` muted. Shared 429 guard still wraps `run_scalp_telegram.sh`.
+
+## How Patrick uses it
+
+Treat the 19 Sep Cherry cell as leftover hunter scoring. After the host drain tick, stale 24h leftovers expire and drop off the win/loss book. New tickets should show family names when intel carries them.
