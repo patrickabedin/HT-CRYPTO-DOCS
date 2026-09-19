@@ -111,6 +111,7 @@
             "pages": [
               "grok-trading-desk/scalp/index",
               "grok-trading-desk/scalp/scalp-cards",
+              "grok-trading-desk/scalp/cherry-settle",
               "grok-trading-desk/scalp/cherry",
               "grok-trading-desk/scalp/playbook-outcomes",
               "grok-trading-desk/scalp/host-timer"
