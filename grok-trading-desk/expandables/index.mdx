@@ -1,0 +1,56 @@
+---
+title: "Expandables"
+description: "Three-seat loan desk. TREND / RECLAIM / EXTREME. Demo-only attach. No Grade B $150 lock."
+sidebarTitle: "Expandables"
+icon: "expand"
+---
+
+Expandables is the **loan desk**, not Grade B paper research. Allowlist: `TREND_CONTINUATION`, `RECLAIM_CONTINUATION`, `EXTREME_MOMENTUM`. Max **3** open, one coin. The same engine may stack. Bitget demo default engines are these three names only.
+
+SHADOW / demo only. Grade A stays 75. No live orders.
+
+<Warning>
+  Do not copy Grade B `$150` / 25% lock or `DAY_STOP -$100` onto this book. Do not lift `EXPAND_STOP` to chase the 16 Sep LSK what-if. Demo follows Expandables TRIGGERED, not the 10-seat Grade B book.
+</Warning>
+
+## What it is
+
+`scripts/expandables.py` + `scripts/expandables_portfolio.py`. Own state and pause. Green days keep printing unless `EXPAND_BANK_USDT>0` (default **off**). Combined UTC-day cash (realized + open) ≤ **−$50** flattens and sits until the next UTC day (`EXPAND_STOP`).
+
+Per-ticket trail still arms at +$50 and gives back 25% of that seat (`TICKET_TRAIL`). Bitget demo places a 2.5% callback net after the same arm. See [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
+
+## Clock and size
+
+USD 50 margin at 20x (USD 1000 notional). Same card exits as Grade B paper: STOP / TP1 / STALL 30m if never +0.25R / MAX_HOLD 2h / PROFIT_GIVEBACK after +1R. Attached closes copy Bitget realized $.
+
+## Radio
+
+None from this book. Do not unmute Hunter / SCALP / USELESS to "test" Expandables.
+
+## Host
+
+Armed-watcher cycle. State file **name** only: `expand_portfolio.json` plus `.pause.json`. Demo timer `grok-demo-trader.timer` 15s.
+
+## State / settle
+
+Paper settlements ingest to the Expandables calendar group. What-if (no sit) is a second calendar: [What-if](/grok-trading-desk/expandables/whatif).
+
+## Gates
+
+- Engine in the three-name allowlist
+- `MAX_OPEN=3`, one symbol
+- `EXPAND_STOP_USDT` default 50
+- `EXPAND_BANK_USDT` default 0
+- Demo: `BITGET_DEMO_MAX_OPEN` cannot exceed 3; `BITGET_DEMO_INCLUDE_EXTREME` default off
+
+## How Patrick uses it
+
+This is the budget / loan book. Calendar cell is ticket Σ, not a captured high. 17 Sep paper +$205 is mostly paper-only. Do not bank it as demo cash.
+
+Capital-guard sweep (19 Sep 2026): [Capital guards](/grok-trading-desk/expandables/capital-guards).
+
+## Decisions that still bind
+
+- 2026-09-15: TREND / RECLAIM / EXTREME split off Grade B. Demo default = Expandables only.
+- 2026-09-16: LSK `EXPAND_STOP` about −$64 vs what-if TP1 about +$251 is "if we had not sat," not a vote to disable the stop.
+- 2026-09-19: Keep `EXPAND_STOP` $50. Do not lift it to chase what-if +$316. Bank default stays off until Patrick asks.

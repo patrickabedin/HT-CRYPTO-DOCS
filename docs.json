@@ -50,6 +50,13 @@
             ]
           },
           {
+            "group": "Expandables",
+            "icon": "expand",
+            "pages": [
+              "grok-trading-desk/expandables/index"
+            ]
+          },
+          {
             "group": "Grade A",
             "pages": [
               "grok-trading-desk/grade-a/index",
