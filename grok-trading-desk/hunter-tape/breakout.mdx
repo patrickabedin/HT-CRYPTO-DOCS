@@ -1,0 +1,50 @@
+---
+title: "BREAKOUT"
+description: "Tape leftover packer when GP/SR miss. Killed 19 Sep. Historical rows stay."
+---
+
+<Warning>
+  Tape no longer packs BREAKOUT. Same leftover spray [Unique already killed](/grok-trading-desk/hunter-unique/breakout). `detect_breakout` stays for diagnostics and rule sweeps. Do not retune GP / SR / XM stops from this page. Do not unmute Hunter Telegram.
+</Warning>
+
+## What it is
+
+`detect_breakout` in `scripts/hunter_ripe_watch.py`. 5m close through the prior session range. Packs only when grain and sweep both miss. This is **not** Grade B `BREAKOUT_CONFIRMATION` and **not** a Bitget demo family. Demo no longer opens TAPE BREAKOUT.
+
+`TAPE_SKIP_ENGINES` drops it from `scan_symbol` / `evaluate`. `RETAIN_ENGINES` is EXTREME only — leftover ripe BREAKOUT rows are not kept across ticks.
+
+## Why Tape killed it (19 Sep)
+
+Live `/api/pnl` `grok_desk_pnl_v0` **2026-09-19T12:12:36Z**. Closed Tape BREAKOUT: **n=4266**, **WR 43.3%**, **−$6,177**, win avg +$9.62 / loss avg −$9.92. 14 days. **789** fires on 11 Sep (then 694 / 521). Same packer Unique already cut (Unique n=455 / WR 37.6% / −$1,247 / 200 fires on 13 Sep).
+
+That is enough data to kill, not to retune. ~1:1 win/loss dollars at 43% WR is negative expectancy. 789/day is resource stress on Tape settle. Restoring the packer would re-spray the leftover seat when GP/SR miss.
+
+Historical BREAKOUT rows stay on the calendar. New ripe / telegram cards will not be BREAKOUT. If GP/SR miss and grain is `EXTREME_*`, Tape may still pack EXTREME_MOMENTUM.
+
+## 967-open lie
+
+Live monitor printed **Tape paper · 967 open**. All 967 were older than 24h (min ~6d, 923 BREAKOUT). Valkey no longer covered entry, settle stamped `no_bars` / `entry_history_unavailable`, and the monitor counted those as open seats.
+
+Fix: wall-clock / last-bar **max-hold 24h** still books a close when history is gone. Monitor hides unresolved rows older than 24h. Tape persist freezes the first `entry_ts` so a reprint cannot reset the clock. Fresh `no_bars` under 24h can still show as a live TAKE waiting for bars.
+
+## Clock and size
+
+5m. SL floor 0.4%, R:R 1.5. $50 @ 20x paper. Max hold 24h. Do not retune those numbers.
+
+## Radio
+
+Lane `HUNTER` stays muted (`TELEGRAM_ALLOW=GRADE_B,GRADE_A`). Mute is chat, not a reason to pack BREAKOUT again.
+
+## Host
+
+Canonical watcher: `scripts/hunter_ripe_watch.py` (`grok-hunter-ripe.timer`). Lean copy under `deploy/host/` also skips BREAKOUT. State file `hunter_breakout.state.json` is leftover Tape retain, not new TAKEs.
+
+## Gates
+
+- Tape: packer result is discarded
+- Unique: already discarded (`UNIQUE_SKIP_ENGINES`)
+- `detect_breakout` still answers diagnostics / `breakout_rule_sweep`
+
+## How Patrick uses it
+
+Treat Tape BREAKOUT as dead. GP / SR / XM stay. EARLY paper is the [EARLY book](/grok-trading-desk/early), even when those names appear on Tape.

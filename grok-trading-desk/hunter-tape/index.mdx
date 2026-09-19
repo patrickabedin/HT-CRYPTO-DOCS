@@ -1,13 +1,17 @@
 ---
 title: "Hunter Tape"
-description: "Ripe shortlist and TAPE cards. Nudge, not TAKE. EARLY names belong to the EARLY book."
+description: "Ripe shortlist and TAPE cards. BREAKOUT killed. 967-open lie was leftover no_bars."
 ---
 
 Hunter Tape is the always-on packer book. It is cheap structure on shared 5m bars. It is **not** the brain product.
 
+<Warning>
+  SHADOW / advisory. Radio stays `GRADE_B,GRADE_A`. Do not unmute Hunter. Tape BREAKOUT is killed. "Tape paper · 967 open" was leftover `no_bars`, not a live book. Do not start Cherry / Scalp from this page.
+</Warning>
+
 ## What it is
 
-`scripts/hunter_ripe_watch.py` scans GRAIN_PULLBACK, SWEEP_RECLAIM, BREAKOUT, EXTREME_MOMENTUM, and EARLY_* . Writes ripe state. May POST `ripe_changed`. Telegram TAPE is optional and muted by default.
+`scripts/hunter_ripe_watch.py` scans GRAIN_PULLBACK, SWEEP_RECLAIM, EXTREME_MOMENTUM, and EARLY\_\* . BREAKOUT is skipped (`TAPE_SKIP_ENGINES`). Writes ripe state. May POST `ripe_changed`. Telegram TAPE is optional and muted by default.
 
 ## Clock and size
 
@@ -21,11 +25,30 @@ Lane `HUNTER`, muted by default. TAPE cards are shortlist. Brain TAKEs live unde
 
 `grok-hunter-ripe.timer`. Lock: `/var/lib/grok-desk/hunter-ripe.lock`. Lean host copy may exist under `deploy/host/` — canonical watcher is this repo's script.
 
+## 19 Sep audit (live `/api/pnl`)
+
+Snapshot `grok_desk_pnl_v0` **2026-09-19T12:12:36Z**. Tape book `hunter_telegram+early_shadow`. Closed **n=9461**, **−\$12,557**. `excluded_invalid=2516` (open / no_bars / leftover). Monitor `tape_open_n=967` — all older than 24h.
+
+| Engine | n | WR | USD | Enough to tune? |
+| --- | --: | --: | --: | --- |
+| BREAKOUT (killed on Tape) | 4266 | 43.3% | −\$6,177 | Yes — same leftover spray as Unique, 789 fires on 11 Sep |
+| GRAIN_PULLBACK | 1010 | 47.6% | +\$50 | Borderline. Keep. Do not retune |
+| SWEEP_RECLAIM | 289 | 46.0% | −\$32 | Flat. Keep |
+| EXTREME_MOMENTUM | 77 | 55.8% | +\$127 | Positive. Keep. No retune |
+| EARLY_PUMP | 883 | 49.8% | +\$38 | EARLY book. 600 on 19 Sep |
+| EARLY_DUMP | 1320 | 37.2% | −\$4,643 | EARLY book. Spray. Not this kill |
+| EARLY_GRIND | 1616 | 44.7% | −\$1,919 | EARLY book. 1020 on 19 Sep |
+
+Tape GP / SR / XM stay. EARLY names belong to the [EARLY book](/grok-trading-desk/early) even when they land on this calendar. Do not retune their stops from Tape.
+
+After 13 Sep, Tape telegram cards stopped (radio mute). Sep 14–17 closes are leftover BREAKOUT holds. The 967 "opens" are those leftover cards after Valkey evicted entry bars.
+
 ## Children
 
 - [Ripe watch](/grok-trading-desk/hunter-tape/ripe-watch)
+- [BREAKOUT](/grok-trading-desk/hunter-tape/breakout)
 - [Nudge vs TAKE](/grok-trading-desk/hunter-tape/nudge-vs-take)
 
 ## How Patrick uses it
 
-Use tape as a wake list. Run brain for TAKE. EARLY paper PnL is the [EARLY book](/grok-trading-desk/early), even when the detector row still says `nudge_only`.
+Use tape as a wake list. Run brain for TAKE. BREAKOUT is dead on Tape and Unique. EARLY paper PnL is the [EARLY book](/grok-trading-desk/early), even when the detector row still says `nudge_only`.
