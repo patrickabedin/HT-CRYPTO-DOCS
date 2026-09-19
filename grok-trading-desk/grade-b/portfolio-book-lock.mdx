@@ -30,6 +30,21 @@ Book lock (whole open book, not one ticket):
 
 13 Sep 2026: prefill tape printed **+\$318** and locked the book. That high was trigger-vs-last, not fill-true. Resume trails fill-true only. Details: [13 Sep notes](/grok-trading-desk/grade-b/2026-09-13-upl-honesty).
 
+Once the book is armed (`fill_true_high ≥ $150`), a ticket TP1 or profit-giveback is **`BOOK_LOCK`**: flatten every **unattached** paper seat at the current mark and sit until the next UTC day. Do not let one winner peel and dump leftovers (14 Sep **\+**$$252.51** fill-true high → leftover flatten **+$$**17.77** → ticket Σ \*\*+$$84.41**). Armed `BOOK_LOCK` has **never** settled a live row. Live demo is Expandables-only now, so the next $$150 Grade B tape is paper-only. If Grade B demo attach comes back, `resolve_reason` still returns `BITGET_CLOSE` / waits on live attach **before** `book_reason` — attached TP1 can still peel. Do not market-close Bitget to "prove" the lock.
+
+## Calendar cell
+
+On `/?g=GRADE_B` the UTC day cell is **not** Σ ticket closes.
+
+| Day type | Cell \$ |
+| --- | --- |
+| `BOOK_LOCK` / `BOOK_GIVEBACK` | fill-true high (the captured book) |
+| `DAY_STOP` / unlocked | ticket Σ (after-fee). Do **not** paint the failed high green |
+
+14 Sep cell is **\+**$$252.51**, not +$$**84. 15 Sep `DAY_STOP` high was +**$$115.63 — the cell stays the red ticket Σ. Leftover Bitget on the day table stays unpaired. Worker `day_realized_usdt` is fee-free open-book UPL (18 Sep tape cash **+$$**331** vs ticket Σ **+\$18**). Do not quote tape cash as the day.
+
+Wiring: `lockCaptureByDay` + `applyLockCaptureCells` in `web/lib/pnl-stats.ts`. Helper ignores `DAY_STOP` / `EXPAND_STOP`.
+
 ## Radio
 
 Measured pre-selection candidates do not publish entry cards. Selected measured alerts use the frozen plan. Book HIGH cards are a separate publisher (`grade_b_upl_high`) — see [Fills, levels, and UPL](/grok-trading-desk/grade-b/fills-levels-upl).
