@@ -25,7 +25,9 @@ None.
 
 ## Host
 
-State file **name** only: `expand_whatif.json`. Armed watcher adopts a live lock-flatten ticket via `whatif_adopt`.
+State file **name** only: `expand_whatif.json`. Armed watcher adopts a live lock-flatten ticket via `whatif_adopt`. New TRIGGERED names after the sit go through `whatif_admit`.
+
+`expand_portfolio.pause.json` `cutoff` is the first flatten clock. Cycle may refresh `until` while cash is still ≤ −\$50. It must not move `cutoff` forward. A moving cutoff makes every later TREND / RECLAIM / EXTREME look pre-flatten, so the watcher EXPIRE `flatten_cancelled_pending_arm` and this book stays empty. Same pause file rule on Grade B `DAY_STOP`.
 
 ## State / settle
 
@@ -45,3 +47,4 @@ Do not turn off `EXPAND_STOP` because what-if is green. That is the blow-up path
 
 - 2026-09-16: `parse_dt` must accept unix ms or what-if exits never fire.
 - 2026-09-19: what-if +$316 is not a production target.
+- 2026-09-19: sit cycles must keep the first flatten `cutoff`. Live sat EXPAND_STOP at 04:33 UTC; what-if also printed 0 new TREND for the rest of the day because `cutoff` walked forward with each cycle.
