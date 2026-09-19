@@ -30,7 +30,11 @@ Live paper reads Valkey / `bars_5m.json`.
 
 ## Gates
 
-Why the first clip book bled: do not GO on a 5m that closed against the side; flatten a coil only when last is still sitting (≤0.4%); exit an opposing expansion at that bar's **close** (the former open-price rule used future information); after a banked clip skip 3 bars (15m); after a stop skip 6 bars (30m).
+Why the first clip book bled: do not GO on a 5m that closed against the side; flatten a coil only when last is still sitting (≤0.4%); after a banked clip skip 3 bars (15m); after a stop skip 6 bars (30m).
+
+**19 Sep 2026 tape retune** (replay 5–19 Sep, $$100@20x, book b): do not GO when the structure stop is tighter than **1.65%** (`MIN_SL_FOR_GO`). The 1.1–1.65% stop bucket was −$$403. Tight wick stops also bled. Wide stops were the only slice that did not sink. Live book is **one clip at a time** (latest closed 5m only) — walking 36 bars stacked overlapping seats.
+
+**Do not flatten opposing expansion.** 19/19 of those exits lost (−\$279). The rule stayed in code behind `FLATTEN_OPP_EXPANSION=False`.
 
 Script `WAIT` = TAKE but `hot_5m_bar` / `climax_5m_bar` / `no_pullback` / `wait_5m`. GO only on ENTER. Good fills are limits on a pullback, not market last on a hot/climax 5m.
 

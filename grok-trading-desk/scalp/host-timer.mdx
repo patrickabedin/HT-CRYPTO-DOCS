@@ -11,11 +11,11 @@ Manual-take watcher in the scalp repo (`manual_take_watch.py`) must call the sam
 
 ## Clock and size
 
-Host timer interval is a scalp-repo concern. While muted, the wrapper still refreshes `market_context.json`.
+Host timer interval is a scalp-repo concern. While muted, the wrapper still refreshes `market_context.json` **and** runs detect / intel / settle with sends patched off.
 
 ## Radio
 
-`SCALP_TELEGRAM` + `TELEGRAM_ALLOW`.
+`SCALP_TELEGRAM` + `TELEGRAM_ALLOW`. Mute is send-only. Do not treat `scalp_telegram_skip reason=telegram_lane_muted` as a dead detector.
 
 ## Host
 

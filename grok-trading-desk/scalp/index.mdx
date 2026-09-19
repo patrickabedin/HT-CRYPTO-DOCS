@@ -17,9 +17,13 @@ Scalp / Cherry live in **`skynet-scalp`** on the host (`/opt/skynet-scalp`), not
 
 Host `grok-scalp-telegram.timer` (not in this repo's `deploy/`). Wrapper: `deploy/host/run_scalp_telegram.sh`.
 
+Minutes scout. Intel settle uses a **90 minute** TTL cap — same as Cherry. Do not score SCALP leftovers as 24h hunter holds.
+
 ## Radio
 
-Lane `SCALP`. Also needs `SCALP_TELEGRAM=1`. Default muted. Runner still refreshes `market_context.json` while muted.
+Lane `SCALP`. Also needs `SCALP_TELEGRAM=1`. Default muted. Runner still refreshes `market_context.json` **and** runs detect / intel / settle while muted. Only the send is gated.
+
+19 Sep 2026: the mute wrapper used to `exit 0` before the host publisher, so SCALP intel died after 11 Sep. That was the quiet-fire bug. Do not unmute to "fix" a quiet calendar.
 
 ## Children
 
