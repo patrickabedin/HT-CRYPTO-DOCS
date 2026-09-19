@@ -1,0 +1,28 @@
+---
+title: "ASTRA paper calendar"
+description: "Engine View PnL scopes Athens days by trade engine_id. Historical SOL scorecards never enter paper."
+sidebarTitle: "Paper calendar"
+---
+
+The desk snapshot book stays tagged `ASTRA_STRUCTURE_V1`. Individual paper rows carry the scanner that emitted them: Structure, Trend Pullback, Crowded Fade, or BTC Impulse.
+
+## View PnL
+
+Each engine card opens a drawer over that engine's paper only. Calendar cells, closed/open counts, and after-fee totals come from:
+
+1. The snapshot `engines` rollup published by the worker (all persisted trades, Athens close date).
+2. If that rollup is missing (older snapshot), the drawer derives days from the tagged trades still on the snapshot.
+
+The book-level `engine_id` is not a filter. Treating a Trend/Fade/Impulse drawer as empty because the book says Structure is a bug, not a no-data state.
+
+## What is not on this calendar
+
+- Historical SOL scorecards in `/api/history`
+- Exchange fills or demo-account attribution
+- Invented exits for unmeasured candidates
+
+Unknown outcomes stay unknown. A day with no measured close shows an em dash, not zero profit.
+
+## Policy
+
+Sampled-quote paper: 50 USDT margin, 10x, 500 USDT notional. Assumed 6 bps fee and 2 bps adverse slippage each side. Funding excluded. No live order authority.
