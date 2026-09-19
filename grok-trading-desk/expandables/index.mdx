@@ -40,7 +40,7 @@ Armed-watcher cycle. State file **name** only: `expand_portfolio.json` plus `.pa
 
 ## State / settle
 
-Paper settlements ingest to the Expandables calendar group. What-if (no sit) is a second calendar: [What-if](/grok-trading-desk/expandables/whatif).
+Paper settlements ingest to the Expandables calendar group. What-if (no sit) is a second calendar: [What-if](/grok-trading-desk/expandables/whatif). A `WHATIF_OPEN` with no mark after `MAX_HOLD` 2h is not a live seat — the book expires that leftover (14 Sep IOTX RECLAIM sat blank ~128h). Still-open what-if marks stamp uPnL from last.
 
 ## Gates
 
@@ -61,3 +61,4 @@ Capital-guard sweep (19 Sep 2026): [Capital guards](/grok-trading-desk/expandabl
 - 2026-09-15: TREND / RECLAIM / EXTREME split off Grade B. Demo default = Expandables only.
 - 2026-09-16: LSK `EXPAND_STOP` about -$64 vs what-if TP1 about +$251 is "if we had not sat," not a vote to disable the stop.
 - 2026-09-19: Keep `EXPAND_STOP` $50. Do not lift it to chase what-if +$316. Bank default stays off until Patrick asks.
+- 2026-09-19: What-if leftovers past `MAX_HOLD` 2h with no last are not live uPnL. Expire them. Do not paint a blank IOTX-style open as \$0 Total uPnL.
