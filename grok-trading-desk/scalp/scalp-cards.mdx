@@ -27,6 +27,8 @@ Outer `telegram_429_gate.py` hard-stops only on shared 429 backoff. Budget press
 
 Settle / detect stay live when radio is muted. Calendar group `SCALP`.
 
+The wrapper must still exec the host publisher on the muted path (`scripts/scalp_telegram_detect_only.py`). Sends are patched off. A mute `exit 0` before detect is how SCALP intel went quiet after 11 Sep 2026 (last honest-ish fire 5–9/day, then zero). Cards without `expires_at` get the **90m** publish cap, never hunter 24h. 7 Sep's 1784-ticket dump was leftover 24h scoring (entries 2–6 Sep), not a live day.
+
 ## Gates
 
 Shared 8/min 20/5min. Do not retry every 10s on 429.
