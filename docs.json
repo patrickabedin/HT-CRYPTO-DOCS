@@ -140,7 +140,8 @@
             "pages": [
               "grok-trading-desk/research/triggered-cf",
               "grok-trading-desk/research/clickhouse",
-              "grok-trading-desk/research/baselines"
+              "grok-trading-desk/research/baselines",
+              "grok-trading-desk/research/repay-15k"
             ]
           }
         ]
