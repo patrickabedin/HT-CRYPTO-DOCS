@@ -5,6 +5,10 @@ description: "Binding Grade B policy: ten-slot book, fill-true lock, demo honest
 
 Decisions that still bind. Dated working notes for 13 Sep 2026 live at [13 Sep 2026 UPL honesty](/grok-trading-desk/grade-b/2026-09-13-upl-honesty). Paid fill / mark / TP-SL pitfalls for the next agent: [Open + TP/SL](/grok-trading-desk/grade-b/bitget-open-tpsl).
 
+## 2026-09-19 -- sit cutoff stays at first flatten
+
+`grade_b_portfolio.pause.json` `cutoff` is the first `DAY_STOP` / lock flatten clock. Cycle may refresh `until` while the sit still holds. It must not move `cutoff` forward. A walking cutoff EXPIRE every later arm as `flatten_cancelled_pending_arm`, so Grade B what-if prints nothing after the sit. Same rule on Expandables `EXPAND_STOP`. Detail: [Expandables what-if](/grok-trading-desk/expandables/whatif).
+
 ## 2026-09-16 -- ticket trail and Bitget moving_plan
 
 - Two layers: script `TICKET_TRAIL` (arm USD 50, give back 25% of peak dollars) and Bitget **Trailing TP/SL** `moving_plan` (2.5% callback).
