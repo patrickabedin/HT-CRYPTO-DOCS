@@ -53,7 +53,9 @@
             "group": "Expandables",
             "icon": "expand",
             "pages": [
-              "grok-trading-desk/expandables/index"
+              "grok-trading-desk/expandables/index",
+              "grok-trading-desk/expandables/capital-guards",
+              "grok-trading-desk/expandables/trend"
             ]
           },
           {

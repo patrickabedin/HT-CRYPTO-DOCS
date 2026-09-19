@@ -1,0 +1,43 @@
+---
+title: "TREND CONTINUATION"
+sidebarTitle: "TREND"
+description: "The only Expandables engine with sample. Five days. Not a retune grid."
+icon: "chart-line"
+keywords:
+  - "TREND_CONTINUATION"
+  - "expandables"
+---
+
+## What it is
+
+`TREND_CONTINUATION` on the Expandables loan desk. Same engine may occupy all three seats. SHADOW / demo only.
+
+## Clock and size
+
+USD 50 at 20x. Card STOP / TP1 / STALL 30m / MAX_HOLD 2h. Book sit is `EXPAND_STOP` -$50, not a per-engine gate.
+
+## Radio
+
+None from this engine page.
+
+## Host
+
+Armed watcher admits into `expandables_portfolio`. Demo timer attaches when the engine is in `BITGET_DEMO_ENGINES`.
+
+## State / settle
+
+Ingest group `EXPANDABLES`. Attached closes are `BITGET_CLOSE`.
+
+## Gates
+
+Allowlist + 3-seat + one coin. No per-engine cap (three TRENDs may stack). That stack is how 16 Sep held COPPER + LSK together.
+
+## How Patrick uses it
+
+15-19 Sep paper: n=120, **+$2.96**, wr about 42%. 17 Sep +$205 vs 16/18/19 `EXPAND_STOP` red. 25 TP1s +$465; 29 stalls; 5 `EXPAND_STOP`. **Not enough days to fine-tune TP/SL.**
+
+Demo TREND **-$160** (35 rows). Do not optimize from demo either.
+
+## Decisions that still bind
+
+- 2026-09-19: leave TREND on the allowlist. Do not run a Grade B-style rule sweep on five days.
