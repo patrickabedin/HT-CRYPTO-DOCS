@@ -1,0 +1,154 @@
+---
+title: "Capital guards"
+description: "EXPAND_STOP, EXPAND_BANK, seats, print caps, stall, TP1 peel. Sweep of 15-19 Sep 2026. SHADOW only."
+sidebarTitle: "Capital guards"
+icon: "shield"
+---
+
+Five UTC days of Expandables paper (15-19 Sep 2026). Snapshot `grok_desk_pnl_v0` `2026-09-19T08:22:39Z`. Live book sat `EXPAND_STOP` until `2026-09-19T23:59:59Z`. SHADOW / advisory. No orders, flatten, or Telegram.
+
+<Warning>
+  Lifting `EXPAND_STOP` to chase the 16 Sep LSK what-if TP1 (+$250.52) is the blow-up path. Paper 5d is about **flat (-$0.50)**. Demo-stamped expand engines **-$211**. 17 Sep paper +$205 is 56/68 tickets with no Bitget twin.
+</Warning>
+
+## Verdict
+
+The guard set that makes **daily** profits more repeatable without blowing the budget:
+
+1. **Keep `EXPAND_STOP=$50`.** Do not lift it. Do not disable it.
+2. **If Patrick wants a first-touch bank, `EXPAND_BANK=$30`** (not $50). 16 Sep fill-true high was **+$37.52** at 03:41Z, then LSK dumped and sat at 03:47Z. A $50 bank never arms on that tape. A $30 bank would have sat the modest high.
+3. **Do not copy Grade B `$150` lock.** 17 Sep open-book high was **+$142.64**. $150 never fires. $150 is a different product.
+4. **Do not raise `MAX_OPEN` above 3.** Four seats is worse. One seat avoids the LSK stack (COPPER already occupied the only seat) but 17 Sep +$210 is one ONEUSDT evening path, not a month of edge.
+5. **Do not unmute EXTREME. Do not retune RECLAIM.** TREND is the only engine with n. RECLAIM n=3. EXTREME paper n=0.
+
+If he wants **green days to keep printing** (17 Sep +$205), leave bank off and accept 16/18/19 reds capped near -$50 to -$88. He cannot have both the 17 Sep lottery and a $30 bank.
+
+## Live vs what-if vs demo
+
+| Book | 5d | What it is |
+| --- | --- | --- |
+| Live paper | **-$0.50** n=123 | Real Expandables calendar |
+| What-if (no sit) | **+$316.05** n=125 | Almost all 16 Sep LSK TP1 +$250.52 |
+| Demo TREND/RECLAIM/EXTREME | **-$211.47** n=42 | 15-19 Sep **-$185** |
+
+| UTC day | Live paper | Fill-true high | Lock | What-if | Expand demo |
+| --- | --- | --- | --- | --- | --- |
+| 15 | +$9.13 | +$36.81 | none | +$9.13 | -$30.92 |
+| 16 | -$66.52 | +$37.52 | `EXPAND_STOP` 03:47Z locked -$75.30 | **+$253.15** | $0 (no twin) |
+| 17 | **+$205.30** | +$142.64 | none (keep printing) | +$205.30 | -$47.99 (12 paired; 56 paper-only) |
+| 18 | -$88.58 | +$47.88 | `EXPAND_STOP` 11:10Z locked -$34.41 | -$102.56 | -$90.98 |
+| 19 | -$59.83 | +$21.72 | `EXPAND_STOP` 04:33Z locked -$34.32 | -$48.97 | -$15.27 |
+
+16 Sep LSK live `EXPAND_STOP` **-$64.20** vs what-if TP1 **+$250.52**. 18 Sep what-if is *worse* than live: the sit cut a loser the no-sit book left open.
+
+## Stop / bank / lock / seats
+
+`EXPAND_BANK` uses **day cash** (realized + open), not open-book UPL. `EXPAND_BANK` count on the live tape: **0**.
+
+| Guard | 16 Sep | 17 Sep | 18 Sep |
+| --- | --- | --- | --- |
+| Bank $30 | Would sit ~03:41 at the +$37 high, before LSK | Realized crossed $30 at 14:13 ($33). Sits; misses evening ONE | Realized peak $39.47 at 01:19. Sits; avoids later -$113 |
+| Bank $50 | **Never.** High $37 | Realized $50.78 at 14:22 (ZEC TP1). Sits ~+$51; forgoes ~+$172 | Realized never $50. Open high $47.88 |
+| Bank $80 / $100 | Never | Open-book hits 80/100 exist; first realized $80 is the ONE TP1 at 22:25 ($157) | Never |
+| $150 open-book lock | Never | Peak $142.64 | Never |
+| Lift stop to $75 / 0 | Lets LSK run to what-if +$251 | Live already did not sit | Live sit *helped* vs what-if |
+
+17 Sep realized path: $30 at 14:13, $50 at 14:22, $80/$100/$150 only when ONEUSDT TP1 +$127.81 prints at 22:25.
+
+Seat replay on **live tickets** (FIFO, one coin):
+
+| Seats | 15 | 16 | 17 | 18 | 19 | 5d |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | +$12.00 | **-$2.32** (LSK skipped; COPPER held the seat) | +$209.86 | +$13.20 | -$15.66 | **+$217** |
+| 2 | +$9.13 | -$66.52 | +$244.34 | -$14.58 | -$40.22 | +$132 |
+| 3 (live) | +$9.13 | -$66.52 | +$205.30 | -$88.58 | -$59.83 | -$0.50 |
+
+1-seat 16 Sep save is real (cannot stack LSK on COPPER). 1-seat 17 Sep still needs the ONEUSDT 22:11Z refill. Five days. Do not promote 1-seat as a proven edge.
+
+5m MTM replay can **false-trigger** `EXPAND_STOP` on 17 Sep (live never sat). Do not tighten the stop from that grid.
+
+## Engines
+
+| Engine | Paper n / 5d $ / wr | Days | Demo $ | Enough to fine-tune? |
+| --- | --- | --- | --- | --- |
+| TREND_CONTINUATION | 120 / +$2.96 / ~42% | 5 | -$160 | **Only engine with n.** Still five days. 17 Sep vs 16/18/19 red. Not a TP-grid sample |
+| RECLAIM_CONTINUATION | **3** / -$3.45 | 2 | -$38 | **Noise.** Skip from admission if you want; does not move the book |
+| EXTREME_MOMENTUM | **0** paper | 0 | -$13 (2 leftovers 15 Sep) | **Dead.** Keep `BITGET_DEMO_INCLUDE_EXTREME` off |
+
+TREND-only vs live is +$2.95 vs -$0.49. Not a skill claim.
+
+## Max prints per day
+
+17 Sep was 68 tickets. Caps that cut before 22:11Z **delete the ONEUSDT +$200** and leave the stall tax:
+
+| Cap (3-seat FIFO) | 17 Sep | 18 Sep | 5d |
+| --- | --- | --- | --- |
+| 8 | +$9 | +$54 | -$45 |
+| 15 | +$21 | +$75 | -$21 |
+| 68 / none | +$205 | -$89 | -$0.50 |
+
+A daily print cap is a **hidden bank** that sits before the only green lottery. Do not add one to "secure daily profits" unless Patrick also accepts losing 17 Sep.
+
+1-seat + cap 8: 5d +$32, 17 Sep **-$2**. Cap plus one seat kills ONE.
+
+## Stall / MAX_HOLD / time-stop
+
+Coded: `STALL_S=1800` if peak never +0.25R. `MAX_HOLD_S=7200`. Expandables uses the same `paper_exit` as Grade B.
+
+| Outcome | n | USD | Hold |
+| --- | --- | --- | --- |
+| STALL | 30 | **-$117.76** | 30.0-31.2m (the timer) |
+| MAX_HOLD | 15 | +$12.47 | ~120m |
+| TP1 | 25 | +$465.13 | med 24m |
+
+Stall is the refill tax (27 losers -$127, 3 tiny wins). 17 Sep stalls -$75.
+
+5m mark if those 30 stalls had been held longer: 30m -$90, 60m -$110, 90m -$36, **120m +$11**. That +$11 includes OPUSDT +$36 and WLD +$31 lotteries. **Not enough n to retune `STALL_S`.** Sitting the day after K stalls is worse (cuts 17 Sep before ONE).
+
+MAX_HOLD is already slightly green. Do not shorten it from this sample.
+
+## TP1 peel vs hold the book
+
+Expandables **peels**. First TP1 does not flatten the other seats. That is coded intent ("green days keep printing"), not a Grade B lock bug.
+
+| Rule | 5d live-ticket replay |
+| --- | --- |
+| First winner (TP1 / giveback / trail) sits | **-$74** (17 Sep dies at RAY +$12) |
+| First TP1 >= $30 sits | -$53 (17 Sep +$29 at ONE +$73; 18 Sep +$35 at WLD) |
+| No refill after first TP1 | -$72 |
+
+Peel is how 17 Sep printed three ONE tickets ($11 trail, +$73, +$128 = **+$212**). Holding the book like Grade B armed-TP1 `BOOK_LOCK` would need a new product and a new child page. Do not silent-copy it.
+
+## Admission filters
+
+| Filter | 5d live FIFO | Note |
+| --- | --- | --- |
+| Symbol cooldown 15-60m | worse than live | Cuts ONE refill more than it cuts red refill |
+| One print per coin / day | **-$120** | Deletes ONE 2nd/3rd TP1 |
+| One engine at a time | ~live | Book is already ~all TREND |
+| Skip RECLAIM | +$3 vs -$0.50 | n=3, noise |
+| Skip EXTREME | no paper change | Already skipped |
+
+`GRADE_B_SYMBOL_COOLDOWN` is a **Telegram** gate, not Expandables admission. Do not reuse it here without Patrick.
+
+## Other coded levers that can blow a few days
+
+| Lever | Default | Blow-up if |
+| --- | --- | --- |
+| `EXPAND_STOP_USDT` | 50 | Set 0 or 75+ to "let LSK work" |
+| `EXPAND_BANK_USDT` | 0 | Leave 0 if he wants 17 Sep-style days; $50 misses 16/18 highs |
+| `MAX_OPEN` | 3 | 4+ stacks more LSK-style books |
+| `BITGET_DEMO_MAX_OPEN` | min(3, env) | Host 10 is already clamped. Do not remove the clamp |
+| `BITGET_DEMO_INCLUDE_EXTREME` | off | Unmute = two leftover demo losses already |
+| `BITGET_DEMO_ENGINES` | three names | Widening reopens Hunter / Grade B on demo |
+| Demo 2h vs leftover 24h | desk 2h | 24h leftover tape is not this book |
+| `TICKET_TRAIL` $50 / 25% | on | One 17 Sep print +$11. Not a book lock |
+| Chase / attach | demo | Paper-only 17 Sep is the honesty gap, not a trail bug |
+
+## Do not touch
+
+Fill stamp, attached Bitget mark, 13 Sep honesty, Grade B $150 lock, Grade A 75, live keys, FLATTEN, Telegram, `telegram_429_backoff.json`, `grok-market-data`, today's pause, retuning STALL/TP1 from this sample, wiring calendar cells to fill-true highs without a DAY_STOP rule.
+
+## Decisions that still bind
+
+- 2026-09-19 sweep: keep stop $50; bank $30 is the only bank that would have sat 16 Sep; $150 lock is a no-op; 1-seat is a stack guard, not a proven edge; stall 30m is costly but not retuned here.
