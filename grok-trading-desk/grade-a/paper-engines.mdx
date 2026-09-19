@@ -1,0 +1,86 @@
+---
+title: "Grade A paper engines"
+sidebarTitle: "Paper engines"
+description: "Same Grade B paper families under Grade A rules only: score 75 and trigger-confirmed. Not Expandables. No $150 lock."
+---
+
+Grade A papers the **same setup families Grade B paper admits**, then keeps only the ones that still clear **score 75** and a **confirmed trigger**. The point is to measure Grade A vs Grade B on the same setups. n=3 all-time (all `RELATIVE_STRENGTH_ROTATION`) is noise — not a model to retune.
+
+<Warning>
+  SHADOW / advisory. Grade A stays off Bitget demo. Threshold stays 75. Do not copy Grade B `$150` lock, 10-seat spray, or `DAY_STOP` onto this book. Do not unmute Hunter / SCALP / USELESS from this page.
+</Warning>
+
+## What it is
+
+`scripts/grade_a_lane.py` plus `matching_setup_families` in `scripts/setup_families.py`. Grade B still classifies **one** exclusive family per symbol. Grade A then scores **every** evidence-backed paper family on that same event bundle.
+
+Admitted on Grade A:
+
+- `RELATIVE_STRENGTH_ROTATION`
+- `REDUMP_CONTINUATION_SHORT`
+- `FUNDING_DISLOCATION`
+- `VOLATILITY_EXPANSION`
+- `LIQUIDITY_SWEEP_RECLAIM`
+- `EARLY_IGNITION`
+- `PULLBACK_RETEST`
+- `DISTRIBUTION_PRE_DUMP`
+- `EXHAUSTION_REVERSAL`
+- `ACCUMULATION_BREAKOUT`
+- `FAILED_AUCTION_TRAP`
+- `POSITIONING_CROWDING`
+- `CROWDED_FADE`
+
+Blocked on Grade A (stay on their own books):
+
+- `TREND_CONTINUATION` / `RECLAIM_CONTINUATION` / `EXTREME_MOMENTUM` — Expandables
+- `BREAKOUT_CONFIRMATION` — sat-box / Hunter, not this paper book
+
+A measured 5m UP tape that would have classified as TREND used to eat the RS / VOL / FUNDING seats. Grade A now skips Expandables and still evaluates the paper families.
+
+## Clock and size
+
+Same 60s drain as Grade B. Paper settle is `scripts/grade_a_paper.py` on STOP / TP1 / `MAX_HOLD`. Calendar USD is frozen entry/stop × stamped notional. **R is stop-risk, not $50.** No book lock. No ten-seat cap. No `DAY_STOP`.
+
+## Radio
+
+Lane `GRADE_A`. Default allowlist `GRADE_B,GRADE_A`. Send only after TRIGGERED + frozen plan. Flood-guarded. Armed-but-waiting does not send.
+
+## Host
+
+Inside `grok-desk-drain.timer` (`build_grade_a_candidates`) and `grok-desk-armed-watcher` (`grade_a_paper.cycle`). No new unit.
+
+## State / settle
+
+- Funnel snapshot: `grade_a_funnel.json` (`evaluated`, `armed`, `skips`, `families_armed`)
+- Open cache: `grade_a_open_plans.json`
+- Local settle: `grade_a_settled.json`
+- ClickHouse `triggered_cf_plans` / `triggered_cf_outcomes` for `GROK-A-*` rows with champion score ≥ 75
+
+File **names** only. No contents, hosts, or tokens.
+
+## Gates
+
+- Score ≥ 75 after measured structure + optional +2 confluence bridge. Do not lower 75.
+- `arm_ok` (thesis, trigger, invalidation, TTL, chase still in front)
+- Trigger-confirmed freeze before Telegram or calendar open
+- Continuation families (`RS`, `VOL`, `EARLY`, `PULLBACK`, `ACCUM`) still require measured 5m side. Dislocation / dump families do not — that lock is why only RS printed.
+- Calendar is one ticket per `candidate_id`. Same-day same-family stacks are not collapsed.
+
+## How Patrick uses it
+
+Live book: `/?g=GRADE_A`. Empty cells until TP/SL. Compare a Grade A ticket to the Grade B twin of the **same family** — not to Expandables or Hunter. n under ~20 tickets or under 3 UTC days is noise. Paste a fire card into trade-check. Do not chase.
+
+## Decisions that still bind
+
+**19 Sep 2026 — paper the Grade B engines under A rules.** Measure A vs B. Keep 75. Keep trigger-confirmed radio. Do not import `$150` / 10-seat / `DAY_STOP`. Do not retune from the three RS tickets (14 Sep MU STOP, 15 Sep SOL STOP, 17 Sep SOL TP1).
+
+## Pitfalls
+
+| Do not | Why |
+| --- | --- |
+| Treat n=3 RS as an engine score | Not enough data. Wilson is meaningless. |
+| Paper TREND / RECLAIM on this book | Expandables. Measured UP + VOLUME + RELATIVE used to steal the A seat. |
+| Lower 75 so more families print | Quota hunting. The funnel `below_75` / `max_*_score` is the honest miss. |
+| Copy `$150` lock or `DAY_STOP` | Different product. A has no equivalent today. |
+| Collapse same-episode A tickets | Grade B already counts each `candidate_id`. A must too. |
+| Mark A from a demo fill | Grade A has no Bitget copy. Frozen paper entry is the fill. |
