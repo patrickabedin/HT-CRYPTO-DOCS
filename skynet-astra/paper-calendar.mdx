@@ -1,0 +1,25 @@
+---
+title: "ASTRA paper calendar"
+description: "Engine View PnL scopes Athens days by trade engine_id. Impulse stays empty until a BTC ±2% window opens."
+sidebarTitle: "Paper calendar"
+---
+
+The desk snapshot book stays tagged `ASTRA_STRUCTURE_V1`. Individual paper rows carry the scanner that emitted them.
+
+## View PnL
+
+Each engine card opens that engine's paper only. Calendar cells come from the worker `engines` rollup, not the book-level `engine_id`.
+
+## BTC Impulse
+
+`ASTRA_BTC_IMPULSE_V1` does not copy SOL's too-early 22-trade slate onto this calendar. Empty cells mean no prospective ASTRA paper yet.
+
+The gate is BTC ±2% on 48 contiguous 5m bars (SOL's 4h window) when the cache has them, else 24×5m. The drawer shows the observed BTC return. Paper starts only after that window opens and an alt passes residual gates. Historical SOL impulse stays in `/api/history`.
+
+## What is not on this calendar
+
+- Historical SOL scorecards
+- Exchange fills or demo-account attribution
+- Invented exits for unmeasured candidates
+
+Unknown outcomes stay unknown. A day with no measured close shows an em dash, not zero profit.
