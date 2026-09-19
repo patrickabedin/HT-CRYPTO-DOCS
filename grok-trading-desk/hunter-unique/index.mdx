@@ -6,28 +6,46 @@ description: "Brain TAKE plus named 5m engines. Ripe is a shortlist. Telegram is
 Hunter Unique is the discretionary / named-engine book. The product is the **brain path**, not the ripe firehose.
 
 <Warning>
-  SHADOW / advisory. No exchange orders. Radio lane `HUNTER` is muted by default. Brain Telegram is TAKE only.
+  SHADOW / advisory. No exchange orders. Radio stays `GRADE_B,GRADE_A`. Lane `HUNTER` is muted. Brain Telegram is TAKE only and needs `HUNTER_UNIQUE_TELEGRAM=1` plus `HUNTER` on the radio — do not unmute either for a paper fix.
 </Warning>
 
 ## What it is
 
 Host ripe / engines cheaply shortlist. `scripts/hunter_brain.py` packs its own structure off the shared tape (WS quotes in `latest.json` + Valkey 5m). Engine entry/SL/TP on a ripe row are **ignored**. `trade_check` must return ENTER before a brain TAKE.
 
-Named packers: `GRAIN_PULLBACK`, `SWEEP_RECLAIM`, `BREAKOUT`, `EXTREME_MOMENTUM`. EARLY names that appear on ripe rows belong to the [EARLY book](/grok-trading-desk/early).
+Named Unique packers: `GRAIN_PULLBACK`, `SWEEP_RECLAIM`, `EXTREME_MOMENTUM`. Unique does **not** pack `BREAKOUT` — that leftover packer stays on [Hunter Tape](/grok-trading-desk/hunter-tape). EARLY names that appear on ripe rows belong to the [EARLY book](/grok-trading-desk/early).
 
 ## Clock and size
 
-5m chart. Brain timer 60s. Projection on hunter-setup cards: $50 @ 10x (label). Do not treat that as a live order.
+5m chart. Brain timer 60s. Projection on hunter-setup cards: $50 @ 20x (label). Do not treat that as a live order.
 
-## Radio
+Dedup key is `symbol|engine|side|episode`. Episode is the grain alert (`STATE@last_market_alert_ts`). Empty episode was an all-time one-slot key and undercounted reprints.
 
-- Brain card: `SKYNET HUNTER BRAIN` — TAKE only
+## Radio vs paper
+
+- Brain card: `SKYNET HUNTER BRAIN` — TAKE only when unmuted
 - UNIQUE Telegram also needs `HUNTER_UNIQUE_TELEGRAM=1` **and** `TELEGRAM_ALLOW` to include `HUNTER`
 - WAIT / SKIP / chop / no grain → silent
+- **Mute is chat, not calendar.** TAKEs still persist to `hunter_brain.json` so Unique paper can settle. First `entry_ts` / `updated_ts` is frozen so 24h max-hold cannot be reset by a reprint.
 
 ## Host
 
 `grok-hunter-brain.timer` (60s). State: `/var/lib/skynet-market/hunter_brain.json`. Leave `grok-hunter-ripe.timer` running if you still want the raw shortlist.
+
+## 19 Sep audit (live `/api/pnl`)
+
+Snapshot `grok_desk_pnl_v0` **2026-09-19T12:03:16Z**. Unique book `hunter_brain`. Closed **n=830**, **−\$1,247**. `excluded_invalid=208` (open / no_bars / flat). `excluded_duplicate=0`. All 830 keys had an empty episode.
+
+| Engine | n | WR | USD | Enough to tune? |
+| --- | --: | --: | --: | --- |
+| BREAKOUT (killed on Unique) | 455 | 37.6% | −\$1,247 | Yes — no Unique edge, 200 fires on 13 Sep |
+| GRAIN_PULLBACK | 204 | 48.0% | −\$172 | Borderline. Do not retune stops |
+| SWEEP_RECLAIM | 108 | 48.1% | +\$26 | Flat. Keep |
+| EXTREME_MOMENTUM | 63 | 55.6% | +\$145 | Positive, not a retune |
+
+New Unique TAKEs stopped after 13 Sep because muted Telegram skipped `hunter_brain.json` writes. Sep 14–18 Unique closes are leftover BREAKOUT holds (some 8d) from empty-episode cards whose settle clock was `updated_ts`.
+
+Do not retune GP / SR / XM stops from this book. Tape's 967 opens and Scalp quiet-fire are other books.
 
 ## Children
 

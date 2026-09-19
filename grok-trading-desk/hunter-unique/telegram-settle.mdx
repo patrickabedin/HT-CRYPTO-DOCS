@@ -5,25 +5,35 @@ description: "TAPE and UNIQUE cards share hunter_telegram. TAKE-only for brain. 
 
 ## What it is
 
-`scripts/hunter_telegram.py` posts TAPE / UNIQUE TAKE cards (`SKYNET HUNTER *`). `scripts/hunter_telegram_settle.py` settles hunter Telegram paper outcomes for the PnL rollup.
+`scripts/hunter_telegram.py` posts TAPE / UNIQUE TAKE cards (`SKYNET HUNTER *`) when the hunter lane is on. `scripts/hunter_telegram_settle.py` settles hunter paper outcomes for the PnL rollup.
 
 `scripts/manual_take_projection.py` builds the shared $50-class level projection used on hunter / USELESS / telegram cards.
 
+Unique paper lives in `hunter_brain.json` even when Telegram is muted. Tape paper lives in `hunter_telegram.json` and is a later book.
+
 ## Clock and size
 
-Chained after ripe / extreme / brain runs. Settle is not a quote stream.
+Chained after ripe / extreme / brain runs. Settle is not a quote stream. Model: $$50 @ 20x, 24h max hold, profit giveback after +$$12 / 35%.
+
+Unique first `entry_ts` / `updated_ts` is frozen on persist. Reprints must not move the settle clock. Empty-episode Unique keys (`SYM|ENGINE|SIDE|`) were an all-time one-slot identity — new TAKEs stamp the grain episode.
 
 ## Radio
 
-Lane `HUNTER`. Brain: TAKE only. Ripe TAPE is a shortlist card, not a brain TAKE. `editMessageText` does not consume the shared send budget.
+Lane `HUNTER` is muted by default. Brain: TAKE only when unmuted. Ripe TAPE is a shortlist card, not a brain TAKE. `editMessageText` does not consume the shared send budget.
+
+**Do not unmute Hunter** so Unique paper works. Persist does not call `api.telegram.org`.
 
 ## Host
 
-Uses the same Telegram env as Grade B. State: `HUNTER_RIPE_PATH`, `HUNTER_SETTLE_PATH` under `/var/lib/skynet-market/`.
+Uses the same Telegram env as Grade B. State: `HUNTER_RIPE_PATH`, `HUNTER_BRAIN_STATE`, `HUNTER_SETTLE_PATH` under `/var/lib/skynet-market/`.
 
 ## State / settle
 
 Dashboard groups: `HUNTER_UNIQUE` vs `HUNTER_TAPE`. EARLY settlements stay under their own engine names on the tape group — they are not relabelled GP/SR/BREAKOUT.
+
+UNIQUE / intel settle do not overlay Bitget demo. Tape BREAKOUT demo mirror is Tape-only.
+
+19 Sep Unique `excluded_invalid=208` is open / no_bars / flat, not a duplicate wipe.
 
 ## Gates
 
@@ -31,8 +41,8 @@ Flood guard on every new send. Dedupe per engine rules. Do not publish EARLY as 
 
 ## How Patrick uses it
 
-A TAPE card is a wake. A BRAIN TAKE is the ping worth trade-check. UNIQUE without brain structure is not the product.
+A TAPE card is a wake. A BRAIN TAKE is the ping worth trade-check. UNIQUE without brain structure is not the product. Calendar honesty does not require a Telegram ping.
 
 ## Decisions that still bind
 
-Mute UNIQUE with `HUNTER_UNIQUE_TELEGRAM=0` if you need a quiet channel. Do not mute Grade B to punish hunter.
+Mute UNIQUE with `HUNTER_UNIQUE_TELEGRAM=0` if you need a quiet channel. Do not mute Grade B to punish hunter. Do not clear the shared 429 backoff file to force a Unique send.

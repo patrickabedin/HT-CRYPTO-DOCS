@@ -7,16 +7,18 @@ description: "Own 5m structure off the shared tape. TAKE / WAIT / SKIP. Telegram
 
 `scripts/hunter_brain.py`. Finds its own setups. No Bitget socket and no `history-candles` on the host timer. REST is laptop/cloud fallback only.
 
+Packers on this book: `GRAIN_PULLBACK`, `SWEEP_RECLAIM`, `EXTREME_MOMENTUM`. Unique skips `BREAKOUT` so Tape's leftover packer cannot occupy the Unique seat.
+
 ## Clock and size
 
 - Timer: 60s (tighter than the 15-minute "find me a setup" ask)
-- Dedup TTL: `BRAIN_TTL_MIN=15` — same symbol/side/levels → no new card
+- Dedup: `symbol|engine|side|episode` with grain episode `STATE@last_market_alert_ts`
 - Universe: HOT 40 + ripe nudge + top 12 movers by 24h move × range (not the full 778)
-- Projection: $50 @ 10x on the hunter-setup path
+- Projection: $50 @ 20x on the hunter-setup path
 
 ## Radio
 
-`SKYNET HUNTER BRAIN`. **TAKE only.** Host service default may set `HUNTER_UNIQUE_TELEGRAM=0`. Lane `HUNTER` must also be allowlisted.
+`SKYNET HUNTER BRAIN`. **TAKE only** when unmuted. Host default is `HUNTER_UNIQUE_TELEGRAM=0` and radio `GRADE_B,GRADE_A`. Lane `HUNTER` must also be allowlisted to send. Do not unmute Hunter to make the calendar honest.
 
 Chat invocations use `--no-publish`.
 
@@ -28,9 +30,13 @@ Chat invocations use `--no-publish`.
 
 Settle via [hunter Telegram settle](/grok-trading-desk/hunter-unique/telegram-settle). Dashboard group `HUNTER_UNIQUE`.
 
+Muted radio / muted Unique Telegram still **persist** TAKEs to `hunter_brain.json`. First settle clock is frozen. A reprint must not move `updated_ts` or 24h max-hold never fires.
+
+19 Sep: Unique paper died after 13 Sep because persist ran only after a successful Telegram send. That is fixed. Historical empty-episode keys stay as they settled.
+
 ## Gates
 
-Own Hunter structure **and** `trade_check` must return ENTER. Chop / no grain → `SILENT`.
+Own Hunter structure **and** `trade_check` must return ENTER. Chop / no grain → `SILENT`. BREAKOUT structure is not a Unique TAKE.
 
 ## How Patrick uses it
 
@@ -38,4 +44,4 @@ Personal Cursor account (`/hunter-setup`), not the Grok Bot login. Do not rubber
 
 ## Decisions that still bind
 
-Ripe is a wake, never equals TAKE. See [nudge vs TAKE](/grok-trading-desk/hunter-tape/nudge-vs-take).
+Ripe is a wake, never equals TAKE. See [nudge vs TAKE](/grok-trading-desk/hunter-tape/nudge-vs-take). Unique BREAKOUT is killed (n=455, WR 37.6%, −\$1,247, 200/day on 13 Sep). Tape BREAKOUT is a later book.
