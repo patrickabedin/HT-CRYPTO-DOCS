@@ -1,6 +1,6 @@
 ---
 title: "Ripe watch"
-description: "60s scan of shared 5m bars. Writes hunter_ripe.json. Priority GP, SR, BREAKOUT, then EXTREME leftovers."
+description: "60s scan of shared 5m bars. Writes hunter_ripe.json. Priority GP, SR, then EXTREME leftovers. BREAKOUT skipped."
 ---
 
 ## What it is
@@ -21,7 +21,7 @@ Webhook POST when a new `(symbol, engine)` pair appears. Optional TAPE Telegram 
 
 ## State / settle
 
-`last_posted` plus per-engine state files for BREAKOUT and EXTREME. Old last_posted symbol lists without an engine are treated as no-engine so a later BREAKOUT still POSTs.
+`last_posted` plus EXTREME state. BREAKOUT retain is off. Old last_posted symbol lists without an engine are treated as no-engine so a later GP/SR/XM still POSTs.
 
 ## Gates
 
