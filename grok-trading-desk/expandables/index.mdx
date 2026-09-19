@@ -22,7 +22,7 @@ SHADOW / demo only. Grade A stays 75. No live orders.
 
 ## What it is
 
-`scripts/expandables.py` + `scripts/expandables_portfolio.py`. Own state and pause. Green days keep printing unless `EXPAND_BANK_USDT>0` (default **off**). Combined UTC-day cash (realized + open) ≤ **−$50** flattens and sits until the next UTC day (`EXPAND_STOP`).
+`scripts/expandables.py` + `scripts/expandables_portfolio.py`. Own state and pause. Green days keep printing unless `EXPAND_BANK_USDT>0` (default **off**). Combined UTC-day cash (realized + open) ≤ **-$50** flattens and sits until the next UTC day (`EXPAND_STOP`).
 
 Per-ticket trail still arms at +$50 and gives back 25% of that seat (`TICKET_TRAIL`). Bitget demo places a 2.5% callback net after the same arm. See [Ticket trail](/grok-trading-desk/grade-b/ticket-trail).
 
@@ -59,5 +59,5 @@ Capital-guard sweep (19 Sep 2026): [Capital guards](/grok-trading-desk/expandabl
 ## Decisions that still bind
 
 - 2026-09-15: TREND / RECLAIM / EXTREME split off Grade B. Demo default = Expandables only.
-- 2026-09-16: LSK `EXPAND_STOP` about −$64 vs what-if TP1 about +$251 is "if we had not sat," not a vote to disable the stop.
+- 2026-09-16: LSK `EXPAND_STOP` about -$64 vs what-if TP1 about +$251 is "if we had not sat," not a vote to disable the stop.
 - 2026-09-19: Keep `EXPAND_STOP` $50. Do not lift it to chase what-if +$316. Bank default stays off until Patrick asks.

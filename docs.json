@@ -57,7 +57,8 @@
               "grok-trading-desk/expandables/capital-guards",
               "grok-trading-desk/expandables/trend",
               "grok-trading-desk/expandables/reclaim",
-              "grok-trading-desk/expandables/extreme"
+              "grok-trading-desk/expandables/extreme",
+              "grok-trading-desk/expandables/whatif"
             ]
           },
           {
