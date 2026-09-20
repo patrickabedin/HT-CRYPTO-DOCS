@@ -1,6 +1,6 @@
 ---
 title: "Hunter Tape"
-description: "Ripe shortlist and TAPE cards. BREAKOUT killed. 967-open lie was leftover no_bars."
+description: "Ripe shortlist and TAPE cards. BREAKOUT killed. 966-open wall is hidden on Vercel ingest/read."
 ---
 
 Hunter Tape is the always-on packer book. It is cheap structure on shared 5m bars. It is **not** the brain product.
@@ -42,6 +42,18 @@ Snapshot `grok_desk_pnl_v0` **2026-09-19T12:12:36Z**. Tape book `hunter_telegram
 Tape GP / SR / XM stay. EARLY names belong to the [EARLY book](/grok-trading-desk/early) even when they land on this calendar. Do not retune their stops from Tape.
 
 After 13 Sep, Tape telegram cards stopped (radio mute). Sep 14–17 closes are leftover BREAKOUT holds. The 967 "opens" are those leftover cards after Valkey evicted entry bars.
+
+## 20 Sep — hide stuck on the live UI
+
+Patrick still saw **Tape paper · 966 open** on `?g=HUNTER_TAPE&e=BREAKOUT&d=2026-09-17#day-trades` after `ffd214f`. Live `/api/pnl` **2026-09-20T11:48:16Z** still had `tape_open_n=966` (922 BREAKOUT). Ingest was not emitting new BREAKOUT cards. The Sep 17 day-trades table was not the spray — the live Tape paper book above it was.
+
+`ffd214f` hid stale rows only inside `load_tape_open` on the host. That did not stick because:
+
+1. `grok-desk-realtime` is long-running and keeps the old monitor in memory until restart. Live ingest overwrites a newer PnL hide every second.
+2. `/api/ingest` stored `tape_open` as posted. Vercel read the 966-row wall as-is.
+3. Preferring restamped `entry_ts_epoch` over frozen `entry_ts` / `STATE@epoch` could keep a 6-day leftover under 24h.
+
+Fix that does not wait another tick: Vercel ingest + `/api/pnl` + `/api/live` drop killed Tape BREAKOUT and unresolved Tape seats older than 24h. Settle expires unresolved Tape BREAKOUT as `tape_breakout_killed` with no invented PnL (off the calendar). Persist will not write new Tape BREAKOUT cards. Unique BREAKOUT kill stays. GP / SR / XM not retuned.
 
 ## Children
 
