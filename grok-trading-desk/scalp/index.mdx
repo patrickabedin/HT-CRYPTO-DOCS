@@ -23,7 +23,7 @@ Minutes scout. Intel settle uses a **90 minute** TTL cap — same as Cherry. Do 
 
 Lane `SCALP`. Also needs `SCALP_TELEGRAM=1`. Default muted. Runner still refreshes `market_context.json` **and** runs detect / intel / settle while muted. Only the send is gated.
 
-19 Sep 2026: the mute wrapper used to `exit 0` before the host publisher, so SCALP intel died after 11 Sep. That was the quiet-fire bug. Do not unmute to "fix" a quiet calendar.
+19 Sep 2026: the mute wrapper used to `exit 0` before the host publisher, so SCALP intel died after 11 Sep (quiet-fire). 20 Sep: Cherry still detected; SCALP intel last entry still 11 Sep because the muted path exported `SCALP_TELEGRAM=0` and leftover `/opt/grok-desk/scripts/run_scalp_telegram.sh` did not pick up `7e95cfa`. `/?g=SCALP&e=SCALP&d=2026-09-17` is empty because that chip is intel-only — 17 Sep CLIP GO printed 22 tickets. Do not unmute to "fix" a quiet calendar.
 
 ## Children
 
