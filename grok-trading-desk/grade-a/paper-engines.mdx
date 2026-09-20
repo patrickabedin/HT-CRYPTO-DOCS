@@ -4,7 +4,7 @@ sidebarTitle: "Paper engines"
 description: "Same Grade B paper families under Grade A rules only: score 75 and trigger-confirmed. Not Expandables. No $150 lock."
 ---
 
-Grade A papers the **same setup families Grade B paper admits**, then keeps only the ones that still clear **score 75** and a **confirmed trigger**. The point is to measure Grade A vs Grade B on the same setups. n=3 all-time (all `RELATIVE_STRENGTH_ROTATION`) is noise — not a model to retune.
+Grade A papers the **same setup families Grade B paper admits**, then keeps only the ones that still clear **score 75** and a **confirmed trigger**. The point is to measure Grade A vs Grade B on the same setups. Early n is still noise — not a model to retune.
 
 <Warning>
   SHADOW / advisory. Grade A stays off Bitget demo. Threshold stays 75. Do not copy Grade B `$150` lock, 10-seat spray, or `DAY_STOP` onto this book. Do not unmute Hunter / SCALP / USELESS from this page.
@@ -68,19 +68,25 @@ File **names** only. No contents, hosts, or tokens.
 
 ## How Patrick uses it
 
-Live book: `/?g=GRADE_A`. Empty cells until TP/SL. Compare a Grade A ticket to the Grade B twin of the **same family** — not to Expandables or Hunter. n under ~20 tickets or under 3 UTC days is noise. Paste a fire card into trade-check. Do not chase.
+Live book: `/?g=GRADE_A`. The engine chips are the **admitted paper set**, not the settled set. All 13 families stay on the chip row and the month engine table at n=0. Clicking a chip with no closes shows empty cells — that family is still scored every drain. Open TRIGGERED paper sits in the live book above the calendar. Compare a Grade A ticket to the Grade B twin of the **same family** — not to Expandables or Hunter. n under ~20 tickets or under 3 UTC days is noise. Paste a fire card into trade-check. Do not chase.
+
+The live Grade A hint prints `evaluated` / `armed` / `N paper families` / `families_armed` from the drain funnel. `families_armed` is this cycle only. An open seat can be from an earlier arm.
 
 ## Decisions that still bind
 
 **19 Sep 2026 — paper the Grade B engines under A rules.** Measure A vs B. Keep 75. Keep trigger-confirmed radio. Do not import `$150` / 10-seat / `DAY_STOP`. Do not retune from the three RS tickets (14 Sep MU STOP, 15 Sep SOL STOP, 17 Sep SOL TP1).
 
+**20 Sep 2026 — chips are the admitted set.** Drain already scored every Grade B paper family (`paper_families` on the funnel). The dashboard only listed families with a settled ticket, so Patrick saw RS + ACCUM while REDUMP was open. Pin the 13 admitted families at n=0. Do not hide a family until it TPs.
+
 ## Pitfalls
 
 | Do not | Why |
 | --- | --- |
-| Treat n=3 RS as an engine score | Not enough data. Wilson is meaningless. |
+| Treat early n as an engine score | Not enough data. Wilson is meaningless. |
+| Read chips as settled-only | Chips are the admitted 13. n=0 means no close yet, not "not scored". |
 | Paper TREND / RECLAIM on this book | Expandables. Measured UP + VOLUME + RELATIVE used to steal the A seat. |
 | Lower 75 so more families print | Quota hunting. The funnel `below_75` / `max_*_score` is the honest miss. |
 | Copy `$150` lock or `DAY_STOP` | Different product. A has no equivalent today. |
 | Collapse same-episode A tickets | Grade B already counts each `candidate_id`. A must too. |
 | Mark A from a demo fill | Grade A has no Bitget copy. Frozen paper entry is the fill. |
+| Close the `grade_a_lane` module docstring early | A premature `"""` after the Mintlify pointer makes drain fail to import A. |
