@@ -1,6 +1,6 @@
 ---
 title: "BREAKOUT"
-description: "Tape leftover packer when GP/SR miss. Killed 19 Sep. Historical rows stay."
+description: "Tape leftover packer when GP/SR miss. Killed 19 Sep. Leftover opens hidden on ingest, not a settle tick."
 ---
 
 <Warning>
@@ -25,7 +25,15 @@ Historical BREAKOUT rows stay on the calendar. New ripe / telegram cards will no
 
 Live monitor printed **Tape paper · 967 open**. All 967 were older than 24h (min ~6d, 923 BREAKOUT). Valkey no longer covered entry, settle stamped `no_bars` / `entry_history_unavailable`, and the monitor counted those as open seats.
 
-Fix: wall-clock / last-bar **max-hold 24h** still books a close when history is gone. Monitor hides unresolved rows older than 24h **using the earlier of `entry_ts` and `entry_ts_epoch`** — a restamped epoch must not revive a 6-day leftover. Killed BREAKOUT paper opens are dropped even when fresh (Bitget leftover symbols stay via keep). The dashboard also hides killed / >24h hunter opens so a stale host payload cannot show 966 leftover seats. Unique BREAKOUT leftover opens are hidden the same way.
+`ffd214f` hid stale rows only in host `load_tape_open`. That did not stick: `grok-desk-realtime` is long-running, and `/api/ingest` stored the posted `tape_open` wall. Preferring a restamped `entry_ts_epoch` over frozen `entry_ts` / `STATE@epoch` could also keep a 6-day leftover under 24h.
+
+Fix that does not wait another tick:
+
+- Vercel ingest + `/api/pnl` + `/api/live` drop killed Tape BREAKOUT and unresolved Tape seats older than 24h. Bitget leftover symbols stay via keep.
+- Host monitor uses the **oldest** of `entry_ts` / epoch / episode. Killed BREAKOUT paper is not a live Tape seat.
+- Settle expires unresolved Tape BREAKOUT as `tape_breakout_killed` with no invented PnL (off the calendar). Persist will not write new Tape BREAKOUT cards.
+
+Unique BREAKOUT kill (`e3827d7`) stays on the Unique book. This hide is Tape `tape_open` only.
 
 ## Clock and size
 
