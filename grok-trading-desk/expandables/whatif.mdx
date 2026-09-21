@@ -47,4 +47,5 @@ Do not turn off `EXPAND_STOP` because what-if is green. That is the blow-up path
 
 - 2026-09-16: `parse_dt` must accept unix ms or what-if exits never fire.
 - 2026-09-19: what-if +$316 is not a production target.
-- 2026-09-19: sit cycles must keep the first flatten `cutoff`. Live sat EXPAND_STOP at 04:33 UTC; what-if also printed 0 new TREND for the rest of the day because `cutoff` walked forward with each cycle. After deploy, snap a walked `cutoff` back to `locked_at` so afternoon arms can still what-if.
+- 2026-09-19: sit cycles must keep the first flatten `cutoff`. A walked cutoff heals back to `locked_at`.
+- 2026-09-21: live sit must not `flatten_cancelled_pending_arm` while paused. What-if is the 24/7 no-lock book. 21 Sep live sat 04:29 UTC; all 7 what-if tickets entered before that stamp.
