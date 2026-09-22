@@ -139,7 +139,8 @@
               "grok-trading-desk/ops/realtime",
               "grok-trading-desk/ops/risk-shadow",
               "grok-trading-desk/ops/engine-health",
-              "grok-trading-desk/ops/guard-book"
+              "grok-trading-desk/ops/guard-book",
+              "grok-trading-desk/ops/desk-shell"
             ]
           },
           {

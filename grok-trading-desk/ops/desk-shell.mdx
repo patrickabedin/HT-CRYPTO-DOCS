@@ -1,0 +1,51 @@
+---
+title: "Desk shell dashboard"
+description: "Vendored crypto-dashboard-shell on grok-desk-shell. Reads the same /api/pnl and /api/live. Query meaning stays g, e, d."
+sidebarTitle: "Desk shell"
+icon: "layout-dashboard"
+keywords:
+  - "dashboard"
+  - "shell"
+  - "web-v2"
+  - "vercel"
+  - "pnl"
+---
+
+## What it is
+
+New desk UI: [grok-desk-shell.vercel.app](https://grok-desk-shell.vercel.app).
+
+Vendored from `HellenicTechnologiesAI/crypto-dashboard-shell` at `75c069e158da9af74caa6a5dadc5f7dd263e5780`. The shell repo stays a generic template. This repo keeps the copy in `web-v2/` plus a desk adapter.
+
+Routes: `/`, `/engines`, `/tickets`, `/calendar`. Bookmarks still use `?g=` `?e=` `?d=` `?ym=` `?cal=whatif`.
+
+## What it is not
+
+- Not a second ingest. Phase 1 only GETs the existing public `/api/pnl` and `/api/live`.
+- Not a second Blob writer or Redis subscriber.
+- Flatten stays disabled on this shell. Do not press FLATTEN to test.
+- SHADOW / advisory only. Grade A stays 75. Radio stays `GRADE_B,GRADE_A`.
+
+## Clock and size
+
+Browser polls the mapped view about every 10s. Freshness is the host `ts` on `/api/live` and `/api/pnl`.
+
+## Radio
+
+None.
+
+## Host
+
+Host `DESK_SNAPSHOT_URL` stays on `grok-trading-desk.vercel.app/api/ingest` until the production alias moves. Env **names** only: `DESK_READ_ORIGIN`, later `DESK_INGEST_SECRET`, `BLOB_READ_WRITE_TOKEN`.
+
+## State / settle
+
+Same Blob keys as the old dashboard: `desk/pnl.json`, `desk/live.json`. The shell maps those JSON types into calendar cells, open books, engine chips, and what-if vs live.
+
+## How Patrick uses it
+
+Open the new URL. Same chips as the old desk: EXPANDABLES, GRADE B, GRADE A, UNIQUE, TAPE, CHERRY, SCALP, DEMO. What-if is the no-lock book. Cell on a lock day is the fill-true high, not ticket Σ.
+
+## Decisions that still bind
+
+Do not dual-ingest. Do not attach the old production alias until the new URL is verified. After cutover, pause the old Vercel project so SSR + ingest + poll run once.
