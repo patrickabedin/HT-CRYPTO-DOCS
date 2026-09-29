@@ -21,11 +21,11 @@ None.
 
 ## Host
 
-Ingest URL + shared secret live in the host dashboard env file and Vercel project settings. Env **names** only: `DESK_INGEST_SECRET`, `BLOB_READ_WRITE_TOKEN`, `REDIS_URL`.
+Ingest URL + shared secret live in the host dashboard env file and Vercel project settings. Env **names** only: `DESK_INGEST_SECRET`, `BLOB_READ_WRITE_TOKEN`. Do not set `REDIS_URL`.
 
 ## State / settle
 
-Vercel Blob is the durable bootstrap store for the full PnL book. Fast marks travel on the realtime socket.
+Vercel Blob is the store for the full PnL book and the live frame. Upstash is not connected.
 
 ## Gates
 
