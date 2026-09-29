@@ -1,13 +1,13 @@
 ---
 title: "Realtime marks"
-description: "Host pushes grok_desk_live_v1 frames. Vercel fans out over Redis. Browser does not poll."
+description: "Host pushes grok_desk_live_v1 frames. The book lives in Vercel Blob. Do not connect Upstash."
 ---
 
 ## What it is
 
-`scripts/desk_realtime.py` reads shared `latest.json` plus Hunter/demo state and sends `grok_desk_live_v1` to `/api/realtime`. Vercel WebSocket Functions fan out through Redis.
+`scripts/desk_realtime.py` reads shared `latest.json` plus Hunter/demo state and sends `grok_desk_live_v1` to `/api/realtime`. The durable book is Vercel Blob (`desk/pnl.json`, `desk/live.json`). There is no Upstash Redis and no `REDIS_URL`. Browsers read `/api/live` and `/api/pnl`.
 
-Open Last, uPnL, open counts, and early-engine marks update from the fast stream (default 1s, change-only, 20s heartbeat). Full `grok_desk_pnl_v0` rollups still come from the PnL job; when a new rollup lands, Monthly / Today / engine totals / W/L / `n` recompute without a page refresh.
+Open Last, uPnL, open counts, and early-engine marks update from that feed (host cadence default 1s, change-only, 20s heartbeat). Full `grok_desk_pnl_v0` rollups still come from the PnL job; when a new rollup lands, Monthly / Today / engine totals / W/L / `n` recompute without a page refresh.
 
 ## Clock and size
 
@@ -23,7 +23,7 @@ None.
 
 ## Host
 
-Realtime URL is derived from the ingest URL unless overridden. Do not point `REDIS_URL` at the trading-host Valkey.
+Realtime URL is derived from the ingest URL unless overridden. Do not set `REDIS_URL`. Do not point the dashboard at the trading-host Valkey.
 
 ## State / settle
 
@@ -31,7 +31,7 @@ Read-only on host state files. No Bitget socket in the browser. No `router.refre
 
 Attached Grade B paper and Bitget demo Last/uPnL come from Bitget demo mark, not public last. Unattached paper still uses `latest.json`. See [Fills, levels, and UPL](/grok-trading-desk/grade-b/fills-levels-upl).
 
-A frozen mark with a moving calendar is the realtime publisher or Redis fan-out — not SSR, not Scout.
+A frozen mark with a moving calendar is the realtime publisher or the Blob read — not SSR, not Scout.
 
 ## Gates
 
@@ -39,11 +39,12 @@ Exactly one upstream Bitget public WS: `grok-market-data`. Do not expose host Va
 
 ## How Patrick uses it
 
-If marks freeze but the calendar still updates, the realtime publisher or Redis fan-out is the suspect — not Scout.
+If marks freeze but the calendar still updates, the realtime publisher or the Blob read is the suspect — not Scout.
 
 If paper and demo match each other but Bitget UI disagrees, the publisher is still on public last or an old `desk_snapshot` — restart realtime after FF, then compare REST mark.
 
 ## Decisions that still bind
 
 - 2026-09-13: attached books use Bitget mark/uPnL. Restart realtime after that class of change.
+- 2026-09-29: Upstash Redis (`grok-desk-realtime`, free 500k commands) is not used. The book is Vercel Blob. Do not reconnect it.
 - Local websocket dev uses `vercel dev`, not plain `next dev`.
