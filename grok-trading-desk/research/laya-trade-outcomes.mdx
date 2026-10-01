@@ -1,0 +1,54 @@
+---
+title: "Laya trade outcomes"
+sidebarTitle: "Laya outcomes"
+description: "Entry-time winner/loser set from every closed desk trade, scored on a later holdout."
+keywords:
+  - "laya"
+  - "research"
+  - "holdout"
+  - "winner"
+  - "loser"
+---
+
+## What it is
+
+`scripts/laya_trade_set.py` turns closed desk rows into a Laya decision set. The question is whether a trade closed as a winner or a loser, using only facts known at entry.
+
+Laya (`laya-finetune` 0.1.2) is installed in its own environment. It is not on the live scoring path.
+
+## Label
+
+Winner means net above zero. Loser means net below zero. A missing net falls back to usd. Flat closes are counted and left out of the graded files. On 1 Oct 2026 the closed book had 22,455 rows, 2 duplicate identities dropped, and 0 flats, leaving 22,453 graded trades.
+
+## What the card contains
+
+Book, engine, symbol, side, score band, family, regime, reward-to-risk, and stop distance in basis points. Prices are ratios. Net, usd, outcome, exit price, exit time, MAE, MFE, and exit reason stay off the card.
+
+Grade A, Grade B, and Expandables can pick up trigger-time score, family, and regime from the triggered-counterfactual plans. That join covered score on 3,622 graded rows and regime on 3,611. Reward-to-risk was present on 22,220.
+
+## Holdout
+
+Sorted by exit time. The earliest 15,717 train. The last 6,736 are the test, and every test close is later than every train close. Synthetic label generation is not used.
+
+On that later slice:
+
+| Model | Accuracy | Brier |
+| --- | --- | --- |
+| Majority (always loser; train win rate 43.5%) | 59.6% | 0.242 |
+| Logistic regression on the same entry fields | 61.2% | 0.238 |
+| Laya | not scored | not scored |
+
+The logistic model beats the majority class on both accuracy and Brier. The edge is small. Laya was not trained: this run had no NVIDIA GPU, and the trainer requires one. No Laya accuracy is invented. It does not count as having learned the book.
+
+When a GPU is available:
+
+```
+layaft train task=tasks/laya_desk_trades.yaml profile=test teacher=none
+layaft val task=tasks/laya_desk_trades.yaml
+```
+
+Laya counts only if that validation beats both the majority class and the logistic model on a later slice it did not train on.
+
+## Gates
+
+Research only. No admission change, no Telegram, no orders. Grade A stays 75. SHADOW stays on. Checkpoint weights stay out of git.
